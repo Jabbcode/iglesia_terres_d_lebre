@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Menu, Church } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,7 +14,7 @@ import {
 
 const navLinks = [
   { href: "/", label: "INICIO" },
-  { href: "/creencias", label: "CREENCIAS" }, // Nosotros?
+  { href: "/creencias", label: "CREENCIAS" },
   { href: "/horarios", label: "HORARIOS" },
   { href: "/galeria", label: "GALERÍA" },
   { href: "/contacto", label: "CONTACTO" },
@@ -27,7 +28,13 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Church className="size-7 text-amber" />
+          <Image
+            src="/logo.png"
+            alt="Logo Iglesia Bíblica Terres de l'Ebre"
+            width={40}
+            height={40}
+            className="size-10 object-contain"
+          />
           <span className="text-sm font-bold tracking-wider text-foreground">
             IGLESIA BIBLICA TERRES DE L'EBRE
           </span>
@@ -46,14 +53,6 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop CTA */}
-        {/* <Button
-          asChild
-          className="hidden rounded-full bg-amber px-6 text-xs font-bold tracking-wider text-white hover:bg-amber-dark md:inline-flex"
-        >
-          <Link href="#nuevos">NUEVOS AQUÍ</Link>
-        </Button> */}
-
         {/* Mobile hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
@@ -66,7 +65,13 @@ export function Navbar() {
             <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
             <div className="flex flex-col gap-6 pt-8">
               <Link href="/" className="flex items-center gap-2 px-4">
-                <Church className="size-6 text-amber" />
+                <Image
+                  src="/logo.png"
+                  alt="Logo Iglesia Bíblica Terres de l'Ebre"
+                  width={32}
+                  height={32}
+                  className="size-8 object-contain"
+                />
                 <span className="text-sm font-bold tracking-wider">
                   IGLESIA BIBLICA
                   <br />
@@ -85,16 +90,6 @@ export function Navbar() {
                   </Link>
                 ))}
               </nav>
-              {/* <div className="px-4">
-                <Button
-                  asChild
-                  className="w-full rounded-full bg-amber text-xs font-bold tracking-wider text-white hover:bg-amber-dark"
-                >
-                  <Link href="#nuevos" onClick={() => setOpen(false)}>
-                    NUEVOS AQUÍ
-                  </Link>
-                </Button>
-              </div> */}
             </div>
           </SheetContent>
         </Sheet>

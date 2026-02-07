@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Church, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { mockConfig } from "@/lib/mock-data";
 
 const navLinks = [
@@ -24,7 +25,13 @@ export function Footer() {
           {/* Column 1 - Logo & Description */}
           <div className="flex flex-col items-center space-y-4 text-center sm:col-span-2 sm:items-start sm:text-left lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2">
-              <Church className="size-7 text-amber" />
+              <Image
+                src="/logo.png"
+                alt="Logo Iglesia Bíblica Terres de l'Ebre"
+                width={32}
+                height={32}
+                className="size-8 object-contain"
+              />
               <span className="text-sm font-bold tracking-wider">
                 IGLESIA BIBLICA
                 <br />
