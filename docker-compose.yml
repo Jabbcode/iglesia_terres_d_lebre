@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: iglesia_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "8956"
+      POSTGRES_DB: iglesia_terres
+    ports:
+      - "5432:5432"
