@@ -66,3 +66,9 @@ All UI components use `"use client"` (Radix primitives require it). Server Compo
 - para manejo de estado global use Zustand
 - para formularios usar react-hook-form y zod
 - cada vez que haces algo nuevo modifica los ficheros plan dentro de /docs con los nuevos cambios
+- llevar un control del estado del repositorio y preguntar si se debe hacer commits con los cambios si la decision es "si" crear los commits correspondientes, si es "no" solo seguir con las tareas. 
+- llevar un formato de commits al crearlos
+  - fix: [FIX]: descripcion del commit
+  - feat: [FEAT]: descripcion del commit
+  - styles: [STYLE]: descripcion del commit
+  - test: [TEST]: descripcion del commit
