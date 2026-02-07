@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,11 +27,9 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image
+          <img
             src="/logo.png"
             alt="Logo Iglesia Bíblica Terres de l'Ebre"
-            width={40}
-            height={40}
             className="size-10 object-contain"
           />
           <span className="text-sm font-bold tracking-wider text-foreground">
@@ -65,11 +62,9 @@ export function Navbar() {
             <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
             <div className="flex flex-col gap-6 pt-8">
               <Link href="/" className="flex items-center gap-2 px-4">
-                <Image
+                <img
                   src="/logo.png"
                   alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                  width={32}
-                  height={32}
                   className="size-8 object-contain"
                 />
                 <span className="text-sm font-bold tracking-wider">
