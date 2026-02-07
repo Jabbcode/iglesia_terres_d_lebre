@@ -3,24 +3,32 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
+    <section
+      aria-labelledby="hero-heading"
+      className="relative flex min-h-[90vh] items-center justify-center overflow-hidden"
+    >
       {/* Background image */}
-      <div
+      <figure
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop')",
         }}
+        role="img"
+        aria-label="Comunidad reunida en adoración"
       />
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+      <header className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <p className="mb-4 text-xs font-bold tracking-[0.3em] text-amber">
           TE ESTÁBAMOS ESPERANDO
         </p>
-        <h1 className="mb-6 text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
+        <h1
+          id="hero-heading"
+          className="mb-6 text-5xl font-bold text-white sm:text-6xl lg:text-7xl"
+        >
           Bienvenidos{" "}
           <span className="font-serif italic text-amber">a Casa</span>
         </h1>
@@ -34,7 +42,7 @@ export function Hero() {
         >
           <Link href="/horarios">Ver servicios</Link>
         </Button>
-      </div>
+      </header>
     </section>
   );
 }

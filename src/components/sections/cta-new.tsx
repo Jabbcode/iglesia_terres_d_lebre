@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 
 export function CtaNew() {
   return (
-    <section id="nuevos" className="py-16">
+    <aside
+      id="nuevos"
+      aria-label="Llamada a la acción para nuevos visitantes"
+      className="py-16"
+    >
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <Button
           asChild
@@ -12,10 +16,10 @@ export function CtaNew() {
         >
           <Link href="/creencias" className="gap-3">
             ¿Eres nuevo? Empieza aquí
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </Button>
       </div>
-    </section>
+    </aside>
   );
 }

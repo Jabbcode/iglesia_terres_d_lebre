@@ -30,14 +30,17 @@ const communityCards = [
 
 export function Community() {
   return (
-    <section id="comunidad" className="py-20">
+    <section id="comunidad" aria-labelledby="community-heading" className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <p className="mb-3 text-xs font-bold tracking-[0.3em] text-amber">
             VIDA DE IGLESIA
           </p>
-          <h2 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2
+            id="community-heading"
+            className="mb-4 text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Nuestra Comunidad
           </h2>
           <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-amber" />
@@ -51,17 +54,22 @@ export function Community() {
         {/* Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {communityCards.map((card) => (
-            <div
+            <article
               key={card.title}
               className="group relative h-96 overflow-hidden rounded-2xl"
             >
               {/* Background image */}
-              <div
+              <figure
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                 style={{ backgroundImage: `url('${card.image}')` }}
+                role="img"
+                aria-label={card.title}
               />
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+                aria-hidden="true"
+              />
 
               {/* Content with glassmorphism */}
               <div className="absolute inset-x-0 bottom-0 p-6">
@@ -77,11 +85,11 @@ export function Community() {
                     className="inline-flex items-center gap-2 text-xs font-bold tracking-wider text-amber transition-colors hover:text-white"
                   >
                     {card.link.label}
-                    <ArrowRight className="size-3.5" />
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
                   </Link>
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

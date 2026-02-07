@@ -58,10 +58,10 @@ export function Footer() {
           </div>
 
           {/* Column 2 - Navigation Links */}
-          <div className="text-center sm:text-left">
-            <h4 className="mb-4 text-xs font-bold tracking-widest text-white/40">
+          <nav aria-label="Enlaces del footer" className="text-center sm:text-left">
+            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
               ENLACES
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -74,27 +74,31 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Column 3 - Contact */}
           <div className="text-center sm:text-left">
-            <h4 className="mb-4 text-xs font-bold tracking-widest text-white/40">
+            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
               CONTACTO
-            </h4>
-            <ul className="space-y-3">
-              <li className="flex items-start justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <MapPin className="mt-0.5 size-4 shrink-0" />
+            </h2>
+            <address className="space-y-3 not-italic">
+              <p className="flex items-start justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 <span>{direccion}</span>
-              </li>
-              <li className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <Phone className="size-4 shrink-0" />
-                <span>{telefono}</span>
-              </li>
-              <li className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <Mail className="size-4 shrink-0" />
-                <span>{email}</span>
-              </li>
-            </ul>
+              </p>
+              <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                <Phone className="size-4 shrink-0" aria-hidden="true" />
+                <a href={`tel:${telefono.replace(/\s+/g, "")}`} className="hover:text-white">
+                  {telefono}
+                </a>
+              </p>
+              <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                <Mail className="size-4 shrink-0" aria-hidden="true" />
+                <a href={`mailto:${email}`} className="hover:text-white">
+                  {email}
+                </a>
+              </p>
+            </address>
           </div>
         </div>
       </div>
