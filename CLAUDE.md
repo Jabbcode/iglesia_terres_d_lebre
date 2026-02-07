@@ -68,7 +68,8 @@ All UI components use `"use client"` (Radix primitives require it). Server Compo
 - cada vez que haces algo nuevo modifica los ficheros plan dentro de /docs con los nuevos cambios
 - llevar un control del estado del repositorio y preguntar si se debe hacer commits con los cambios si la decision es "si" crear los commits correspondientes, si es "no" solo seguir con las tareas. 
 - llevar un formato de commits al crearlos
-  - fix: [FIX]: descripcion del commit
-  - feat: [FEAT]: descripcion del commit
-  - styles: [STYLE]: descripcion del commit
-  - test: [TEST]: descripcion del commit
+  - si fue un arreglo: [FIX]: describir explicacion de lo que se hizo
+  - si fue una nueva feature: [FEAT]: describir que cambios se agregaron nuevo
+  - si solo fue algo del tipo estilos: [STYLE]: explicar brevemente que se cambio o agrego
+  - si es el caso de testing: [TEST]:  breve descripcion de o de los test nuevos
+  - si es un refactor: [REF]: descripcion de la refactorización
