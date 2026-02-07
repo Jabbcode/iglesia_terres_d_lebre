@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Gallery } from "@/components/sections/gallery";
+import { IGLESIA_NAME } from "@/lib/constant";
 
 export const metadata: Metadata = {
-  title: "Galería | Comunidad Cristiana Terres de l'Ebre",
+  title: `Galería | ${IGLESIA_NAME}`,
   description:
     "Explora los momentos que hemos compartido en comunidad. Cada imagen es un testimonio de nuestra fe, alegría y comunión.",
 };

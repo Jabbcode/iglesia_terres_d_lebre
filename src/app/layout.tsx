@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { IGLESIA_NAME } from "@/lib/constant";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -14,7 +15,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Comunidad Cristiana Terres de l'Ebre | Iglesia en Tortosa",
+  title: IGLESIA_NAME,
   description:
     "Somos una comunidad cristiana en Terres de l'Ebre. Un lugar donde encontrarás familia, propósito y fe. Te estábamos esperando.",
   keywords: [
