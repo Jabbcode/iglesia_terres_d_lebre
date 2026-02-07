@@ -1,4 +1,5 @@
-import { MapPin, CalendarPlus } from "lucide-react";
+import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/sections/countdown";
 import { getNextSundayServiceDate, mockConfig } from "@/lib/mock-data";
@@ -29,19 +30,15 @@ export function NextService() {
           <Countdown targetDate={nextServiceDate} />
 
           {/* Actions */}
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              className="h-10 gap-2 rounded-full border-border px-5 text-xs font-semibold"
-            >
+          <Button
+            asChild
+            className="h-10 gap-2 rounded-full bg-amber px-5 text-xs font-semibold text-white shadow-lg shadow-amber/25 hover:bg-amber-dark hover:shadow-xl hover:shadow-amber/30"
+          >
+            <Link href="/contacto">
               <MapPin className="size-4" />
               Cómo llegar
-            </Button>
-            <Button className="h-10 gap-2 rounded-full bg-amber px-5 text-xs font-semibold text-white hover:bg-amber-dark">
-              <CalendarPlus className="size-4" />
-              Agendar
-            </Button>
-          </div>
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

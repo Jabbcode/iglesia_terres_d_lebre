@@ -28,21 +28,12 @@ export function Hero() {
           Somos una comunidad de fe donde cada persona encuentra su lugar.
           Un espacio para crecer, servir y vivir en el amor de Dios.
         </p>
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button
-            asChild
-            className="h-12 rounded-full bg-amber px-8 text-sm font-bold tracking-wider text-white hover:bg-amber-dark"
-          >
-            <Link href="#comunidad">Únete a nuestra comunidad</Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="h-12 rounded-full border-2 border-white bg-transparent px-8 text-sm font-bold tracking-wider text-white hover:bg-white hover:text-foreground"
-          >
-            <Link href="#servicios">Ver servicios online</Link>
-          </Button>
-        </div>
+        <Button
+          asChild
+          className="h-12 rounded-full bg-amber px-8 text-sm font-bold tracking-wider text-white shadow-lg shadow-amber/25 hover:bg-amber-dark hover:shadow-xl hover:shadow-amber/30"
+        >
+          <Link href="/horarios">Ver servicios online</Link>
+        </Button>
       </div>
     </section>
   );

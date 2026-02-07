@@ -10,7 +10,7 @@ export function CtaNew() {
           asChild
           className="h-14 rounded-full bg-amber px-10 text-sm font-bold tracking-wider text-white shadow-lg shadow-amber/25 hover:bg-amber-dark hover:shadow-xl hover:shadow-amber/30"
         >
-          <Link href="#empieza" className="gap-3">
+          <Link href="/creencias" className="gap-3">
             ¿Eres nuevo? Empieza aquí
             <ArrowRight className="size-4" />
           </Link>
