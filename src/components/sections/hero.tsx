@@ -32,7 +32,7 @@ export function Hero() {
           asChild
           className="h-12 rounded-full bg-amber px-8 text-sm font-bold tracking-wider text-white shadow-lg shadow-amber/25 hover:bg-amber-dark hover:shadow-xl hover:shadow-amber/30"
         >
-          <Link href="/horarios">Ver servicios online</Link>
+          <Link href="/horarios">Ver servicios</Link>
         </Button>
       </div>
     </section>
