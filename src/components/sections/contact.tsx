@@ -83,32 +83,40 @@ export function Contact() {
         </div>
 
         {/* Social media */}
-        <div className="mx-auto mb-10 flex justify-center gap-4">
-          <a
-            href={instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
-          >
-            <Instagram className="size-5" />
-          </a>
-          <a
-            href={facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
-          >
-            <Facebook className="size-5" />
-          </a>
-          <a
-            href={youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
-          >
-            <Youtube className="size-5" />
-          </a>
-        </div>
+        {(instagramUrl || facebookUrl || youtubeUrl) && (
+          <div className="mx-auto mb-10 flex justify-center gap-4">
+            {instagramUrl && (
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
+              >
+                <Instagram className="size-5" />
+              </a>
+            )}
+            {facebookUrl && (
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
+              >
+                <Facebook className="size-5" />
+              </a>
+            )}
+            {youtubeUrl && (
+              <a
+                href={youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
+              >
+                <Youtube className="size-5" />
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Map */}
         {googleMapsEmbed && (
