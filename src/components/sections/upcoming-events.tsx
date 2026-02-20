@@ -1,9 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CalendarDays, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { mockEventos } from "@/lib/mock-data";
+
+interface Evento {
+  id: string;
+  nombre: string;
+  descripcion: string | null;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string | null;
+  ubicacion: string | null;
+}
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -15,7 +25,32 @@ function formatDate(dateStr: string): string {
 }
 
 export function UpcomingEvents() {
-  const eventos = mockEventos.slice(0, 3);
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/eventos")
+      .then((res) => res.json())
+      .then((data) => {
+        setEventos(data.slice(0, 3));
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="border-t border-border bg-white py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mb-10 max-w-2xl text-center">
+            <div className="mx-auto h-4 w-32 animate-pulse rounded bg-muted" />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (eventos.length === 0) {
     return null;
@@ -62,10 +97,12 @@ export function UpcomingEvents() {
                   <Clock className="size-4" />
                   <span>{evento.horaInicio}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="size-4" />
-                  <span className="line-clamp-1">{evento.ubicacion}</span>
-                </div>
+                {evento.ubicacion && (
+                  <div className="flex items-center gap-2">
+                    <MapPin className="size-4" />
+                    <span className="line-clamp-1">{evento.ubicacion}</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

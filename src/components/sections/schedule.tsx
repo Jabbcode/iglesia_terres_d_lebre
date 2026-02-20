@@ -1,28 +1,33 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Church,
   HeartHandshake,
   Users,
   BookOpen,
   Smile,
+  Calendar,
+  type LucideIcon,
 } from "lucide-react";
 
-const scheduleCards = [
-  {
-    icon: Church,
-    title: "Culto de Adoración",
-    time: "Domingos, 11:00h",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Reunión de Oración",
-    time: "Miércoles, 20:00h",
-  },
-  {
-    icon: Users,
-    title: "Reunión de Jóvenes",
-    time: "Sábados, 18:00h",
-  },
-];
+interface Horario {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  dia: string;
+  hora: string;
+  icono: string | null;
+}
+
+const iconMap: Record<string, LucideIcon> = {
+  Church,
+  HeartHandshake,
+  Users,
+  BookOpen,
+  Smile,
+  Calendar,
+};
 
 const detailSections = [
   {
@@ -54,6 +59,37 @@ const detailSections = [
 ];
 
 export function Schedule() {
+  const [horarios, setHorarios] = useState<Horario[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/horarios")
+      .then((res) => res.json())
+      .then((data) => {
+        setHorarios(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const getIcon = (iconName: string | null): LucideIcon => {
+    if (iconName && iconMap[iconName]) {
+      return iconMap[iconName];
+    }
+    return Calendar;
+  };
+
+  if (loading) {
+    return (
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto h-8 w-48 animate-pulse rounded bg-muted" />
+        </div>
+      </section>
+    );
+  }
   return (
     <>
       {/* Header */}
@@ -76,20 +112,25 @@ export function Schedule() {
       {/* Schedule cards */}
       <section className="bg-cream pb-16 pt-10">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {scheduleCards.map((card) => (
-            <div
-              key={card.title}
-              className="rounded-2xl border border-border/50 bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
-            >
-              <div className="mx-auto mb-4 flex size-14 items-center justify-center">
-                <card.icon className="size-9 text-amber" strokeWidth={1.5} />
+          {horarios.map((horario) => {
+            const Icon = getIcon(horario.icono);
+            return (
+              <div
+                key={horario.id}
+                className="rounded-2xl border border-border/50 bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div className="mx-auto mb-4 flex size-14 items-center justify-center">
+                  <Icon className="size-9 text-amber" strokeWidth={1.5} />
+                </div>
+                <h3 className="mb-1 text-lg font-bold text-foreground">
+                  {horario.titulo}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {horario.dia}, {horario.hora}
+                </p>
               </div>
-              <h3 className="mb-1 text-lg font-bold text-foreground">
-                {card.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">{card.time}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
