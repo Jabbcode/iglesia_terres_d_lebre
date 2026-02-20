@@ -32,7 +32,7 @@ export function Footer() {
               <span className="text-sm font-bold tracking-wider">
                 IGLESIA BIBLICA
                 <br />
-                TERRES DE L'EBRE
+                TERRES DE L&apos;EBRE
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-white/60">

@@ -43,7 +43,7 @@ export function Navbar() {
             className="size-10 object-contain"
           />
           <span className="text-sm font-bold tracking-wider text-foreground">
-            IGLESIA BIBLICA TERRES DE L'EBRE
+            IGLESIA BIBLICA TERRES DE L&apos;EBRE
           </span>
         </Link>
 
@@ -89,7 +89,7 @@ export function Navbar() {
                 <span className="text-sm font-bold tracking-wider">
                   IGLESIA BIBLICA
                   <br />
-                  TERRES DE L'EBRE
+                  TERRES DE L&apos;EBRE
                 </span>
               </Link>
               <nav className="flex flex-col gap-4 px-4">
