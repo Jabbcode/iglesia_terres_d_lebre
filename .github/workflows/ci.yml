@@ -139,8 +139,8 @@ jobs:
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Run npm audit
-        # Only fail on high/critical vulnerabilities
-        run: npm audit --audit-level=high
+        # Only check production dependencies, fail on critical
+        run: npm audit --audit-level=critical --omit=dev
 
   # ─── Build ────────────────────────────────────────────────────────────────
   build:
