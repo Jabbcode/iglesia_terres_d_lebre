@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/hero";
 import { NextService } from "@/components/sections/next-service";
 import { Community } from "@/components/sections/community";
 import { CtaNew } from "@/components/sections/cta-new";
+import { UpcomingEvents } from "@/components/sections/upcoming-events";
 import {
   IGLESIA_NAME,
   SITE_URL,
@@ -29,6 +30,7 @@ export default function Home() {
       <NextService />
       <Community />
       <CtaNew />
+      <UpcomingEvents />
     </>
   );
 }
