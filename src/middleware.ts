@@ -19,17 +19,15 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get("auth-token")?.value
 
-  // Protect /admin/* pages (except /admin/login)
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  // Protect /admin/* pages
+  if (pathname.startsWith("/admin")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/admin/login", request.url))
+      return NextResponse.redirect(new URL("/login", request.url))
     }
 
     const payload = await verifyAuth(token)
     if (!payload) {
-      const response = NextResponse.redirect(
-        new URL("/admin/login", request.url)
-      )
+      const response = NextResponse.redirect(new URL("/login", request.url))
       response.cookies.delete("auth-token")
       return response
     }
@@ -47,8 +45,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // If on /admin/login and already authenticated, redirect to /admin
-  if (pathname === "/admin/login" && token) {
+  // If on /login and already authenticated, redirect to /admin
+  if (pathname === "/login" && token) {
     const payload = await verifyAuth(token)
     if (payload) {
       return NextResponse.redirect(new URL("/admin", request.url))
@@ -59,5 +57,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/login"],
 }
