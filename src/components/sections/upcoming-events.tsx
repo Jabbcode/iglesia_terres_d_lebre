@@ -1,38 +1,38 @@
-"use client";
+"use client"
 
-import { CalendarDays, MapPin, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { mockEventos } from "@/lib/mock-data";
+import { CalendarDays, MapPin, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { mockEventos } from "@/lib/mock-data"
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
+  const date = new Date(dateStr)
   return date.toLocaleDateString("es-ES", {
     weekday: "long",
     day: "numeric",
     month: "long",
-  });
+  })
 }
 
 export function UpcomingEvents() {
-  const eventos = mockEventos.slice(0, 3);
+  const eventos = mockEventos.slice(0, 3)
 
   if (eventos.length === 0) {
-    return null;
+    return null
   }
 
   return (
-    <section className="border-t border-border bg-white py-16">
+    <section className="border-border border-t bg-white py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-3 text-xs font-bold tracking-[0.3em] text-amber">
+          <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
             PRÓXIMOS EVENTOS
           </p>
-          <h2 className="mb-4 font-serif text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 className="text-foreground mb-4 font-serif text-3xl font-bold sm:text-4xl">
             Únete a nuestras actividades
           </h2>
-          <p className="text-base leading-relaxed text-muted-foreground">
+          <p className="text-muted-foreground text-base leading-relaxed">
             Estas son algunas de las próximas actividades que hemos preparado
             para nuestra comunidad.
           </p>
@@ -43,21 +43,21 @@ export function UpcomingEvents() {
           {eventos.map((evento) => (
             <div
               key={evento.id}
-              className="flex flex-col rounded-2xl border border-border/50 bg-cream p-6 shadow-sm"
+              className="border-border/50 bg-cream flex flex-col rounded-2xl border p-6 shadow-sm"
             >
-              <div className="mb-4 flex items-center gap-2 text-amber">
+              <div className="text-amber mb-4 flex items-center gap-2">
                 <CalendarDays className="size-5" />
                 <span className="text-sm font-semibold capitalize">
                   {formatDate(evento.fecha)}
                 </span>
               </div>
-              <h3 className="mb-2 text-lg font-bold text-foreground">
+              <h3 className="text-foreground mb-2 text-lg font-bold">
                 {evento.nombre}
               </h3>
-              <p className="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">
+              <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
                 {evento.descripcion}
               </p>
-              <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="text-muted-foreground space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="size-4" />
                   <span>{evento.horaInicio}</span>
@@ -76,12 +76,12 @@ export function UpcomingEvents() {
           <Button
             asChild
             variant="outline"
-            className="h-11 rounded-full border-amber px-8 text-sm font-semibold text-amber hover:bg-amber hover:text-white"
+            className="border-amber text-amber hover:bg-amber h-11 rounded-full px-8 text-sm font-semibold hover:text-white"
           >
             <Link href="/horarios">Ver todos los horarios</Link>
           </Button>
         </div>
       </div>
     </section>
-  );
+  )
 }

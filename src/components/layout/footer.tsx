@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
-import { mockConfig } from "@/lib/mock-data";
+import Link from "next/link"
+import { Mail, Phone, MapPin, MessageCircle } from "lucide-react"
+import { mockConfig } from "@/lib/mock-data"
 
 const navLinks = [
   { href: "/creencias", label: "Creencias" },
   { href: "/horarios", label: "Horarios" },
   { href: "/galeria", label: "Galería" },
   { href: "/contacto", label: "Contacto" },
-];
+]
 
 export function Footer() {
-  const direccion = mockConfig.contacto.direccion.replace("\n", ", ");
-  const telefono = mockConfig.contacto.telefono;
-  const email = mockConfig.contacto.email;
-  const whatsappNumber = telefono.replace(/\s+/g, "").replace("+", "");
+  const direccion = mockConfig.contacto.direccion.replace("\n", ", ")
+  const telefono = mockConfig.contacto.telefono
+  const email = mockConfig.contacto.email
+  const whatsappNumber = telefono.replace(/\s+/g, "").replace("+", "")
 
   return (
     <footer className="bg-foreground text-white">
@@ -44,13 +44,13 @@ export function Footer() {
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-amber"
+                className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
               >
                 <MessageCircle className="size-4" />
               </a>
               <a
                 href={`mailto:${email}`}
-                className="flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-amber"
+                className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
               >
                 <Mail className="size-4" />
               </a>
@@ -58,7 +58,10 @@ export function Footer() {
           </div>
 
           {/* Column 2 - Navigation Links */}
-          <nav aria-label="Enlaces del footer" className="text-center sm:text-left">
+          <nav
+            aria-label="Enlaces del footer"
+            className="text-center sm:text-left"
+          >
             <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
               ENLACES
             </h2>
@@ -88,7 +91,10 @@ export function Footer() {
               </p>
               <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
                 <Phone className="size-4 shrink-0" aria-hidden="true" />
-                <a href={`tel:${telefono.replace(/\s+/g, "")}`} className="hover:text-white">
+                <a
+                  href={`tel:${telefono.replace(/\s+/g, "")}`}
+                  className="hover:text-white"
+                >
                   {telefono}
                 </a>
               </p>
@@ -105,8 +111,11 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:text-left sm:px-6 lg:px-8">
-          <p>&copy; {new Date().getFullYear()} Iglesia Bíblica Terres de l&apos;Ebre. Todos los derechos reservados.</p>
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:px-6 sm:text-left lg:px-8">
+          <p>
+            &copy; {new Date().getFullYear()} Iglesia Bíblica Terres de
+            l&apos;Ebre. Todos los derechos reservados.
+          </p>
           <div className="flex gap-4">
             <Link href="/privacidad" className="hover:text-white">
               Privacidad
@@ -118,5 +127,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

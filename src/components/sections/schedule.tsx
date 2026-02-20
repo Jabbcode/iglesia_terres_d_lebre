@@ -1,10 +1,4 @@
-import {
-  Church,
-  HeartHandshake,
-  Users,
-  BookOpen,
-  Smile,
-} from "lucide-react";
+import { Church, HeartHandshake, Users, BookOpen, Smile } from "lucide-react"
 
 const scheduleCards = [
   {
@@ -22,7 +16,7 @@ const scheduleCards = [
     title: "Reunión de Jóvenes",
     time: "Sábados, 18:00h",
   },
-];
+]
 
 const detailSections = [
   {
@@ -43,51 +37,49 @@ const detailSections = [
     description:
       "Durante el culto de adoración, los más pequeños disfrutan de un tiempo especial en la",
     emphasis: "Escuela Dominical,",
-    afterEmphasis:
-      " aprendiendo de la Biblia de forma divertida y creativa.",
+    afterEmphasis: " aprendiendo de la Biblia de forma divertida y creativa.",
     icon: Smile,
     schedule: "Domingos a las 11:00h",
     image:
       "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1200&auto=format&fit=crop",
     imageAlt: "Actividades para niños",
   },
-];
+]
 
 export function Schedule() {
   return (
     <>
       {/* Header */}
-      <section className="bg-cream pb-6 pt-20">
+      <section className="bg-cream pt-20 pb-6">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="mb-6 text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
             Nuestros{" "}
-            <span className="font-serif italic text-amber">Horarios</span>
+            <span className="text-amber font-serif italic">Horarios</span>
           </h1>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
             Únete a nuestra comunidad. Un espacio para{" "}
-            <em className="not-italic text-amber">crecer en la fe</em>,
-            compartir en{" "}
-            <em className="not-italic text-amber">comunión</em> y adorar
-            juntos.
+            <em className="text-amber not-italic">crecer en la fe</em>,
+            compartir en <em className="text-amber not-italic">comunión</em> y
+            adorar juntos.
           </p>
         </div>
       </section>
 
       {/* Schedule cards */}
-      <section className="bg-cream pb-16 pt-10">
+      <section className="bg-cream pt-10 pb-16">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
           {scheduleCards.map((card) => (
             <div
               key={card.title}
-              className="rounded-2xl border border-border/50 bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
+              className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="mx-auto mb-4 flex size-14 items-center justify-center">
-                <card.icon className="size-9 text-amber" strokeWidth={1.5} />
+                <card.icon className="text-amber size-9" strokeWidth={1.5} />
               </div>
-              <h3 className="mb-1 text-lg font-bold text-foreground">
+              <h3 className="text-foreground mb-1 text-lg font-bold">
                 {card.title}
               </h3>
-              <p className="text-sm text-muted-foreground">{card.time}</p>
+              <p className="text-muted-foreground text-sm">{card.time}</p>
             </div>
           ))}
         </div>
@@ -96,7 +88,7 @@ export function Schedule() {
       {/* Detail sections (alternating) */}
       <section className="bg-white">
         {detailSections.map((section, index) => {
-          const isReversed = index % 2 !== 0;
+          const isReversed = index % 2 !== 0
           return (
             <div
               key={section.title}
@@ -109,23 +101,22 @@ export function Schedule() {
               >
                 {/* Text */}
                 <div className="flex-1">
-                  <h2 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl">
+                  <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
                     {section.title}{" "}
-                    <span className="font-serif italic text-amber">
+                    <span className="text-amber font-serif italic">
                       {section.subtitle}
                     </span>
                   </h2>
-                  <p className="mb-6 text-base leading-relaxed text-muted-foreground">
-                    {section.description}{" "}
-                    <em>{section.emphasis}</em>
+                  <p className="text-muted-foreground mb-6 text-base leading-relaxed">
+                    {section.description} <em>{section.emphasis}</em>
                     {section.afterEmphasis}
                   </p>
                   <div className="flex items-center gap-3">
                     <section.icon
-                      className="size-5 text-amber"
+                      className="text-amber size-5"
                       strokeWidth={1.5}
                     />
-                    <span className="text-sm font-semibold text-foreground">
+                    <span className="text-foreground text-sm font-semibold">
                       {section.schedule}
                     </span>
                   </div>
@@ -133,7 +124,7 @@ export function Schedule() {
 
                 {/* Image */}
                 <div className="flex-1">
-                  <div className="overflow-hidden rounded-2xl bg-muted">
+                  <div className="bg-muted overflow-hidden rounded-2xl">
                     <img
                       src={section.image}
                       alt={section.imageAlt}
@@ -144,9 +135,9 @@ export function Schedule() {
                 </div>
               </div>
             </div>
-          );
+          )
         })}
       </section>
     </>
-  );
+  )
 }

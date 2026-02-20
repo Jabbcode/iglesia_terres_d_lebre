@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 const communityCards = [
   {
@@ -26,28 +26,32 @@ const communityCards = [
     image:
       "https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2874&auto=format&fit=crop",
   },
-];
+]
 
 export function Community() {
   return (
-    <section id="comunidad" aria-labelledby="community-heading" className="py-20">
+    <section
+      id="comunidad"
+      aria-labelledby="community-heading"
+      className="py-20"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="mb-3 text-xs font-bold tracking-[0.3em] text-amber">
+          <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
             VIDA DE IGLESIA
           </p>
           <h2
             id="community-heading"
-            className="mb-4 text-3xl font-bold text-foreground sm:text-4xl"
+            className="text-foreground mb-4 text-3xl font-bold sm:text-4xl"
           >
             Nuestra Comunidad
           </h2>
-          <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-amber" />
-          <p className="text-base leading-relaxed text-muted-foreground">
+          <div className="bg-amber mx-auto mb-6 h-1 w-16 rounded-full" />
+          <p className="text-muted-foreground text-base leading-relaxed">
             En nuestra iglesia encontrarás un lugar donde ser parte de algo más
-            grande. Descubre las diferentes formas en que puedes conectar, crecer
-            y servir junto a nosotros.
+            grande. Descubre las diferentes formas en que puedes conectar,
+            crecer y servir junto a nosotros.
           </p>
         </div>
 
@@ -82,7 +86,7 @@ export function Community() {
                   </p>
                   <Link
                     href={card.link.href}
-                    className="inline-flex items-center gap-2 text-xs font-bold tracking-wider text-amber transition-colors hover:text-white"
+                    className="text-amber inline-flex items-center gap-2 text-xs font-bold tracking-wider transition-colors hover:text-white"
                   >
                     {card.link.label}
                     <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -94,5 +98,5 @@ export function Community() {
         </div>
       </div>
     </section>
-  );
+  )
 }

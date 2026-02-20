@@ -78,95 +78,105 @@ export default function NuevoEventoPage() {
       <div className="mb-6">
         <Link
           href="/admin/eventos"
-          className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
         >
           <ArrowLeft className="size-4" />
           Volver a eventos
         </Link>
-        <h1 className="text-2xl font-bold text-foreground">Nuevo Evento</h1>
-        <p className="mt-1 text-muted-foreground">Crea un nuevo evento para la iglesia</p>
+        <h1 className="text-foreground text-2xl font-bold">Nuevo Evento</h1>
+        <p className="text-muted-foreground mt-1">
+          Crea un nuevo evento para la iglesia
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
         {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            {error}
+          </div>
         )}
 
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Nombre del Evento
               </label>
               <input
                 {...register("nombre")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.nombre.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Descripcion
               </label>
               <textarea
                 {...register("descripcion")}
                 rows={3}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-1 block text-sm font-medium">
                   Fecha
                 </label>
                 <input
                   {...register("fecha")}
                   type="date"
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
                 {errors.fecha && (
-                  <p className="mt-1 text-sm text-red-500">{errors.fecha.message}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.fecha.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-1 block text-sm font-medium">
                   Hora Inicio
                 </label>
                 <input
                   {...register("horaInicio")}
                   type="time"
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
                 {errors.horaInicio && (
-                  <p className="mt-1 text-sm text-red-500">{errors.horaInicio.message}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.horaInicio.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-1 block text-sm font-medium">
                   Hora Fin
                 </label>
                 <input
                   {...register("horaFin")}
                   type="time"
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Ubicacion
               </label>
               <input
                 {...register("ubicacion")}
                 placeholder="Ej: Sala principal, Patio, etc."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
 
@@ -175,9 +185,12 @@ export default function NuevoEventoPage() {
                 {...register("activo")}
                 type="checkbox"
                 id="activo"
-                className="size-4 rounded border-border"
+                className="border-border size-4 rounded"
               />
-              <label htmlFor="activo" className="text-sm font-medium text-foreground">
+              <label
+                htmlFor="activo"
+                className="text-foreground text-sm font-medium"
+              >
                 Evento activo
               </label>
             </div>
@@ -190,7 +203,11 @@ export default function NuevoEventoPage() {
               Cancelar
             </Button>
           </Link>
-          <Button type="submit" disabled={saving} className="gap-2 bg-amber hover:bg-amber-dark">
+          <Button
+            type="submit"
+            disabled={saving}
+            className="bg-amber hover:bg-amber-dark gap-2"
+          >
             <Save className="size-4" />
             {saving ? "Guardando..." : "Crear Evento"}
           </Button>

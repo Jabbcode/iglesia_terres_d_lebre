@@ -63,58 +63,66 @@ export default function NuevaImagenPage() {
       <div className="mb-6">
         <Link
           href="/admin/galeria"
-          className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
         >
           <ArrowLeft className="size-4" />
           Volver a galeria
         </Link>
-        <h1 className="text-2xl font-bold text-foreground">Nueva Imagen</h1>
-        <p className="mt-1 text-muted-foreground">Agrega una nueva imagen a la galeria</p>
+        <h1 className="text-foreground text-2xl font-bold">Nueva Imagen</h1>
+        <p className="text-muted-foreground mt-1">
+          Agrega una nueva imagen a la galeria
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
         {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            {error}
+          </div>
         )}
 
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 URL de la Imagen
               </label>
               <input
                 {...register("src")}
                 placeholder="https://ejemplo.com/imagen.jpg"
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.src && (
-                <p className="mt-1 text-sm text-red-500">{errors.src.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.src.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Texto Alternativo
               </label>
               <input
                 {...register("alt")}
                 placeholder="Descripcion de la imagen"
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.alt && (
-                <p className="mt-1 text-sm text-red-500">{errors.alt.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.alt.message}
+                </p>
               )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-1 block text-sm font-medium">
                   Tipo de Imagen
                 </label>
                 <select
                   {...register("span")}
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 >
                   <option value="normal">Normal</option>
                   <option value="tall">Vertical (Alta)</option>
@@ -123,13 +131,13 @@ export default function NuevaImagenPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-1 block text-sm font-medium">
                   Orden
                 </label>
                 <input
                   {...register("order", { valueAsNumber: true })}
                   type="number"
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -142,7 +150,11 @@ export default function NuevaImagenPage() {
               Cancelar
             </Button>
           </Link>
-          <Button type="submit" disabled={saving} className="gap-2 bg-amber hover:bg-amber-dark">
+          <Button
+            type="submit"
+            disabled={saving}
+            className="bg-amber hover:bg-amber-dark gap-2"
+          >
             <Save className="size-4" />
             {saving ? "Guardando..." : "Guardar Imagen"}
           </Button>
