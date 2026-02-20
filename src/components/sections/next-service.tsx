@@ -27,7 +27,7 @@ export function NextService() {
     fetchConfig()
   }, [fetchConfig])
 
-  const serviceTime = "Domingo, 11:00"
+  const serviceTime = "Domingo, 11:30"
   const address = config?.direccion?.replace("\n", ", ") || ""
   const nextServiceDate = getNextSundayServiceDate().toISOString()
 

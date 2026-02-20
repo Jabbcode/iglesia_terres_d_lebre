@@ -108,10 +108,9 @@ export default function GaleriaPage() {
               className="group border-border/50 relative overflow-hidden rounded-xl border bg-white shadow-sm"
             >
               <div className="relative aspect-video">
-                <Image
+                <img
                   src={imagen.src}
                   alt={imagen.alt}
-                  fill
                   className="object-cover"
                 />
               </div>

@@ -110,7 +110,7 @@ export function Schedule() {
 
       {/* Schedule cards */}
       <section className="bg-cream pt-10 pb-16">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-4 sm:grid-cols-4 sm:px-6 lg:px-8">
           {horarios.map((horario) => {
             const Icon = getIcon(horario.icono)
             return (

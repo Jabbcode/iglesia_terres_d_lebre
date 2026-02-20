@@ -7,6 +7,7 @@ import { useConfigStore } from "@/stores/config-store"
 
 const navLinks = [
   { href: "/creencias", label: "Creencias" },
+  { href: "/nosotros", label: "Nosotros" },
   { href: "/horarios", label: "Horarios" },
   { href: "/galeria", label: "Galería" },
   { href: "/contacto", label: "Contacto" },

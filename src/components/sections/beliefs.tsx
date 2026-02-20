@@ -5,8 +5,6 @@ import {
   Church,
   Clock,
   CalendarCheck,
-  Target,
-  Eye,
 } from "lucide-react"
 
 const topCards = [
@@ -27,21 +25,6 @@ const topCards = [
     title: "El Ser Humano y el Pecado",
     description:
       "El ser humano fue creado a imagen de Dios, pero cayó en pecado, lo que resultó en separación de Dios.",
-  },
-]
-
-const missionVision = [
-  {
-    icon: Target,
-    title: "Nuestra Misión",
-    description:
-      "Compartir el amor de Cristo con nuestra comunidad, formando discípulos que vivan y proclamen el evangelio, sirviendo a los demás con compasión y dedicación.",
-  },
-  {
-    icon: Eye,
-    title: "Nuestra Visión",
-    description:
-      "Ser una iglesia que transforma vidas y comunidades a través del poder del evangelio, donde cada persona encuentre su propósito en Cristo y crezca en fe, amor y servicio.",
   },
 ]
 
@@ -134,30 +117,6 @@ export function Beliefs() {
             un único Dios, creador del universo, manifestado en tres personas:{" "}
             <em>Padre, Hijo y Espíritu Santo</em>.
           </p>
-        </div>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="border-border border-t bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {missionVision.map((item) => (
-              <div
-                key={item.title}
-                className="border-border/50 bg-cream flex flex-col items-center rounded-2xl border p-8 text-center shadow-sm md:items-start md:text-left"
-              >
-                <div className="bg-amber/10 mb-4 flex size-14 items-center justify-center rounded-full">
-                  <item.icon className="text-amber size-7" />
-                </div>
-                <h3 className="text-foreground mb-3 text-xl font-bold">
-                  {item.title}
-                </h3>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

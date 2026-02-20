@@ -14,6 +14,7 @@ import {
 const navLinks = [
   { href: "/", label: "INICIO" },
   { href: "/creencias", label: "CREENCIAS" },
+  { href: "/nosotros", label: "NOSOTROS" },
   { href: "/horarios", label: "HORARIOS" },
   { href: "/galeria", label: "GALERÍA" },
   { href: "/contacto", label: "CONTACTO" },
