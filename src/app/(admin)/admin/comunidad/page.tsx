@@ -42,7 +42,9 @@ export default function ComunidadPage() {
 
     setDeleting(id)
     try {
-      const res = await fetch(`/api/admin/comunidad/${id}`, { method: "DELETE" })
+      const res = await fetch(`/api/admin/comunidad/${id}`, {
+        method: "DELETE",
+      })
       if (res.ok) {
         setTarjetas(tarjetas.filter((t) => t.id !== id))
       }

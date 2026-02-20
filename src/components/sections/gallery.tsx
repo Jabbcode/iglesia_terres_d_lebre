@@ -40,7 +40,7 @@ export function Gallery() {
     return (
       <section className="bg-cream py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto h-8 w-48 animate-pulse rounded bg-muted" />
+          <div className="bg-muted mx-auto h-8 w-48 animate-pulse rounded" />
         </div>
       </section>
     )
@@ -49,7 +49,7 @@ export function Gallery() {
   return (
     <>
       {/* Header */}
-      <section className="bg-cream pb-6 pt-20">
+      <section className="bg-cream pt-20 pb-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
             Nuestra vida en{" "}
@@ -63,7 +63,7 @@ export function Gallery() {
       </section>
 
       {/* Masonry Grid */}
-      <section className="bg-cream pb-10 pt-10">
+      <section className="bg-cream pt-10 pb-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
             {imagenes.map((image, index) => (
@@ -99,7 +99,7 @@ export function Gallery() {
 
       {/* Instagram CTA */}
       {instagramUrl && (
-        <section className="bg-cream pb-20 pt-6">
+        <section className="bg-cream pt-6 pb-20">
           <div className="flex justify-center">
             <Button
               asChild
@@ -122,7 +122,7 @@ export function Gallery() {
         >
           <button
             onClick={() => setLightbox(null)}
-            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
             <X className="size-5" />
             <span className="sr-only">Cerrar</span>

@@ -10,6 +10,7 @@ import {
   Calendar,
   Clock,
   LucideIcon,
+  HeartHandshake,
 } from "lucide-react"
 
 interface NavItem {
@@ -20,6 +21,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/comunidad", label: "Comunidad", icon: HeartHandshake },
   { href: "/admin/galeria", label: "Galeria", icon: Image },
   { href: "/admin/eventos", label: "Eventos", icon: Calendar },
   { href: "/admin/horarios", label: "Horarios", icon: Clock },

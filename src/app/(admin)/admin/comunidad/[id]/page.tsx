@@ -111,7 +111,9 @@ export default function EditarTarjetaPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/comunidad/${id}`, { method: "DELETE" })
+      const res = await fetch(`/api/admin/comunidad/${id}`, {
+        method: "DELETE",
+      })
       if (res.ok) {
         router.push("/admin/comunidad")
       }
