@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   MapPin,
   Phone,
@@ -8,16 +9,50 @@ import {
   Facebook,
   Youtube,
 } from "lucide-react";
-import { mockConfig } from "@/lib/mock-data";
+
+interface ConfigSitio {
+  nombreIglesia: string;
+  descripcion: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  youtube: string | null;
+  direccion: string | null;
+  telefono: string | null;
+  email: string | null;
+  horarioAtencion: string | null;
+  googleMapsUrl: string | null;
+  googleMapsEmbed: string | null;
+}
 
 export function Contact() {
-  const direccion = mockConfig.contacto.direccion;
-  const telefono = mockConfig.contacto.telefono;
-  const horarioAtencion = mockConfig.contacto.horarioAtencion;
-  const instagramUrl = mockConfig.redesSociales.instagram;
-  const facebookUrl = mockConfig.redesSociales.facebook;
-  const youtubeUrl = mockConfig.redesSociales.youtube;
-  const googleMapsUrl = mockConfig.contacto.googleMapsUrl;
+  const [config, setConfig] = useState<ConfigSitio | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/config")
+      .then((res) => res.json())
+      .then((data) => {
+        setConfig(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto h-8 w-48 animate-pulse rounded bg-muted" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!config) {
+    return null;
+  }
 
   return (
     <section id="contacto" className="bg-cream py-20">
@@ -44,7 +79,7 @@ export function Contact() {
             </div>
             <h3 className="mb-2 font-bold text-foreground">Visítanos</h3>
             <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-              {direccion}
+              {config.direccion}
             </p>
           </div>
 
@@ -54,7 +89,7 @@ export function Contact() {
               <Phone className="size-6 text-amber" />
             </div>
             <h3 className="mb-2 font-bold text-foreground">Llámanos</h3>
-            <p className="text-sm text-muted-foreground">{telefono}</p>
+            <p className="text-sm text-muted-foreground">{config.telefono}</p>
           </div>
 
           {/* Hours */}
@@ -63,52 +98,60 @@ export function Contact() {
               <Clock className="size-6 text-amber" />
             </div>
             <h3 className="mb-2 font-bold text-foreground">Horario</h3>
-            <p className="text-sm text-muted-foreground">{horarioAtencion}</p>
+            <p className="text-sm text-muted-foreground">{config.horarioAtencion}</p>
           </div>
         </div>
 
         {/* Social media */}
         <div className="mx-auto mb-10 flex justify-center gap-4">
-          <a
-            href={instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
-          >
-            <Instagram className="size-5" />
-          </a>
-          <a
-            href={facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
-          >
-            <Facebook className="size-5" />
-          </a>
-          <a
-            href={youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
-          >
-            <Youtube className="size-5" />
-          </a>
+          {config.instagram && (
+            <a
+              href={config.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
+            >
+              <Instagram className="size-5" />
+            </a>
+          )}
+          {config.facebook && (
+            <a
+              href={config.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
+            >
+              <Facebook className="size-5" />
+            </a>
+          )}
+          {config.youtube && (
+            <a
+              href={config.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex size-12 items-center justify-center rounded-full border border-border bg-white transition-colors hover:border-amber hover:text-amber"
+            >
+              <Youtube className="size-5" />
+            </a>
+          )}
         </div>
 
         {/* Map */}
-        <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border/50 shadow-sm">
-          <iframe
-            title="Ubicación de la iglesia"
-            src={googleMapsUrl}
-            width="100%"
-            height="350"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="grayscale transition-all duration-300 hover:grayscale-0"
-          />
-        </div>
+        {config.googleMapsEmbed && (
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border/50 shadow-sm">
+            <iframe
+              title="Ubicación de la iglesia"
+              src={config.googleMapsEmbed}
+              width="100%"
+              height="350"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="grayscale transition-all duration-300 hover:grayscale-0"
+            />
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,12 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Instagram, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { mockGalleryImages } from "@/lib/mock-data";
+
+interface Imagen {
+  id: string;
+  src: string;
+  alt: string;
+  span: string | null;
+}
 
 export function Gallery() {
+  const [imagenes, setImagenes] = useState<Imagen[]>([]);
+  const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/public/galeria")
+      .then((res) => res.json())
+      .then((data) => {
+        setImagenes(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto h-8 w-48 animate-pulse rounded bg-muted" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
@@ -29,7 +59,7 @@ export function Gallery() {
       <section className="bg-cream pb-10 pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
-            {mockGalleryImages.map((image, index) => (
+            {imagenes.map((image, index) => (
               <div
                 key={index}
                 className="mb-4 break-inside-avoid"
@@ -97,8 +127,8 @@ export function Gallery() {
           </button>
 
           <img
-            src={mockGalleryImages[lightbox].src.replace("w=800", "w=1600")}
-            alt={mockGalleryImages[lightbox].alt}
+            src={imagenes[lightbox].src.replace("w=800", "w=1600")}
+            alt={imagenes[lightbox].alt}
             className="max-h-[85vh] max-w-full rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}
           />
@@ -108,7 +138,7 @@ export function Gallery() {
             onClick={(e) => {
               e.stopPropagation();
               setLightbox(
-                lightbox === 0 ? mockGalleryImages.length - 1 : lightbox - 1
+                lightbox === 0 ? imagenes.length - 1 : lightbox - 1
               );
             }}
             className="absolute left-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
@@ -119,7 +149,7 @@ export function Gallery() {
             onClick={(e) => {
               e.stopPropagation();
               setLightbox(
-                lightbox === mockGalleryImages.length - 1 ? 0 : lightbox + 1
+                lightbox === imagenes.length - 1 ? 0 : lightbox + 1
               );
             }}
             className="absolute right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
