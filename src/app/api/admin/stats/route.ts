@@ -3,11 +3,10 @@ import { prisma } from "@/lib/prisma"
 
 export async function GET() {
   try {
-    const [imagenes, eventos, horarios, comunidad] = await Promise.all([
+    const [imagenes, eventos, horarios] = await Promise.all([
       prisma.imagen.count(),
       prisma.evento.count({ where: { activo: true } }),
       prisma.horario.count({ where: { activo: true } }),
-      prisma.tarjetaComunidad.count({ where: { activo: true } }),
     ])
 
     // Próximos eventos (próximos 7 días)
@@ -27,7 +26,6 @@ export async function GET() {
       imagenes,
       eventos,
       horarios,
-      comunidad,
       proximosEventos,
     })
   } catch (error) {

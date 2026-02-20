@@ -2,18 +2,45 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
+// Transform empty strings to null for nullable fields
+const emptyToNull = (val: string | null | undefined) =>
+  val === "" ? null : val
+
+// For nullable URL fields
+const optionalUrl = z
+  .string()
+  .transform(emptyToNull)
+  .pipe(z.string().url().nullable())
+  .optional()
+
+// For nullable email field
+const optionalEmail = z
+  .string()
+  .transform(emptyToNull)
+  .pipe(z.string().email().nullable())
+  .optional()
+
+// For nullable string fields
+const optionalNullableString = z
+  .string()
+  .transform(emptyToNull)
+  .nullable()
+  .optional()
+
 const configSchema = z.object({
+  // Non-nullable fields (have defaults in Prisma)
   nombreIglesia: z.string().min(1).optional(),
   descripcion: z.string().optional(),
-  instagram: z.string().url().nullable().optional(),
-  facebook: z.string().url().nullable().optional(),
-  youtube: z.string().url().nullable().optional(),
-  direccion: z.string().nullable().optional(),
-  telefono: z.string().nullable().optional(),
-  email: z.string().email().nullable().optional(),
-  horarioAtencion: z.string().nullable().optional(),
-  googleMapsUrl: z.string().url().nullable().optional(),
-  googleMapsEmbed: z.string().nullable().optional(),
+  // Nullable fields
+  instagram: optionalUrl,
+  facebook: optionalUrl,
+  youtube: optionalUrl,
+  direccion: optionalNullableString,
+  telefono: optionalNullableString,
+  email: optionalEmail,
+  horarioAtencion: optionalNullableString,
+  googleMapsUrl: optionalUrl,
+  googleMapsEmbed: optionalNullableString,
 })
 
 export async function GET() {

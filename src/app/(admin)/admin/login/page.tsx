@@ -54,16 +54,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-cream px-4">
+    <div className="bg-cream flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-border/50 bg-white p-8 shadow-lg">
+        <div className="border-border/50 rounded-2xl border bg-white p-8 shadow-lg">
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-foreground text-2xl font-bold">
               Panel de Administracion
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {IGLESIA_NAME}
-            </p>
+            <p className="text-muted-foreground mt-2 text-sm">{IGLESIA_NAME}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -76,7 +74,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-1 block text-sm font-medium text-foreground"
+                className="text-foreground mb-1 block text-sm font-medium"
               >
                 Email
               </label>
@@ -84,7 +82,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 {...register("email")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 text-foreground focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+                className="border-border text-foreground focus:border-amber focus:ring-amber w-full rounded-lg border bg-white px-4 py-2 focus:ring-1 focus:outline-none"
                 placeholder="admin@iglesia.es"
               />
               {errors.email && (
@@ -97,7 +95,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1 block text-sm font-medium text-foreground"
+                className="text-foreground mb-1 block text-sm font-medium"
               >
                 Password
               </label>
@@ -105,7 +103,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 {...register("password")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 text-foreground focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+                className="border-border text-foreground focus:border-amber focus:ring-amber w-full rounded-lg border bg-white px-4 py-2 focus:ring-1 focus:outline-none"
                 placeholder="••••••••"
               />
               {errors.password && (
@@ -118,7 +116,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-amber py-2 font-semibold text-white hover:bg-amber-dark disabled:opacity-50"
+              className="bg-amber hover:bg-amber-dark w-full rounded-lg py-2 font-semibold text-white disabled:opacity-50"
             >
               {loading ? "Iniciando..." : "Iniciar Sesion"}
             </Button>

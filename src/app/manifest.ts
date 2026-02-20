@@ -1,5 +1,5 @@
-import { MetadataRoute } from "next";
-import { IGLESIA_NAME, SITE_DESCRIPTION } from "@/lib/constant";
+import { MetadataRoute } from "next"
+import { IGLESIA_NAME, SITE_DESCRIPTION } from "@/lib/constant"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -22,5 +22,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-  };
+  }
 }

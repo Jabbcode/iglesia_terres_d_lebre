@@ -7,19 +7,24 @@ interface StatCardProps {
   description?: string
 }
 
-export function StatCard({ title, value, icon: Icon, description }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  icon: Icon,
+  description,
+}: StatCardProps) {
   return (
-    <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
+    <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="mt-2 text-3xl font-bold text-foreground">{value}</p>
+          <p className="text-muted-foreground text-sm font-medium">{title}</p>
+          <p className="text-foreground mt-2 text-3xl font-bold">{value}</p>
           {description && (
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground mt-1 text-sm">{description}</p>
           )}
         </div>
-        <div className="rounded-lg bg-amber/10 p-3">
-          <Icon className="size-6 text-amber" />
+        <div className="bg-amber/10 rounded-lg p-3">
+          <Icon className="text-amber size-6" />
         </div>
       </div>
     </div>
