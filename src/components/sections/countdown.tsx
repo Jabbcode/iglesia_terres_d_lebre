@@ -26,13 +26,20 @@ export function Countdown({ targetDate }: CountdownProps) {
 
   useEffect(() => {
     const target = new Date(targetDate);
-    setTimeLeft(calcTimeLeft(target));
 
-    const interval = setInterval(() => {
+    const updateTime = () => {
       setTimeLeft(calcTimeLeft(target));
-    }, 60_000);
+    };
 
-    return () => clearInterval(interval);
+    // Initial update via RAF to avoid setState in effect body
+    const rafId = requestAnimationFrame(updateTime);
+
+    const interval = setInterval(updateTime, 60_000);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearInterval(interval);
+    };
   }, [targetDate]);
 
   const items = [
