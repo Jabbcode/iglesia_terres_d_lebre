@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -21,6 +21,16 @@ const navLinks = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        setIsAdmin(!!data.user);
+      })
+      .catch(() => setIsAdmin(false));
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur-md">
@@ -48,6 +58,15 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-1 rounded-full bg-amber px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-dark"
+            >
+              <Settings className="size-3.5" />
+              ADMIN
+            </Link>
+          )}
         </nav>
 
         {/* Mobile hamburger */}
@@ -84,6 +103,16 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 text-sm font-semibold tracking-wider text-amber transition-colors hover:text-amber-dark"
+                  >
+                    <Settings className="size-4" />
+                    ADMIN
+                  </Link>
+                )}
               </nav>
             </div>
           </SheetContent>
