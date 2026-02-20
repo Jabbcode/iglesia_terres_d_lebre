@@ -9,30 +9,30 @@ import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-const eventoSchema = z.object({
-  nombre: z.string().min(1, "Nombre requerido"),
-  descripcion: z.string(),
-  fecha: z.string().min(1, "Fecha requerida"),
-  horaInicio: z.string().min(1, "Hora de inicio requerida"),
-  horaFin: z.string(),
-  ubicacion: z.string(),
+const tarjetaSchema = z.object({
+  titulo: z.string().min(1, "Titulo requerido"),
+  descripcion: z.string().min(1, "Descripcion requerida"),
+  imagen: z.string().url("URL de imagen invalida"),
+  linkHref: z.string().url("URL invalida").or(z.literal("")),
+  linkLabel: z.string(),
+  order: z.number().int(),
   activo: z.boolean(),
 })
 
-type EventoForm = z.infer<typeof eventoSchema>
+type TarjetaForm = z.infer<typeof tarjetaSchema>
 
-interface Evento {
+interface TarjetaComunidad {
   id: string
-  nombre: string
-  descripcion: string | null
-  fecha: string
-  horaInicio: string
-  horaFin: string | null
-  ubicacion: string | null
+  titulo: string
+  descripcion: string
+  imagen: string
+  linkHref: string | null
+  linkLabel: string | null
+  order: number
   activo: boolean
 }
 
-export default function EditarEventoPage({
+export default function EditarTarjetaPage({
   params,
 }: {
   params: Promise<{ id: string }>
@@ -49,56 +49,55 @@ export default function EditarEventoPage({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EventoForm>({
-    resolver: zodResolver(eventoSchema),
+  } = useForm<TarjetaForm>({
+    resolver: zodResolver(tarjetaSchema),
   })
 
   useEffect(() => {
-    fetch("/api/admin/eventos")
+    fetch("/api/admin/comunidad")
       .then((res) => res.json())
-      .then((data: Evento[]) => {
-        const evento = data.find((e) => e.id === id)
-        if (evento) {
-          const fechaDate = new Date(evento.fecha)
+      .then((data: TarjetaComunidad[]) => {
+        const tarjeta = data.find((t) => t.id === id)
+        if (tarjeta) {
           reset({
-            nombre: evento.nombre,
-            descripcion: evento.descripcion || "",
-            fecha: fechaDate.toISOString().split("T")[0],
-            horaInicio: evento.horaInicio,
-            horaFin: evento.horaFin || "",
-            ubicacion: evento.ubicacion || "",
-            activo: evento.activo,
+            titulo: tarjeta.titulo,
+            descripcion: tarjeta.descripcion,
+            imagen: tarjeta.imagen,
+            linkHref: tarjeta.linkHref || "",
+            linkLabel: tarjeta.linkLabel || "",
+            order: tarjeta.order,
+            activo: tarjeta.activo,
           })
         }
       })
       .finally(() => setLoading(false))
   }, [id, reset])
 
-  const onSubmit = async (data: EventoForm) => {
+  const onSubmit = async (data: TarjetaForm) => {
     setSaving(true)
     setError(null)
 
     try {
       const payload = {
-        nombre: data.nombre,
-        descripcion: data.descripcion || null,
-        fecha: new Date(data.fecha).toISOString(),
-        horaInicio: data.horaInicio,
-        horaFin: data.horaFin || null,
-        ubicacion: data.ubicacion || null,
+        titulo: data.titulo,
+        descripcion: data.descripcion,
+        imagen: data.imagen,
+        linkHref: data.linkHref || null,
+        linkLabel: data.linkLabel || null,
+        order: data.order,
         activo: data.activo,
       }
 
-      const res = await fetch(`/api/admin/eventos/${id}`, {
+      const res = await fetch(`/api/admin/comunidad/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
 
       if (res.ok) {
-        router.push("/admin/eventos")
+        router.push("/admin/comunidad")
       } else {
-        setError("Error al actualizar el evento")
+        setError("Error al actualizar la tarjeta")
       }
     } catch {
       setError("Error de conexion")
@@ -108,13 +107,13 @@ export default function EditarEventoPage({
   }
 
   const handleDelete = async () => {
-    if (!confirm("¿Estas seguro de eliminar este evento?")) return
+    if (!confirm("¿Estas seguro de eliminar esta tarjeta?")) return
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/eventos/${id}`, { method: "DELETE" })
+      const res = await fetch(`/api/admin/comunidad/${id}`, { method: "DELETE" })
       if (res.ok) {
-        router.push("/admin/eventos")
+        router.push("/admin/comunidad")
       }
     } catch {
       setError("Error al eliminar")
@@ -136,15 +135,15 @@ export default function EditarEventoPage({
     <div>
       <div className="mb-6">
         <Link
-          href="/admin/eventos"
+          href="/admin/comunidad"
           className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
         >
           <ArrowLeft className="size-4" />
-          Volver a eventos
+          Volver a comunidad
         </Link>
-        <h1 className="text-foreground text-2xl font-bold">Editar Evento</h1>
+        <h1 className="text-foreground text-2xl font-bold">Editar Tarjeta</h1>
         <p className="text-muted-foreground mt-1">
-          Modifica los datos del evento
+          Modifica los datos de la tarjeta
         </p>
       </div>
 
@@ -159,15 +158,16 @@ export default function EditarEventoPage({
           <div className="space-y-4">
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                Nombre del Evento
+                Titulo
               </label>
               <input
-                {...register("nombre")}
+                {...register("titulo")}
+                placeholder="Ej: Grupos de Vida"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
-              {errors.nombre && (
+              {errors.titulo && (
                 <p className="mt-1 text-sm text-red-500">
-                  {errors.nombre.message}
+                  {errors.titulo.message}
                 </p>
               )}
             </div>
@@ -179,79 +179,89 @@ export default function EditarEventoPage({
               <textarea
                 {...register("descripcion")}
                 rows={3}
+                placeholder="Descripcion de la tarjeta"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Fecha
-                </label>
-                <input
-                  {...register("fecha")}
-                  type="date"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                {errors.fecha && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.fecha.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Hora Inicio
-                </label>
-                <input
-                  {...register("horaInicio")}
-                  type="time"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                {errors.horaInicio && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.horaInicio.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Hora Fin
-                </label>
-                <input
-                  {...register("horaFin")}
-                  type="time"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
+              {errors.descripcion && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.descripcion.message}
+                </p>
+              )}
             </div>
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                Ubicacion
+                URL de Imagen
               </label>
               <input
-                {...register("ubicacion")}
-                placeholder="Ej: Sala principal, Patio, etc."
+                {...register("imagen")}
+                placeholder="https://ejemplo.com/imagen.jpg"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
+              {errors.imagen && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.imagen.message}
+                </p>
+              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                {...register("activo")}
-                type="checkbox"
-                id="activo"
-                className="border-border size-4 rounded"
-              />
-              <label
-                htmlFor="activo"
-                className="text-foreground text-sm font-medium"
-              >
-                Evento activo
-              </label>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  URL del Enlace (opcional)
+                </label>
+                <input
+                  {...register("linkHref")}
+                  placeholder="https://ejemplo.com"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                {errors.linkHref && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.linkHref.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Texto del Enlace (opcional)
+                </label>
+                <input
+                  {...register("linkLabel")}
+                  placeholder="Ej: VER MAS"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Orden
+                </label>
+                <input
+                  {...register("order", { valueAsNumber: true })}
+                  type="number"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-end pb-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    {...register("activo")}
+                    type="checkbox"
+                    id="activo"
+                    className="border-border size-4 rounded"
+                  />
+                  <label
+                    htmlFor="activo"
+                    className="text-foreground text-sm font-medium"
+                  >
+                    Tarjeta activa
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -268,7 +278,7 @@ export default function EditarEventoPage({
             {deleting ? "Eliminando..." : "Eliminar"}
           </Button>
           <div className="flex gap-3">
-            <Link href="/admin/eventos">
+            <Link href="/admin/comunidad">
               <Button type="button" variant="outline">
                 Cancelar
               </Button>

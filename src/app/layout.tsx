@@ -1,24 +1,24 @@
-import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Inter, Playfair_Display } from "next/font/google"
+import "./globals.css"
 import {
   IGLESIA_NAME,
   SITE_URL,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-} from "@/lib/constant";
-import { JsonLd } from "@/components/seo/json-ld";
+} from "@/lib/constant"
+import { JsonLd } from "@/components/seo/json-ld"
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-});
+})
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   style: ["normal", "italic"],
-});
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -65,12 +65,12 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.webmanifest",
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="es">
@@ -81,5 +81,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
+  )
 }

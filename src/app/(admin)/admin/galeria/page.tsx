@@ -74,13 +74,13 @@ export default function GaleriaPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Galeria</h1>
-          <p className="mt-1 text-muted-foreground">
+          <h1 className="text-foreground text-2xl font-bold">Galeria</h1>
+          <p className="text-muted-foreground mt-1">
             Gestiona las imagenes de la galeria
           </p>
         </div>
         <Link href="/admin/galeria/nueva">
-          <Button className="gap-2 bg-amber hover:bg-amber-dark">
+          <Button className="bg-amber hover:bg-amber-dark gap-2">
             <Plus className="size-4" />
             Agregar Imagen
           </Button>
@@ -88,9 +88,11 @@ export default function GaleriaPage() {
       </div>
 
       {imagenes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-white p-12 shadow-sm">
-          <ImageIcon className="size-12 text-muted-foreground/50" />
-          <p className="mt-4 text-muted-foreground">No hay imagenes en la galeria</p>
+        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
+          <ImageIcon className="text-muted-foreground/50 size-12" />
+          <p className="text-muted-foreground mt-4">
+            No hay imagenes en la galeria
+          </p>
           <Link href="/admin/galeria/nueva" className="mt-4">
             <Button variant="outline" className="gap-2">
               <Plus className="size-4" />
@@ -103,7 +105,7 @@ export default function GaleriaPage() {
           {imagenes.map((imagen) => (
             <div
               key={imagen.id}
-              className="group relative overflow-hidden rounded-xl border border-border/50 bg-white shadow-sm"
+              className="group border-border/50 relative overflow-hidden rounded-xl border bg-white shadow-sm"
             >
               <div className="relative aspect-video">
                 <Image
@@ -114,15 +116,17 @@ export default function GaleriaPage() {
                 />
               </div>
               <div className="p-4">
-                <p className="truncate font-medium text-foreground">{imagen.alt}</p>
-                <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="rounded bg-amber/10 px-2 py-0.5 text-amber">
+                <p className="text-foreground truncate font-medium">
+                  {imagen.alt}
+                </p>
+                <div className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
+                  <span className="bg-amber/10 text-amber rounded px-2 py-0.5">
                     {spanLabels[imagen.span]}
                   </span>
                   <span>Orden: {imagen.order}</span>
                 </div>
               </div>
-              <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                 <Link href={`/admin/galeria/${imagen.id}`}>
                   <Button size="icon" variant="secondary" className="size-8">
                     <Pencil className="size-4" />
