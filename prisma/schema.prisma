@@ -88,7 +88,7 @@ model Horario {
 }
 
 model TarjetaComunidad {
-  id          String   @id
+  id          String   @id @default(cuid())
   titulo      String
   descripcion String
   imagen      String
@@ -97,7 +97,7 @@ model TarjetaComunidad {
   order       Int      @default(0)
   activo      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 
   @@map("TarjetaComunidad")
 }
