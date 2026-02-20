@@ -1,34 +1,62 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+"use client"
 
-const communityCards = [
-  {
-    title: "Grupos de Vida",
-    description:
-      "Conecta con otros creyentes en grupos pequeños donde podrás crecer espiritualmente, compartir y ser edificado.",
-    link: { href: "#grupos", label: "VER GRUPOS" },
-    image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2832&auto=format&fit=crop",
-  },
-  {
-    title: "Familias",
-    description:
-      "Nuestros programas para familias y niños buscan formar la próxima generación en los valores del reino de Dios.",
-    link: { href: "#familias", label: "MINISTERIO KIDS" },
-    image:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2940&auto=format&fit=crop",
-  },
-  {
-    title: "Impacto Social",
-    description:
-      "Creemos que la fe se vive sirviendo. Descubre cómo estamos transformando nuestra comunidad y cómo puedes ser parte.",
-    link: { href: "#impacto", label: "INVOLÚCRATE" },
-    image:
-      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2874&auto=format&fit=crop",
-  },
-];
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
+
+interface TarjetaComunidad {
+  id: string
+  titulo: string
+  descripcion: string
+  imagen: string
+  linkHref: string | null
+  linkLabel: string | null
+}
 
 export function Community() {
+  const [cards, setCards] = useState<TarjetaComunidad[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/public/comunidad")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCards(data)
+        }
+      })
+      .catch(() => {
+        // Handle error silently
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) {
+    return (
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="mx-auto mb-14 max-w-2xl text-center">
+              <div className="mx-auto mb-3 h-4 w-24 rounded bg-gray-200" />
+              <div className="mx-auto mb-4 h-10 w-64 rounded bg-gray-200" />
+              <div className="mx-auto mb-6 h-1 w-16 rounded bg-gray-200" />
+              <div className="mx-auto h-16 w-full max-w-md rounded bg-gray-200" />
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-96 rounded-2xl bg-gray-200" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (cards.length === 0) {
+    return null
+  }
+
   return (
     <section id="comunidad" aria-labelledby="community-heading" className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -53,17 +81,17 @@ export function Community() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {communityCards.map((card) => (
+          {cards.map((card) => (
             <article
-              key={card.title}
+              key={card.id}
               className="group relative h-96 overflow-hidden rounded-2xl"
             >
               {/* Background image */}
               <figure
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                style={{ backgroundImage: `url('${card.image}')` }}
+                style={{ backgroundImage: `url('${card.imagen}')` }}
                 role="img"
-                aria-label={card.title}
+                aria-label={card.titulo}
               />
               {/* Gradient overlay */}
               <div
@@ -75,18 +103,20 @@ export function Community() {
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <div className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
                   <h3 className="mb-2 text-lg font-bold text-white">
-                    {card.title}
+                    {card.titulo}
                   </h3>
                   <p className="mb-4 text-sm leading-relaxed text-white/80">
-                    {card.description}
+                    {card.descripcion}
                   </p>
-                  <Link
-                    href={card.link.href}
-                    className="inline-flex items-center gap-2 text-xs font-bold tracking-wider text-amber transition-colors hover:text-white"
-                  >
-                    {card.link.label}
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                  </Link>
+                  {card.linkHref && card.linkLabel && (
+                    <Link
+                      href={card.linkHref}
+                      className="text-amber inline-flex items-center gap-2 text-xs font-bold tracking-wider transition-colors hover:text-white"
+                    >
+                      {card.linkLabel}
+                      <ArrowRight className="size-3.5" aria-hidden="true" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </article>
@@ -94,5 +124,5 @@ export function Community() {
         </div>
       </div>
     </section>
-  );
+  )
 }
