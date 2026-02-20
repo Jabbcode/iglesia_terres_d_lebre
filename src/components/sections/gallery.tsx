@@ -1,12 +1,53 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Instagram, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { mockGalleryImages } from "@/lib/mock-data"
+import { useConfigStore } from "@/stores/config-store"
+
+// TODO: Replace with API data
+const mockGalleryImages = [
+  {
+    src: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800",
+    alt: "Servicio dominical",
+    span: "tall",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1560439514-4e9645039924?w=800",
+    alt: "Grupo de oración",
+    span: "square",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800",
+    alt: "Estudio bíblico",
+    span: "wide",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=800",
+    alt: "Adoración",
+    span: "square",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800",
+    alt: "Actividad juvenil",
+    span: "tall",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1511649475669-e288648b2339?w=800",
+    alt: "Comunidad",
+    span: "wide",
+  },
+]
 
 export function Gallery() {
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const { config, fetchConfig } = useConfigStore()
+
+  useEffect(() => {
+    fetchConfig()
+  }, [fetchConfig])
+
+  const instagramUrl = config?.instagram
 
   return (
     <>
@@ -60,23 +101,21 @@ export function Gallery() {
       </section>
 
       {/* Instagram CTA */}
-      <section className="bg-cream pt-6 pb-20">
-        <div className="flex justify-center">
-          <Button
-            asChild
-            className="bg-amber hover:bg-amber-dark h-12 gap-2 rounded-full px-8 text-sm font-bold tracking-wider text-white"
-          >
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
+      {instagramUrl && (
+        <section className="bg-cream pt-6 pb-20">
+          <div className="flex justify-center">
+            <Button
+              asChild
+              className="bg-amber hover:bg-amber-dark h-12 gap-2 rounded-full px-8 text-sm font-bold tracking-wider text-white"
             >
-              <Instagram className="size-4" />
-              Ver más en Instagram
-            </a>
-          </Button>
-        </div>
-      </section>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+                <Instagram className="size-4" />
+                Ver más en Instagram
+              </a>
+            </Button>
+          </div>
+        </section>
+      )}
 
       {/* Lightbox */}
       {lightbox !== null && (

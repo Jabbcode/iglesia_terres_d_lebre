@@ -1,8 +1,9 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react"
-import { mockConfig } from "@/lib/mock-data"
+import { useConfigStore } from "@/stores/config-store"
 
 const navLinks = [
   { href: "/creencias", label: "Creencias" },
@@ -12,9 +13,18 @@ const navLinks = [
 ]
 
 export function Footer() {
-  const direccion = mockConfig.contacto.direccion.replace("\n", ", ")
-  const telefono = mockConfig.contacto.telefono
-  const email = mockConfig.contacto.email
+  const { config, fetchConfig } = useConfigStore()
+
+  useEffect(() => {
+    fetchConfig()
+  }, [fetchConfig])
+
+  const direccion = config?.direccion?.replace("\n", ", ") || ""
+  const telefono = config?.telefono || ""
+  const email = config?.email || ""
+  const descripcion =
+    config?.descripcion ||
+    "Somos una familia de fe en Terres de l'Ebre. Un lugar donde cada persona es bienvenida tal como es."
   const whatsappNumber = telefono.replace(/\s+/g, "").replace("+", "")
 
   return (
@@ -36,24 +46,27 @@ export function Footer() {
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-white/60">
-              Somos una familia de fe en Terres de l&apos;Ebre. Un lugar donde
-              cada persona es bienvenida tal como es.
+              {descripcion}
             </p>
             <div className="flex gap-3">
-              <a
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
-              >
-                <MessageCircle className="size-4" />
-              </a>
-              <a
-                href={`mailto:${email}`}
-                className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
-              >
-                <Mail className="size-4" />
-              </a>
+              {telefono && (
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
+                >
+                  <MessageCircle className="size-4" />
+                </a>
+              )}
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
+                >
+                  <Mail className="size-4" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -85,25 +98,34 @@ export function Footer() {
               CONTACTO
             </h2>
             <address className="space-y-3 not-italic">
-              <p className="flex items-start justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>{direccion}</span>
-              </p>
-              <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <Phone className="size-4 shrink-0" aria-hidden="true" />
-                <a
-                  href={`tel:${telefono.replace(/\s+/g, "")}`}
-                  className="hover:text-white"
-                >
-                  {telefono}
-                </a>
-              </p>
-              <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
-                <Mail className="size-4 shrink-0" aria-hidden="true" />
-                <a href={`mailto:${email}`} className="hover:text-white">
-                  {email}
-                </a>
-              </p>
+              {direccion && (
+                <p className="flex items-start justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                  <MapPin
+                    className="mt-0.5 size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span>{direccion}</span>
+                </p>
+              )}
+              {telefono && (
+                <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                  <Phone className="size-4 shrink-0" aria-hidden="true" />
+                  <a
+                    href={`tel:${telefono.replace(/\s+/g, "")}`}
+                    className="hover:text-white"
+                  >
+                    {telefono}
+                  </a>
+                </p>
+              )}
+              {email && (
+                <p className="flex items-center justify-center gap-2 text-sm text-white/60 sm:justify-start">
+                  <Mail className="size-4 shrink-0" aria-hidden="true" />
+                  <a href={`mailto:${email}`} className="hover:text-white">
+                    {email}
+                  </a>
+                </p>
+              )}
             </address>
           </div>
         </div>
@@ -116,14 +138,6 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Iglesia Bíblica Terres de
             l&apos;Ebre. Todos los derechos reservados.
           </p>
-          <div className="flex gap-4">
-            <Link href="/privacidad" className="hover:text-white">
-              Privacidad
-            </Link>
-            <Link href="/terminos" className="hover:text-white">
-              Términos
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

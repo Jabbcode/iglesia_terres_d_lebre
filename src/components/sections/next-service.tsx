@@ -1,12 +1,34 @@
+"use client"
+
+import { useEffect } from "react"
 import Link from "next/link"
 import { MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Countdown } from "@/components/sections/countdown"
-import { getNextSundayServiceDate, mockConfig } from "@/lib/mock-data"
+import { useConfigStore } from "@/stores/config-store"
+
+function getNextSundayServiceDate(): Date {
+  const now = new Date()
+  const dayOfWeek = now.getDay()
+  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+  const nextSunday = new Date(now)
+  nextSunday.setDate(now.getDate() + daysUntilSunday)
+  nextSunday.setHours(11, 0, 0, 0)
+  if (daysUntilSunday === 0 && now.getHours() >= 13) {
+    nextSunday.setDate(nextSunday.getDate() + 7)
+  }
+  return nextSunday
+}
 
 export function NextService() {
+  const { config, fetchConfig } = useConfigStore()
+
+  useEffect(() => {
+    fetchConfig()
+  }, [fetchConfig])
+
   const serviceTime = "Domingo, 11:00"
-  const address = mockConfig.contacto.direccion.replace("\n", ", ")
+  const address = config?.direccion?.replace("\n", ", ") || ""
   const nextServiceDate = getNextSundayServiceDate().toISOString()
 
   return (

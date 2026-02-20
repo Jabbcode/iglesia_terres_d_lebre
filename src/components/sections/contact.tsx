@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import {
   MapPin,
   Phone,
@@ -8,16 +9,30 @@ import {
   Facebook,
   Youtube,
 } from "lucide-react"
-import { mockConfig } from "@/lib/mock-data"
+import { useConfigStore } from "@/stores/config-store"
+
+function decodeHtmlEntities(str: string): string {
+  const textarea = document.createElement("textarea")
+  textarea.innerHTML = str
+  return textarea.value
+}
 
 export function Contact() {
-  const direccion = mockConfig.contacto.direccion
-  const telefono = mockConfig.contacto.telefono
-  const horarioAtencion = mockConfig.contacto.horarioAtencion
-  const instagramUrl = mockConfig.redesSociales.instagram
-  const facebookUrl = mockConfig.redesSociales.facebook
-  const youtubeUrl = mockConfig.redesSociales.youtube
-  const googleMapsUrl = mockConfig.contacto.googleMapsUrl
+  const { config, fetchConfig } = useConfigStore()
+
+  useEffect(() => {
+    fetchConfig()
+  }, [fetchConfig])
+
+  const direccion = config?.direccion || ""
+  const telefono = config?.telefono || ""
+  const horarioAtencion = config?.horarioAtencion || ""
+  const instagramUrl = config?.instagram || ""
+  const facebookUrl = config?.facebook || ""
+  const youtubeUrl = config?.youtube || ""
+  const googleMapsEmbed = config?.googleMapsEmbed
+    ? decodeHtmlEntities(config.googleMapsEmbed)
+    : ""
 
   return (
     <section id="contacto" className="bg-cream py-20">
@@ -96,19 +111,21 @@ export function Contact() {
         </div>
 
         {/* Map */}
-        <div className="border-border/50 mx-auto max-w-4xl overflow-hidden rounded-2xl border shadow-sm">
-          <iframe
-            title="Ubicación de la iglesia"
-            src={googleMapsUrl}
-            width="100%"
-            height="350"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="grayscale transition-all duration-300 hover:grayscale-0"
-          />
-        </div>
+        {googleMapsEmbed && (
+          <div className="border-border/50 mx-auto max-w-4xl overflow-hidden rounded-2xl border shadow-sm">
+            <iframe
+              title="Ubicación de la iglesia"
+              src={googleMapsEmbed}
+              width="100%"
+              height="350"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="grayscale transition-all duration-300 hover:grayscale-0"
+            />
+          </div>
+        )}
       </div>
     </section>
   )

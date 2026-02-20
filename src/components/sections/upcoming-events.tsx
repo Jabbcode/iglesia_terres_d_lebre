@@ -1,9 +1,19 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { CalendarDays, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { mockEventos } from "@/lib/mock-data"
+
+interface Evento {
+  id: string
+  nombre: string
+  descripcion: string | null
+  fecha: string
+  horaInicio: string
+  horaFin: string | null
+  ubicacion: string
+}
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
@@ -15,7 +25,14 @@ function formatDate(dateStr: string): string {
 }
 
 export function UpcomingEvents() {
-  const eventos = mockEventos.slice(0, 3)
+  const [eventos, setEventos] = useState<Evento[]>([])
+
+  useEffect(() => {
+    fetch("/api/public/eventos")
+      .then((res) => res.json())
+      .then((data) => setEventos(data.slice(0, 3)))
+      .catch(() => setEventos([]))
+  }, [])
 
   if (eventos.length === 0) {
     return null
