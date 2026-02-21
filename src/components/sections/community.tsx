@@ -1,9 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { FadeInUp } from "@/components/ui/motion"
 
 interface TarjetaComunidad {
   id: string

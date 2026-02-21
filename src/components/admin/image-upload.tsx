@@ -153,7 +153,9 @@ export function ImageUpload({
           ) : (
             <>
               <ImageIcon className="text-muted-foreground size-8" />
-              <span className="text-muted-foreground text-sm">{placeholder}</span>
+              <span className="text-muted-foreground text-sm">
+                {placeholder}
+              </span>
               <span className="text-muted-foreground text-xs">
                 Arrastra o haz clic para seleccionar
               </span>
