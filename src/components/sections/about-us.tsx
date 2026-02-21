@@ -2,6 +2,14 @@
 
 import { Target, Eye, Heart, Users, BookOpen, Play } from "lucide-react"
 import { useState, useEffect } from "react"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 
 interface Testimonio {
   id: string
@@ -240,11 +248,11 @@ export function AboutUs() {
             </div>
 
             {loadingTestimonios ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="flex justify-center gap-6">
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm"
+                    className="w-full max-w-sm animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm"
                   >
                     <div className="aspect-video bg-gray-200" />
                     <div className="space-y-2 p-5">
@@ -255,14 +263,13 @@ export function AboutUs() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            ) : testimonios.length <= 3 ? (
+              <div className="flex flex-wrap justify-center gap-6">
                 {testimonios.map((testimonio) => (
                   <div
                     key={testimonio.id}
-                    className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm"
+                    className="border-border/50 group w-full max-w-sm overflow-hidden rounded-2xl border bg-white shadow-sm"
                   >
-                    {/* Video thumbnail */}
                     <div className="relative aspect-video">
                       <img
                         src={testimonio.thumbnail}
@@ -282,8 +289,6 @@ export function AboutUs() {
                         </button>
                       </div>
                     </div>
-
-                    {/* Content */}
                     <div className="p-5">
                       <h3 className="text-foreground mb-2 font-bold">
                         {testimonio.nombre}
@@ -295,6 +300,61 @@ export function AboutUs() {
                   </div>
                 ))}
               </div>
+            ) : (
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[
+                  Autoplay({
+                    delay: 4000,
+                    stopOnInteraction: true,
+                  }),
+                ]}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {testimonios.map((testimonio) => (
+                    <CarouselItem
+                      key={testimonio.id}
+                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                    >
+                      <div className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm">
+                        <div className="relative aspect-video">
+                          <img
+                            src={testimonio.thumbnail}
+                            alt={`Testimonio de ${testimonio.nombre}`}
+                            className="h-full w-full object-cover"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
+                            <button
+                              onClick={() =>
+                                setActiveVideo(
+                                  getYouTubeEmbedUrl(testimonio.videoUrl)
+                                )
+                              }
+                              className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                            >
+                              <Play className="ml-1 size-7" fill="currentColor" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="p-5">
+                          <h3 className="text-foreground mb-2 font-bold">
+                            {testimonio.nombre}
+                          </h3>
+                          <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
+                            {testimonio.descripcion}
+                          </p>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-0 -translate-x-1/2" />
+                <CarouselNext className="right-0 translate-x-1/2" />
+              </Carousel>
             )}
           </div>
         </section>
