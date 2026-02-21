@@ -5,12 +5,7 @@ import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-type EmptyStateVariant =
-  | "galeria"
-  | "eventos"
-  | "comunidad"
-  | "horarios"
-  | "testimonios"
+type EmptyStateVariant = "galeria" | "eventos" | "horarios" | "testimonios"
 
 interface EmptyStateProps {
   variant: EmptyStateVariant
@@ -129,59 +124,6 @@ function EventosIllustration() {
   )
 }
 
-function ComunidadIllustration() {
-  return (
-    <svg
-      width="120"
-      height="120"
-      viewBox="0 0 120 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="text-amber"
-    >
-      <circle
-        cx="60"
-        cy="45"
-        r="25"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="4 4"
-        opacity="0.3"
-      />
-      <circle cx="60" cy="42" r="12" fill="currentColor" opacity="0.2" />
-      <circle
-        cx="60"
-        cy="40"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M35 95 C35 75 45 65 60 65 C75 65 85 75 85 95"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <circle cx="30" cy="55" r="7" stroke="currentColor" strokeWidth="2" opacity="0.5" />
-      <path
-        d="M12 95 C12 80 20 72 30 72 C35 72 39 74 42 77"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
-      <circle cx="90" cy="55" r="7" stroke="currentColor" strokeWidth="2" opacity="0.5" />
-      <path
-        d="M108 95 C108 80 100 72 90 72 C85 72 81 74 78 77"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
-    </svg>
-  )
-}
-
 function HorariosIllustration() {
   return (
     <svg
@@ -267,7 +209,6 @@ function TestimoniosIllustration() {
 const illustrations: Record<EmptyStateVariant, React.FC> = {
   galeria: GaleriaIllustration,
   eventos: EventosIllustration,
-  comunidad: ComunidadIllustration,
   horarios: HorariosIllustration,
   testimonios: TestimoniosIllustration,
 }
