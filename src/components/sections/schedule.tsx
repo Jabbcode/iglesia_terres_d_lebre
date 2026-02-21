@@ -15,6 +15,13 @@ import {
   Star,
   type LucideIcon,
 } from "lucide-react"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 interface Horario {
   id: string
@@ -100,26 +107,67 @@ export function Schedule() {
 
       {/* Schedule cards */}
       <section className="bg-cream pt-10 pb-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-4 sm:grid-cols-4 sm:px-6 lg:px-8">
-          {horarios.map((horario) => {
-            const Icon = getIcon(horario.icono)
-            return (
-              <div
-                key={horario.id}
-                className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
-              >
-                <div className="mx-auto mb-4 flex size-14 items-center justify-center">
-                  <Icon className="text-amber size-9" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-foreground mb-1 text-lg font-bold">
-                  {horario.titulo}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {horario.dia}, {horario.hora}
-                </p>
-              </div>
-            )
-          })}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {horarios.length <= 4 ? (
+            <div className="flex flex-wrap justify-center gap-5">
+              {horarios.map((horario) => {
+                const Icon = getIcon(horario.icono)
+                return (
+                  <div
+                    key={horario.id}
+                    className="border-border/50 w-full max-w-[280px] rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <div className="mx-auto mb-4 flex size-14 items-center justify-center">
+                      <Icon className="text-amber size-9" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-foreground mb-1 text-lg font-bold">
+                      {horario.titulo}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {horario.dia}, {horario.hora}
+                    </p>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {horarios.map((horario) => {
+                  const Icon = getIcon(horario.icono)
+                  return (
+                    <CarouselItem
+                      key={horario.id}
+                      className="-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                    >
+                      <div className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md">
+                        <div className="mx-auto mb-4 flex size-14 items-center justify-center">
+                          <Icon
+                            className="text-amber size-9"
+                            strokeWidth={1.5}
+                          />
+                        </div>
+                        <h3 className="text-foreground mb-1 text-lg font-bold">
+                          {horario.titulo}
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {horario.dia}, {horario.hora}
+                        </p>
+                      </div>
+                    </CarouselItem>
+                  )
+                })}
+              </CarouselContent>
+              <CarouselPrevious className="left-0 -translate-x-1/2" />
+              <CarouselNext className="right-0 translate-x-1/2" />
+            </Carousel>
+          )}
         </div>
       </section>
 
@@ -161,7 +209,7 @@ export function Schedule() {
                   {/* Image */}
                   {horario.imagen && (
                     <div
-                      className={`flex-1 ${isReversed ? "lg:order-1" : "lg:order-2"}`}
+                      className={`w-full max-w-sm lg:max-w-md ${isReversed ? "lg:order-1" : "lg:order-2"}`}
                     >
                       <div className="bg-muted overflow-hidden rounded-2xl">
                         <img

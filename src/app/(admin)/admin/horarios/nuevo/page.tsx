@@ -291,11 +291,6 @@ export default function NuevoHorarioPage() {
               <p className="text-muted-foreground text-sm">
                 Muestra este horario con imagen y descripcion ampliada
               </p>
-              {!imagenValue && (
-                <p className="mt-1 text-xs text-amber-600">
-                  Agrega una imagen para habilitar esta opcion
-                </p>
-              )}
             </div>
             <Switch
               checked={mostrarDetalle}
@@ -304,32 +299,35 @@ export default function NuevoHorarioPage() {
             />
           </div>
 
-          {mostrarDetalle && (
-            <div className="space-y-4 border-t pt-4">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Descripcion Larga
-                </label>
-                <textarea
-                  {...register("descripcionLarga")}
-                  rows={4}
-                  placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  URL de Imagen
-                </label>
-                <input
-                  {...register("imagen")}
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
+          <div className="space-y-4 border-t pt-4">
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                URL de Imagen
+              </label>
+              <input
+                {...register("imagen")}
+                placeholder="https://ejemplo.com/imagen.jpg"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              />
+              {!imagenValue && (
+                <p className="mt-1 text-xs text-amber-600">
+                  Requerida para mostrar la seccion de detalle
+                </p>
+              )}
             </div>
-          )}
+
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Descripcion Larga
+              </label>
+              <textarea
+                {...register("descripcionLarga")}
+                rows={4}
+                placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-end gap-3">
