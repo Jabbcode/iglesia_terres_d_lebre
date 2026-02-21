@@ -1,4 +1,4 @@
-const IGLESIA_NAME = "Iglesia Biblica Terres de l'Ebre"
+const IGLESIA_NAME = "IB Terres De l'Ebre"
 const SITE_URL = "https://iglesiabiblicaterresdelebre.es"
 const SITE_DESCRIPTION =
   "Somos una comunidad cristiana en Terres de l'Ebre. Un lugar donde encontrarás familia, propósito y fe. Te estábamos esperando."

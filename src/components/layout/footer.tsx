@@ -2,7 +2,13 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
-import { Mail, Phone, MapPin, MessageCircle } from "lucide-react"
+import {
+  Mail,
+  Phone,
+  MapPin,
+  MessageCircle,
+  MessageSquareMore,
+} from "lucide-react"
 import { useConfigStore } from "@/stores/config-store"
 
 const navLinks = [
@@ -36,14 +42,17 @@ export function Footer() {
           <div className="flex flex-col items-center space-y-4 text-center sm:col-span-2 sm:items-start sm:text-left lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2">
               <img
-                src="/logo.png"
+                src="/logo_white.png"
                 alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                className="size-8 object-contain"
+                className="size-20 object-contain"
               />
-              <span className="text-sm font-bold tracking-wider">
-                IGLESIA BIBLICA
-                <br />
-                TERRES DE L&apos;EBRE
+              <span className="relative right-5 text-white">
+                <div className="flex flex-col">
+                  <span className="relative top-0.5 left-0.5 text-xs">
+                    Iglesia Biblica
+                  </span>
+                  <span className="text-md">{config?.nombreIglesia}</span>
+                </div>
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-white/60">
@@ -57,7 +66,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:bg-amber flex size-9 items-center justify-center rounded-full bg-white/10 transition-colors"
                 >
-                  <MessageCircle className="size-4" />
+                  <MessageSquareMore className="size-4" />
                 </a>
               )}
               {email && (
@@ -79,7 +88,7 @@ export function Footer() {
             <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
               ENLACES
             </h2>
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-1">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link

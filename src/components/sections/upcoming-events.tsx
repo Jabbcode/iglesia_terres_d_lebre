@@ -77,7 +77,7 @@ export function UpcomingEvents() {
           <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
             PRÓXIMOS EVENTOS
           </p>
-          <h2 className="text-foreground mb-4 font-serif text-3xl font-bold sm:text-4xl">
+          <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
             Únete a nuestras actividades
           </h2>
           <p className="text-muted-foreground text-base leading-relaxed">
@@ -101,7 +101,7 @@ export function UpcomingEvents() {
                   <h3 className="text-foreground mb-2 text-lg font-bold">
                     {evento.nombre}
                   </h3>
-                  <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
+                  <p className="text-muted-foreground mb-4 line-clamp-5 flex-1 text-sm leading-relaxed">
                     {evento.descripcion}
                   </p>
                   <div className="text-muted-foreground space-y-2 text-sm">
@@ -174,8 +174,8 @@ export function UpcomingEvents() {
                 ))}
               </CarouselContent>
               {/* Flechas a los lados en desktop */}
-              <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
-              <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+              <CarouselPrevious className="absolute top-1/2 -left-1 hidden -translate-y-1/2 md:flex" />
+              <CarouselNext className="absolute top-1/2 -right-1 hidden -translate-y-1/2 md:flex" />
             </div>
             {/* Flechas centradas en móvil */}
             <div className="mt-6 flex justify-center gap-4 md:hidden">

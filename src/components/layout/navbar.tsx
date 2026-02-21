@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Menu, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,6 +11,8 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { useConfigStore } from "@/stores/config-store"
+import { cn } from "@/lib/utils"
 
 const navLinks = [
   { href: "/", label: "INICIO" },
@@ -23,6 +26,13 @@ const navLinks = [
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const { config } = useConfigStore()
+  const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname.startsWith(href)
+  }
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -35,16 +45,21 @@ export function Navbar() {
 
   return (
     <header className="border-border/40 sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <img
-            src="/logo.png"
+            src="/logo_black.png"
             alt="Logo Iglesia Bíblica Terres de l'Ebre"
-            className="size-10 object-contain"
+            className="size-20 object-contain"
           />
-          <span className="text-foreground text-sm font-bold tracking-wider">
-            IGLESIA BIBLICA TERRES DE L&apos;EBRE
+          <span className="text-foreground relative right-5">
+            <div className="flex flex-col">
+              <span className="text-muted-foreground relative top-0.5 left-0.5 text-xs">
+                Iglesia Biblica
+              </span>
+              <span className="text-md">{config?.nombreIglesia}</span>
+            </div>
           </span>
         </Link>
 
@@ -54,7 +69,12 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-foreground/70 hover:text-foreground text-xs font-semibold tracking-wider transition-colors"
+              className={cn(
+                "text-xs font-semibold tracking-wider transition-colors",
+                isActive(link.href)
+                  ? "text-amber"
+                  : "text-foreground/70 hover:text-foreground"
+              )}
             >
               {link.label}
             </Link>
@@ -83,14 +103,17 @@ export function Navbar() {
             <div className="flex flex-col gap-6 pt-8">
               <Link href="/" className="flex items-center gap-2 px-4">
                 <img
-                  src="/logo.png"
+                  src="/logo_black.png"
                   alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                  className="size-8 object-contain"
+                  className="size-20 object-contain"
                 />
-                <span className="text-sm font-bold tracking-wider">
-                  IGLESIA BIBLICA
-                  <br />
-                  TERRES DE L&apos;EBRE
+                <span className="text-foreground relative right-5">
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground relative top-0.5 left-0.5 text-xs">
+                      Iglesia Biblica
+                    </span>
+                    <span className="text-md">{config?.nombreIglesia}</span>
+                  </div>
                 </span>
               </Link>
               <nav className="flex flex-col gap-4 px-4">
@@ -99,7 +122,12 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="text-foreground/70 hover:text-foreground text-sm font-semibold tracking-wider transition-colors"
+                    className={cn(
+                      "text-sm font-semibold tracking-wider transition-colors",
+                      isActive(link.href)
+                        ? "text-amber"
+                        : "text-foreground/70 hover:text-foreground"
+                    )}
                   >
                     {link.label}
                   </Link>

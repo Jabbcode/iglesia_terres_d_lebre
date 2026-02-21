@@ -12,13 +12,14 @@ export function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.15,
+        duration: shouldReduceMotion ? 0 : 0.4,
+        staggerChildren: shouldReduceMotion ? 0 : 0.2,
       },
     },
   }
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 10 },
     visible: {
       opacity: 1,
       y: 0,

@@ -140,7 +140,7 @@ export function Contact() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale transition-all duration-300 hover:grayscale-0"
+                className="transition-all duration-300 hover:grayscale-0"
               />
             </div>
           </FadeInUp>

@@ -7,7 +7,6 @@ import { UpcomingEvents } from "@/components/sections/upcoming-events"
 import { IGLESIA_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constant"
 
 export const metadata: Metadata = {
-  title: `Inicio | ${IGLESIA_NAME}`,
   description: SITE_DESCRIPTION,
   alternates: {
     canonical: SITE_URL,

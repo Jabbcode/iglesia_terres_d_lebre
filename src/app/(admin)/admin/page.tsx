@@ -27,9 +27,7 @@ export default function AdminDashboard() {
     <div>
       <div className="mb-6">
         <h1 className="text-foreground text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Bienvenido al panel de administracion
-        </p>
+        <p className="text-muted-foreground mt-1">Panel de administracion</p>
       </div>
 
       {loading ? (
