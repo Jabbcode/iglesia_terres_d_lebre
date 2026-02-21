@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { FadeInUp } from "@/components/ui/motion"
+import { useIsMobile } from "@/hooks/use-media-query"
 
 interface Evento {
   id: string
@@ -36,6 +37,7 @@ function formatDate(dateStr: string): string {
 export function UpcomingEvents() {
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     fetch("/api/public/eventos")
@@ -82,8 +84,8 @@ export function UpcomingEvents() {
           </p>
         </div>
 
-        {/* Events */}
-        {eventos.length <= 3 ? (
+        {/* Events - En móvil: slider si hay más de 1. En desktop: slider si hay más de 3 */}
+        {(isMobile ? eventos.length <= 1 : eventos.length <= 3) ? (
           <div className="flex flex-wrap justify-center gap-6">
             {eventos.map((evento, index) => (
               <FadeInUp key={evento.id} delay={index * 0.1}>

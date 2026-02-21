@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { FadeInUp } from "@/components/ui/motion"
+import { useIsMobile } from "@/hooks/use-media-query"
 
 interface Horario {
   id: string
@@ -55,6 +56,7 @@ const iconMap: Record<string, LucideIcon> = {
 export function Schedule() {
   const [horarios, setHorarios] = useState<Horario[]>([])
   const [loading, setLoading] = useState(true)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     fetch("/api/public/horarios")
@@ -112,7 +114,8 @@ export function Schedule() {
       {/* Schedule cards */}
       <section className="bg-cream pt-10 pb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {horarios.length <= 4 ? (
+          {/* En móvil: slider si hay más de 1. En desktop: slider si hay más de 4 */}
+          {(isMobile ? horarios.length <= 1 : horarios.length <= 4) ? (
             <div className="flex flex-wrap justify-center gap-5">
               {horarios.map((horario) => {
                 const Icon = getIcon(horario.icono)
@@ -154,7 +157,7 @@ export function Schedule() {
                   return (
                     <CarouselItem
                       key={horario.id}
-                      className="-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                      className="basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                     >
                       <div className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md">
                         <div className="mx-auto mb-4 flex size-14 items-center justify-center">

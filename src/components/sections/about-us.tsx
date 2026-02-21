@@ -12,6 +12,7 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
+import { useIsMobile } from "@/hooks/use-media-query"
 
 interface Testimonio {
   id: string
@@ -83,6 +84,7 @@ export function AboutUs() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [testimonios, setTestimonios] = useState<Testimonio[]>([])
   const [loadingTestimonios, setLoadingTestimonios] = useState(true)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     fetch("/api/public/testimonios")
@@ -263,7 +265,7 @@ export function AboutUs() {
                   </div>
                 ))}
               </div>
-            ) : testimonios.length <= 3 ? (
+            ) : (isMobile ? testimonios.length <= 1 : testimonios.length <= 3) ? (
               <div className="flex flex-wrap justify-center gap-6">
                 {testimonios.map((testimonio) => (
                   <div
