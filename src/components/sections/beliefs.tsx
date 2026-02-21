@@ -100,7 +100,7 @@ function IconCard({
   description: string
 }) {
   return (
-    <div className="flex h-full flex-col items-center rounded-2xl border bg-cream p-8 text-center shadow-sm">
+    <div className="bg-cream flex h-full flex-col items-center rounded-2xl border p-8 text-center shadow-sm">
       <div className="bg-amber/10 mb-5 flex size-16 shrink-0 items-center justify-center rounded-full">
         <Icon className="text-amber size-7" />
       </div>
@@ -153,29 +153,18 @@ export function Beliefs() {
               ]}
               className="w-full"
             >
-              {/* Contenedor con espacio para flechas en desktop */}
-              <div className="relative px-0 md:px-14">
-                <CarouselContent className="-ml-4">
-                  {allCards.map((card, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
-                    >
-                      <IconCard {...card} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-
-                {/* Flechas a los lados en desktop */}
-                <CarouselPrevious className="absolute -left-2 top-1/2 hidden -translate-y-1/2 md:flex" />
-                <CarouselNext className="absolute -right-2 top-1/2 hidden -translate-y-1/2 md:flex" />
-              </div>
-
-              {/* Flechas centradas en móvil */}
-              <div className="mt-6 flex justify-center gap-4 md:hidden">
-                <CarouselPrevious className="static translate-y-0" />
-                <CarouselNext className="static translate-y-0" />
-              </div>
+              <CarouselContent className="-ml-4">
+                {allCards.map((card, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
+                  >
+                    <IconCard {...card} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-0 -translate-x-1/2" />
+              <CarouselNext className="right-0 translate-x-1/2" />
             </Carousel>
           </div>
         </FadeInUp>
