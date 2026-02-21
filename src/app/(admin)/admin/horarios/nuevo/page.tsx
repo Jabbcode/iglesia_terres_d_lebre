@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { IconSelector } from "@/components/admin/icon-selector"
 import Link from "next/link"
 
 const horarioSchema = z.object({
@@ -25,20 +26,6 @@ const horarioSchema = z.object({
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
-
-const iconOptions = [
-  "Church",
-  "BookOpen",
-  "HeartHandshake",
-  "Users",
-  "Smile",
-  "Music",
-  "Mic2",
-  "Sun",
-  "Moon",
-  "Star",
-  "Calendar",
-]
 
 const diaOptions = [
   "Lunes",
@@ -240,16 +227,10 @@ export default function NuevoHorarioPage() {
                 <label className="text-foreground mb-1 block text-sm font-medium">
                   Icono
                 </label>
-                <select
-                  {...register("icono")}
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                >
-                  {iconOptions.map((icon) => (
-                    <option key={icon} value={icon}>
-                      {icon}
-                    </option>
-                  ))}
-                </select>
+                <IconSelector
+                  value={watch("icono")}
+                  onValueChange={(value) => setValue("icono", value)}
+                />
               </div>
 
               <div>
