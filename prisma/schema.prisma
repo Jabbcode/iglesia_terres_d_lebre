@@ -101,3 +101,15 @@ model TarjetaComunidad {
 
   @@map("TarjetaComunidad")
 }
+
+model Testimonio {
+  id          String   @id @default(cuid())
+  nombre      String
+  descripcion String
+  videoUrl    String
+  thumbnail   String
+  order       Int      @default(0)
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

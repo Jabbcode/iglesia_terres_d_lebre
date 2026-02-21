@@ -1,7 +1,15 @@
 "use client"
 
 import { Target, Eye, Heart, Users, BookOpen, Play } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+interface Testimonio {
+  id: string
+  nombre: string
+  descripcion: string
+  videoUrl: string
+  thumbnail: string
+}
 
 const missionVision = [
   {
@@ -39,39 +47,40 @@ const values = [
   },
 ]
 
-// Mock de testimonios - se conectará con el admin posteriormente
-const mockTestimonios = [
-  {
-    id: "1",
-    nombre: "María García",
-    descripcion:
-      "Mi vida cambió completamente cuando conocí a Cristo en esta iglesia. Encontré una familia de fe que me apoya en todo momento.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail:
-      "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800",
-  },
-  {
-    id: "2",
-    nombre: "Juan Martínez",
-    descripcion:
-      "Después de años buscando propósito, encontré en esta comunidad el amor y la guía que necesitaba para mi vida.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800",
-  },
-  {
-    id: "3",
-    nombre: "Ana López",
-    descripcion:
-      "Los estudios bíblicos y el compañerismo me han ayudado a crecer espiritualmente de maneras que nunca imaginé.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    thumbnail:
-      "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=800",
-  },
-]
+// Convierte cualquier URL de YouTube al formato embed
+function getYouTubeEmbedUrl(url: string): string {
+  // Si ya es embed, retornar
+  if (url.includes("/embed/")) return url
+
+  // Extraer video ID de diferentes formatos de URL
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([^&]+)/,
+    /(?:youtu\.be\/)([^?]+)/,
+    /(?:youtube\.com\/shorts\/)([^?]+)/,
+  ]
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match) {
+      return `https://www.youtube.com/embed/${match[1]}`
+    }
+  }
+
+  return url
+}
 
 export function AboutUs() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
+  const [testimonios, setTestimonios] = useState<Testimonio[]>([])
+  const [loadingTestimonios, setLoadingTestimonios] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/public/testimonios")
+      .then((res) => res.json())
+      .then((data) => setTestimonios(data))
+      .catch(() => setTestimonios([]))
+      .finally(() => setLoadingTestimonios(false))
+  }, [])
 
   return (
     <>
@@ -206,59 +215,79 @@ export function AboutUs() {
       </section>
 
       {/* Testimonios */}
-      <section className="bg-cream py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-              TESTIMONIOS
-            </p>
-            <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
-              Vidas{" "}
-              <span className="text-amber font-serif italic">transformadas</span>
-            </h2>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
-              Escucha las historias de personas cuyas vidas han sido
-              transformadas por el amor de Cristo en nuestra comunidad.
-            </p>
-          </div>
+      {(loadingTestimonios || testimonios.length > 0) && (
+        <section className="bg-cream py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-10 text-center">
+              <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
+                TESTIMONIOS
+              </p>
+              <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
+                Vidas{" "}
+                <span className="text-amber font-serif italic">transformadas</span>
+              </h2>
+              <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
+                Escucha las historias de personas cuyas vidas han sido
+                transformadas por el amor de Cristo en nuestra comunidad.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {mockTestimonios.map((testimonio) => (
-              <div
-                key={testimonio.id}
-                className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm"
-              >
-                {/* Video thumbnail */}
-                <div className="relative aspect-video">
-                  <img
-                    src={testimonio.thumbnail}
-                    alt={`Testimonio de ${testimonio.nombre}`}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
-                    <button
-                      onClick={() => setActiveVideo(testimonio.videoUrl)}
-                      className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                    >
-                      <Play className="ml-1 size-7" fill="currentColor" />
-                    </button>
+            {loadingTestimonios ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm"
+                  >
+                    <div className="aspect-video bg-gray-200" />
+                    <div className="p-5 space-y-2">
+                      <div className="h-5 w-32 rounded bg-gray-200" />
+                      <div className="h-4 w-full rounded bg-gray-200" />
+                      <div className="h-4 w-3/4 rounded bg-gray-200" />
+                    </div>
                   </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5">
-                  <h3 className="text-foreground mb-2 font-bold">
-                    {testimonio.nombre}
-                  </h3>
-                  <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                    {testimonio.descripcion}
-                  </p>
-                </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {testimonios.map((testimonio) => (
+                  <div
+                    key={testimonio.id}
+                    className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm"
+                  >
+                    {/* Video thumbnail */}
+                    <div className="relative aspect-video">
+                      <img
+                        src={testimonio.thumbnail}
+                        alt={`Testimonio de ${testimonio.nombre}`}
+                        className="h-full w-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
+                        <button
+                          onClick={() => setActiveVideo(getYouTubeEmbedUrl(testimonio.videoUrl))}
+                          className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                        >
+                          <Play className="ml-1 size-7" fill="currentColor" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5">
+                      <h3 className="text-foreground mb-2 font-bold">
+                        {testimonio.nombre}
+                      </h3>
+                      <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
+                        {testimonio.descripcion}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Video Modal */}
       {activeVideo && (
