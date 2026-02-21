@@ -318,7 +318,7 @@ export function AboutUs() {
                   {testimonios.map((testimonio) => (
                     <CarouselItem
                       key={testimonio.id}
-                      className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                      className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
                     >
                       <div className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm">
                         <div className="relative aspect-video">
@@ -336,7 +336,10 @@ export function AboutUs() {
                               }
                               className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
                             >
-                              <Play className="ml-1 size-7" fill="currentColor" />
+                              <Play
+                                className="ml-1 size-7"
+                                fill="currentColor"
+                              />
                             </button>
                           </div>
                         </div>

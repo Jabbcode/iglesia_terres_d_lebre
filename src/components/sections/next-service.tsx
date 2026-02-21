@@ -13,7 +13,7 @@ function getNextSundayServiceDate(): Date {
   const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
   const nextSunday = new Date(now)
   nextSunday.setDate(now.getDate() + daysUntilSunday)
-  nextSunday.setHours(11, 0, 0, 0)
+  nextSunday.setHours(11, 30, 0, 0)
   if (daysUntilSunday === 0 && now.getHours() >= 13) {
     nextSunday.setDate(nextSunday.getDate() + 7)
   }
