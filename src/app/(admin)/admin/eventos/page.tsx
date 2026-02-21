@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 interface Evento {
@@ -20,6 +21,7 @@ export default function EventosPage() {
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [toggling, setToggling] = useState<string | null>(null)
 
   useEffect(() => {
     fetchEventos()
@@ -50,6 +52,28 @@ export default function EventosPage() {
       console.error("Error deleting event")
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const handleToggle = async (id: string, currentValue: boolean) => {
+    setToggling(id)
+    try {
+      const res = await fetch(`/api/admin/eventos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !currentValue }),
+      })
+      if (res.ok) {
+        setEventos(
+          eventos.map((e) =>
+            e.id === id ? { ...e, activo: !currentValue } : e
+          )
+        )
+      }
+    } catch {
+      console.error("Error toggling evento")
+    } finally {
+      setToggling(null)
     }
   }
 
@@ -114,20 +138,9 @@ export default function EventosPage() {
               className="group border-border/50 flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm"
             >
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-foreground font-semibold">
-                    {evento.nombre}
-                  </h3>
-                  <span
-                    className={`rounded px-2 py-0.5 text-xs ${
-                      evento.activo
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {evento.activo ? "Activo" : "Inactivo"}
-                  </span>
-                </div>
+                <h3 className="text-foreground font-semibold">
+                  {evento.nombre}
+                </h3>
                 {evento.descripcion && (
                   <p className="text-muted-foreground mt-1 line-clamp-1 text-sm">
                     {evento.descripcion}
@@ -150,6 +163,16 @@ export default function EventosPage() {
                     </span>
                   )}
                 </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={evento.activo}
+                  onCheckedChange={() => handleToggle(evento.id, evento.activo)}
+                  disabled={toggling === evento.id}
+                />
+                <span className="text-muted-foreground w-16 text-xs">
+                  {evento.activo ? "Activo" : "Inactivo"}
+                </span>
               </div>
               <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                 <Link href={`/admin/eventos/${evento.id}`}>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 interface TarjetaComunidad {
@@ -20,6 +21,7 @@ export default function ComunidadPage() {
   const [tarjetas, setTarjetas] = useState<TarjetaComunidad[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [toggling, setToggling] = useState<string | null>(null)
 
   useEffect(() => {
     fetchTarjetas()
@@ -52,6 +54,28 @@ export default function ComunidadPage() {
       console.error("Error deleting community card")
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const handleToggle = async (id: string, currentValue: boolean) => {
+    setToggling(id)
+    try {
+      const res = await fetch(`/api/admin/comunidad/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !currentValue }),
+      })
+      if (res.ok) {
+        setTarjetas(
+          tarjetas.map((t) =>
+            t.id === id ? { ...t, activo: !currentValue } : t
+          )
+        )
+      }
+    } catch {
+      console.error("Error toggling tarjeta")
+    } finally {
+      setToggling(null)
     }
   }
 
@@ -113,20 +137,9 @@ export default function ComunidadPage() {
                   style={{ backgroundImage: `url('${tarjeta.imagen}')` }}
                 />
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-foreground font-semibold">
-                      {tarjeta.titulo}
-                    </h3>
-                    <span
-                      className={`rounded px-2 py-0.5 text-xs ${
-                        tarjeta.activo
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      {tarjeta.activo ? "Activo" : "Inactivo"}
-                    </span>
-                  </div>
+                  <h3 className="text-foreground font-semibold">
+                    {tarjeta.titulo}
+                  </h3>
                   <p className="text-muted-foreground line-clamp-1 text-sm">
                     {tarjeta.descripcion}
                   </p>
@@ -137,7 +150,17 @@ export default function ComunidadPage() {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={tarjeta.activo}
+                    onCheckedChange={() => handleToggle(tarjeta.id, tarjeta.activo)}
+                    disabled={toggling === tarjeta.id}
+                  />
+                  <span className="text-muted-foreground w-16 text-xs">
+                    {tarjeta.activo ? "Activo" : "Inactivo"}
+                  </span>
+                </div>
                 <span className="text-muted-foreground text-sm">
                   Orden: {tarjeta.order}
                 </span>
