@@ -7,13 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
   descripcion: z.string().min(1, "Descripcion requerida"),
   videoUrl: z.string().url("URL de video invalida"),
-  thumbnail: z.string().url("URL de thumbnail invalida"),
+  thumbnail: z.string().min(1, "Thumbnail requerido"),
   order: z.number().int(),
   activo: z.boolean(),
 })
@@ -46,6 +47,8 @@ export default function EditarTestimonioPage({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<TestimonioForm>({
     resolver: zodResolver(testimonioSchema),
@@ -199,12 +202,13 @@ export default function EditarTestimonioPage({
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                URL del Thumbnail
+                Thumbnail
               </label>
-              <input
-                {...register("thumbnail")}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              <ImageUpload
+                value={watch("thumbnail") || ""}
+                onChange={(url) => setValue("thumbnail", url)}
+                folder="testimonios"
+                placeholder="Subir imagen de portada del video"
               />
               {errors.thumbnail && (
                 <p className="mt-1 text-sm text-red-500">

@@ -2,13 +2,7 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
-import {
-  Mail,
-  Phone,
-  MapPin,
-  MessageCircle,
-  MessageSquareMore,
-} from "lucide-react"
+import { Mail, Phone, MapPin, MessageSquareMore } from "lucide-react"
 import { useConfigStore } from "@/stores/config-store"
 
 const navLinks = [
@@ -44,14 +38,16 @@ export function Footer() {
               <img
                 src="/logo_white.png"
                 alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                className="size-20 object-contain"
+                className="size-28 object-contain"
               />
-              <span className="relative right-5 text-white">
+              <span className="relative right-7">
                 <div className="flex flex-col">
-                  <span className="relative top-0.5 left-0.5 text-xs">
+                  <span className="text-muted-foreground relative top-1 left-0.5 text-sm">
                     Iglesia Biblica
                   </span>
-                  <span className="text-md">{config?.nombreIglesia}</span>
+                  <span className="relative top-0.5 text-lg">
+                    {config?.nombreIglesia}
+                  </span>
                 </div>
               </span>
             </Link>

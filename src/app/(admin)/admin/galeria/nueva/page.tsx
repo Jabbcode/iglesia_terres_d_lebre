@@ -7,10 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 
 const imagenSchema = z.object({
-  src: z.string().url("URL de imagen invalida"),
+  src: z.string().min(1, "Imagen requerida"),
   alt: z.string().min(1, "Texto alternativo requerido"),
   span: z.enum(["normal", "tall", "wide"]),
   order: z.number().int(),
@@ -26,10 +27,13 @@ export default function NuevaImagenPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ImagenForm>({
     resolver: zodResolver(imagenSchema),
     defaultValues: {
+      src: "",
       span: "normal",
       order: 0,
     },
@@ -85,12 +89,13 @@ export default function NuevaImagenPage() {
           <div className="space-y-4">
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                URL de la Imagen
+                Imagen
               </label>
-              <input
-                {...register("src")}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              <ImageUpload
+                value={watch("src")}
+                onChange={(url) => setValue("src", url)}
+                folder="galeria"
+                placeholder="Subir imagen para la galería"
               />
               {errors.src && (
                 <p className="mt-1 text-sm text-red-500">

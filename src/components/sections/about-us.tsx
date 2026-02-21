@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { useIsMobile } from "@/hooks/use-media-query"
 
@@ -366,8 +366,8 @@ export function AboutUs() {
                     ))}
                   </CarouselContent>
                   {/* Flechas a los lados en desktop */}
-                  <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
-                  <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+                  <CarouselPrevious className="absolute top-1/2 -left-1 hidden -translate-y-1/2 md:flex" />
+                  <CarouselNext className="absolute top-1/2 -right-1 hidden -translate-y-1/2 md:flex" />
                 </div>
                 {/* Flechas centradas en móvil */}
                 <div className="mt-6 flex justify-center gap-4 md:hidden">

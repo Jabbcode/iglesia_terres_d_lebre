@@ -182,8 +182,8 @@ export function Schedule() {
                   })}
                 </CarouselContent>
                 {/* Flechas a los lados en desktop */}
-                <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
-                <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+                <CarouselPrevious className="absolute top-1/2 -left-1 hidden -translate-y-1/2 md:flex" />
+                <CarouselNext className="absolute top-1/2 -right-1 hidden -translate-y-1/2 md:flex" />
               </div>
               {/* Flechas centradas en móvil */}
               <div className="mt-6 flex justify-center gap-4 md:hidden">
@@ -204,7 +204,7 @@ export function Schedule() {
             return (
               <div
                 key={horario.id}
-                className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
+                className="mx-auto max-w-7xl px-4 py-8 sm:py-8 lg:px-8 lg:py-20"
               >
                 <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
                   {/* Text */}
