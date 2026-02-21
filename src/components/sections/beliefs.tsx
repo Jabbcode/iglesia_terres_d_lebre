@@ -1,3 +1,5 @@
+"use client"
+
 import {
   BookOpen,
   Triangle,
@@ -6,6 +8,7 @@ import {
   Clock,
   CalendarCheck,
 } from "lucide-react"
+import { FadeInUp } from "@/components/ui/motion"
 
 const topCards = [
   {
@@ -108,23 +111,28 @@ export function Beliefs() {
     <>
       {/* Hero header */}
       <section className="bg-cream pt-20 pb-16">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
-            En que <span className="text-amber font-serif italic">Creemos</span>
-          </h1>
-          <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-            Fundamentamos nuestra fe en la <em>Palabra de Dios</em>. Creemos en
-            un único Dios, creador del universo, manifestado en tres personas:{" "}
-            <em>Padre, Hijo y Espíritu Santo</em>.
-          </p>
-        </div>
+        <FadeInUp>
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+            <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
+              En que{" "}
+              <span className="text-amber font-serif italic">Creemos</span>
+            </h1>
+            <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+              Fundamentamos nuestra fe en la <em>Palabra de Dios</em>. Creemos
+              en un único Dios, creador del universo, manifestado en tres
+              personas: <em>Padre, Hijo y Espíritu Santo</em>.
+            </p>
+          </div>
+        </FadeInUp>
       </section>
 
       {/* Top 3 icon cards */}
       <section className="bg-cream py-20">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {topCards.map((card) => (
-            <IconCard key={card.title} {...card} />
+          {topCards.map((card, index) => (
+            <FadeInUp key={card.title} delay={index * 0.1}>
+              <IconCard {...card} />
+            </FadeInUp>
           ))}
         </div>
       </section>
@@ -134,41 +142,40 @@ export function Beliefs() {
         {alternatingBeliefs.map((belief, index) => {
           const isReversed = index % 2 !== 0
           return (
-            <div
-              key={belief.title}
-              className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
-            >
-              <div
-                className={`flex flex-col items-center gap-8 lg:gap-12 ${
-                  isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
-                }`}
-              >
-                {/* Text */}
-                <div className="flex-1 text-center lg:text-left">
-                  <h2 className="text-foreground mb-3 text-xl font-bold sm:text-2xl">
-                    {belief.title}{" "}
-                    <span className="text-amber font-serif italic">
-                      {belief.subtitle}
-                    </span>
-                  </h2>
-                  <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                    {belief.description}
-                  </p>
-                </div>
+            <FadeInUp key={belief.title}>
+              <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+                <div
+                  className={`flex flex-col items-center gap-8 lg:gap-12 ${
+                    isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
+                  }`}
+                >
+                  {/* Text */}
+                  <div className="flex-1 text-center lg:text-left">
+                    <h2 className="text-foreground mb-3 text-xl font-bold sm:text-2xl">
+                      {belief.title}{" "}
+                      <span className="text-amber font-serif italic">
+                        {belief.subtitle}
+                      </span>
+                    </h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
+                      {belief.description}
+                    </p>
+                  </div>
 
-                {/* Image */}
-                <div className="flex-1">
-                  <div className="overflow-hidden rounded-xl">
-                    <img
-                      src={belief.image}
-                      alt={belief.imageAlt}
-                      className="aspect-[16/10] w-full object-cover transition-transform duration-500 hover:scale-105"
-                      loading="lazy"
-                    />
+                  {/* Image */}
+                  <div className="flex-1">
+                    <div className="overflow-hidden rounded-xl">
+                      <img
+                        src={belief.image}
+                        alt={belief.imageAlt}
+                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeInUp>
           )
         })}
       </section>
@@ -176,8 +183,10 @@ export function Beliefs() {
       {/* Bottom 3 icon cards */}
       <section className="border-border bg-cream border-t py-20">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {bottomCards.map((card) => (
-            <IconCard key={card.title} {...card} />
+          {bottomCards.map((card, index) => (
+            <FadeInUp key={card.title} delay={index * 0.1}>
+              <IconCard {...card} />
+            </FadeInUp>
           ))}
         </div>
       </section>

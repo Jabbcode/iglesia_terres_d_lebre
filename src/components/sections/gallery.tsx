@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { Instagram, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfigStore } from "@/stores/config-store"
+import { motion, AnimatePresence } from "framer-motion"
+import { FadeInUp } from "@/components/ui/motion"
 
 interface Imagen {
   id: string
@@ -50,16 +52,18 @@ export function Gallery() {
     <>
       {/* Header */}
       <section className="bg-cream pt-20 pb-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
-            Nuestra vida en{" "}
-            <span className="text-amber font-serif italic">Comunidad</span>
-          </h1>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
-            Explora los momentos que hemos compartido. Cada imagen y video es un
-            testimonio de <em>nuestra fe, alegría y comunión</em>.
-          </p>
-        </div>
+        <FadeInUp>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
+              Nuestra vida en{" "}
+              <span className="text-amber font-serif italic">Comunidad</span>
+            </h1>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
+              Explora los momentos que hemos compartido. Cada imagen y video es
+              un testimonio de <em>nuestra fe, alegría y comunión</em>.
+            </p>
+          </div>
+        </FadeInUp>
       </section>
 
       {/* Masonry Grid */}
@@ -115,47 +119,58 @@ export function Gallery() {
       )}
 
       {/* Lightbox */}
-      {lightbox !== null && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-          onClick={() => setLightbox(null)}
-        >
-          <button
+      <AnimatePresence>
+        {lightbox !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
             onClick={() => setLightbox(null)}
-            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
-            <X className="size-5" />
-            <span className="sr-only">Cerrar</span>
-          </button>
+            <button
+              onClick={() => setLightbox(null)}
+              className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            >
+              <X className="size-5" />
+              <span className="sr-only">Cerrar</span>
+            </button>
 
-          <img
-            src={imagenes[lightbox].src.replace("w=800", "w=1600")}
-            alt={imagenes[lightbox].alt}
-            className="max-h-[85vh] max-w-full rounded-lg object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
+            <motion.img
+              key={lightbox}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              src={imagenes[lightbox].src.replace("w=800", "w=1600")}
+              alt={imagenes[lightbox].alt}
+              className="max-h-[85vh] max-w-full rounded-lg object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
 
-          {/* Navigation */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setLightbox(lightbox === 0 ? imagenes.length - 1 : lightbox - 1)
-            }}
-            className="absolute left-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
-          >
-            &#8249;
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setLightbox(lightbox === imagenes.length - 1 ? 0 : lightbox + 1)
-            }}
-            className="absolute right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
-          >
-            &#8250;
-          </button>
-        </div>
-      )}
+            {/* Navigation */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setLightbox(lightbox === 0 ? imagenes.length - 1 : lightbox - 1)
+              }}
+              className="absolute left-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
+            >
+              &#8249;
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setLightbox(lightbox === imagenes.length - 1 ? 0 : lightbox + 1)
+              }}
+              className="absolute right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
+            >
+              &#8250;
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

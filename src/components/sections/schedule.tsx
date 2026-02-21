@@ -23,6 +23,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { FadeInUp } from "@/components/ui/motion"
 
 interface Horario {
   id: string
@@ -92,18 +93,20 @@ export function Schedule() {
     <>
       {/* Header */}
       <section className="bg-cream pt-20 pb-6">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
-            Nuestros{" "}
-            <span className="text-amber font-serif italic">Horarios</span>
-          </h1>
-          <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-            Únete a nuestra comunidad. Un espacio para{" "}
-            <em className="text-amber not-italic">crecer en la fe</em>,
-            compartir en <em className="text-amber not-italic">comunión</em> y
-            adorar juntos.
-          </p>
-        </div>
+        <FadeInUp>
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+            <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
+              Nuestros{" "}
+              <span className="text-amber font-serif italic">Horarios</span>
+            </h1>
+            <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+              Únete a nuestra comunidad. Un espacio para{" "}
+              <em className="text-amber not-italic">crecer en la fe</em>,
+              compartir en <em className="text-amber not-italic">comunión</em>{" "}
+              y adorar juntos.
+            </p>
+          </div>
+        </FadeInUp>
       </section>
 
       {/* Schedule cards */}
