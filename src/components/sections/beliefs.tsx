@@ -153,17 +153,26 @@ export function Beliefs() {
               ]}
               className="w-full"
             >
-              <CarouselContent className="-ml-4">
-                {allCards.map((card, index) => (
-                  <CarouselItem
-                    key={index}
-                    className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
-                  >
-                    <IconCard {...card} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <div className="mt-8 flex justify-center gap-4">
+              {/* Contenedor con espacio para flechas en desktop */}
+              <div className="relative px-0 md:px-14">
+                <CarouselContent className="-ml-4">
+                  {allCards.map((card, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
+                    >
+                      <IconCard {...card} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+
+                {/* Flechas a los lados en desktop */}
+                <CarouselPrevious className="absolute -left-2 top-1/2 hidden -translate-y-1/2 md:flex" />
+                <CarouselNext className="absolute -right-2 top-1/2 hidden -translate-y-1/2 md:flex" />
+              </div>
+
+              {/* Flechas centradas en móvil */}
+              <div className="mt-6 flex justify-center gap-4 md:hidden">
                 <CarouselPrevious className="static translate-y-0" />
                 <CarouselNext className="static translate-y-0" />
               </div>
