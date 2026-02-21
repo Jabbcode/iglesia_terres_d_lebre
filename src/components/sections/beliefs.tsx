@@ -5,9 +5,7 @@ import {
   Church,
   Clock,
   CalendarCheck,
-  Target,
-  Eye,
-} from "lucide-react";
+} from "lucide-react"
 
 const topCards = [
   {
@@ -28,22 +26,7 @@ const topCards = [
     description:
       "El ser humano fue creado a imagen de Dios, pero cayó en pecado, lo que resultó en separación de Dios.",
   },
-];
-
-const missionVision = [
-  {
-    icon: Target,
-    title: "Nuestra Misión",
-    description:
-      "Compartir el amor de Cristo con nuestra comunidad, formando discípulos que vivan y proclamen el evangelio, sirviendo a los demás con compasión y dedicación.",
-  },
-  {
-    icon: Eye,
-    title: "Nuestra Visión",
-    description:
-      "Ser una iglesia que transforma vidas y comunidades a través del poder del evangelio, donde cada persona encuentre su propósito en Cristo y crezca en fe, amor y servicio.",
-  },
-];
+]
 
 const alternatingBeliefs = [
   {
@@ -73,7 +56,7 @@ const alternatingBeliefs = [
       "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Luz de esperanza",
   },
-];
+]
 
 const bottomCards = [
   {
@@ -94,72 +77,46 @@ const bottomCards = [
     description:
       "Practicamos el Bautismo del creyente por inmersión y la Cena del Señor como símbolos de nuestra fe y comunión.",
   },
-];
+]
 
 function IconCard({
   icon: Icon,
   title,
   description,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
 }) {
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-amber/10">
-        <Icon className="size-7 text-amber" />
+      <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
+        <Icon className="text-amber size-7" />
       </div>
-      <h3 className="mb-2 font-serif text-lg font-bold italic text-foreground">
+      <h3 className="text-foreground mb-2 font-serif text-lg font-bold italic">
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">
+      <p className="text-muted-foreground text-sm leading-relaxed">
         {description}
       </p>
     </div>
-  );
+  )
 }
 
 export function Beliefs() {
   return (
     <>
       {/* Hero header */}
-      <section className="bg-cream pb-16 pt-20">
+      <section className="bg-cream pt-20 pb-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="mb-6 text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
-            En que{" "}
-            <span className="font-serif italic text-amber">Creemos</span>
+          <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
+            En que <span className="text-amber font-serif italic">Creemos</span>
           </h1>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Fundamentamos nuestra fe en la{" "}
-            <em>Palabra de Dios</em>. Creemos en un único Dios, creador del
-            universo, manifestado en tres personas:{" "}
+          <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+            Fundamentamos nuestra fe en la <em>Palabra de Dios</em>. Creemos en
+            un único Dios, creador del universo, manifestado en tres personas:{" "}
             <em>Padre, Hijo y Espíritu Santo</em>.
           </p>
-        </div>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="border-t border-border bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {missionVision.map((item) => (
-              <div
-                key={item.title}
-                className="flex flex-col items-center rounded-2xl border border-border/50 bg-cream p-8 text-center shadow-sm md:items-start md:text-left"
-              >
-                <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-amber/10">
-                  <item.icon className="size-7 text-amber" />
-                </div>
-                <h3 className="mb-3 text-xl font-bold text-foreground">
-                  {item.title}
-                </h3>
-                <p className="text-base leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -175,7 +132,7 @@ export function Beliefs() {
       {/* Alternating belief sections */}
       <section className="bg-white">
         {alternatingBeliefs.map((belief, index) => {
-          const isReversed = index % 2 !== 0;
+          const isReversed = index % 2 !== 0
           return (
             <div
               key={belief.title}
@@ -188,13 +145,13 @@ export function Beliefs() {
               >
                 {/* Text */}
                 <div className="flex-1 text-center lg:text-left">
-                  <h2 className="mb-3 text-xl font-bold text-foreground sm:text-2xl">
+                  <h2 className="text-foreground mb-3 text-xl font-bold sm:text-2xl">
                     {belief.title}{" "}
-                    <span className="font-serif italic text-amber">
+                    <span className="text-amber font-serif italic">
                       {belief.subtitle}
                     </span>
                   </h2>
-                  <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
                     {belief.description}
                   </p>
                 </div>
@@ -212,12 +169,12 @@ export function Beliefs() {
                 </div>
               </div>
             </div>
-          );
+          )
         })}
       </section>
 
       {/* Bottom 3 icon cards */}
-      <section className="border-t border-border bg-cream py-20">
+      <section className="border-border bg-cream border-t py-20">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
           {bottomCards.map((card) => (
             <IconCard key={card.title} {...card} />
@@ -225,5 +182,5 @@ export function Beliefs() {
         </div>
       </section>
     </>
-  );
+  )
 }

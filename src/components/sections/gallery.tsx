@@ -1,42 +1,76 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Instagram, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { mockGalleryImages } from "@/lib/mock-data";
+import { useEffect, useState } from "react"
+import { Instagram, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useConfigStore } from "@/stores/config-store"
+
+interface Imagen {
+  id: string
+  src: string
+  alt: string
+  span: string | null
+}
 
 export function Gallery() {
-  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [imagenes, setImagenes] = useState<Imagen[]>([])
+  const [loading, setLoading] = useState(true)
+  const [lightbox, setLightbox] = useState<number | null>(null)
+  const { config, fetchConfig } = useConfigStore()
+
+  useEffect(() => {
+    fetchConfig()
+  }, [fetchConfig])
+
+  useEffect(() => {
+    fetch("/api/public/galeria")
+      .then((res) => res.json())
+      .then((data) => {
+        setImagenes(data)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  const instagramUrl = config?.instagram
+
+  if (loading) {
+    return (
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="bg-muted mx-auto h-8 w-48 animate-pulse rounded" />
+        </div>
+      </section>
+    )
+  }
 
   return (
     <>
       {/* Header */}
-      <section className="bg-cream pb-6 pt-20">
+      <section className="bg-cream pt-20 pb-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="mb-4 text-center text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
             Nuestra vida en{" "}
-            <span className="font-serif italic text-amber">Comunidad</span>
+            <span className="text-amber font-serif italic">Comunidad</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-center text-base leading-relaxed text-muted-foreground">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
             Explora los momentos que hemos compartido. Cada imagen y video es un
-            testimonio de{" "}
-            <em>nuestra fe, alegría y comunión</em>.
+            testimonio de <em>nuestra fe, alegría y comunión</em>.
           </p>
         </div>
       </section>
 
       {/* Masonry Grid */}
-      <section className="bg-cream pb-10 pt-10">
+      <section className="bg-cream pt-10 pb-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
-            {mockGalleryImages.map((image, index) => (
-              <div
-                key={index}
-                className="mb-4 break-inside-avoid"
-              >
+            {imagenes.map((image, index) => (
+              <div key={index} className="mb-4 break-inside-avoid">
                 <button
                   onClick={() => setLightbox(index)}
-                  className="group relative block w-full overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-amber"
+                  className="focus-visible:ring-amber group relative block w-full overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2"
                 >
                   <img
                     src={image.src}
@@ -64,23 +98,21 @@ export function Gallery() {
       </section>
 
       {/* Instagram CTA */}
-      <section className="bg-cream pb-20 pt-6">
-        <div className="flex justify-center">
-          <Button
-            asChild
-            className="h-12 gap-2 rounded-full bg-amber px-8 text-sm font-bold tracking-wider text-white hover:bg-amber-dark"
-          >
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
+      {instagramUrl && (
+        <section className="bg-cream pt-6 pb-20">
+          <div className="flex justify-center">
+            <Button
+              asChild
+              className="bg-amber hover:bg-amber-dark h-12 gap-2 rounded-full px-8 text-sm font-bold tracking-wider text-white"
             >
-              <Instagram className="size-4" />
-              Ver más en Instagram
-            </a>
-          </Button>
-        </div>
-      </section>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+                <Instagram className="size-4" />
+                Ver más en Instagram
+              </a>
+            </Button>
+          </div>
+        </section>
+      )}
 
       {/* Lightbox */}
       {lightbox !== null && (
@@ -90,15 +122,15 @@ export function Gallery() {
         >
           <button
             onClick={() => setLightbox(null)}
-            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
             <X className="size-5" />
             <span className="sr-only">Cerrar</span>
           </button>
 
           <img
-            src={mockGalleryImages[lightbox].src.replace("w=800", "w=1600")}
-            alt={mockGalleryImages[lightbox].alt}
+            src={imagenes[lightbox].src.replace("w=800", "w=1600")}
+            alt={imagenes[lightbox].alt}
             className="max-h-[85vh] max-w-full rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}
           />
@@ -106,10 +138,8 @@ export function Gallery() {
           {/* Navigation */}
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              setLightbox(
-                lightbox === 0 ? mockGalleryImages.length - 1 : lightbox - 1
-              );
+              e.stopPropagation()
+              setLightbox(lightbox === 0 ? imagenes.length - 1 : lightbox - 1)
             }}
             className="absolute left-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
           >
@@ -117,10 +147,8 @@ export function Gallery() {
           </button>
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              setLightbox(
-                lightbox === mockGalleryImages.length - 1 ? 0 : lightbox + 1
-              );
+              e.stopPropagation()
+              setLightbox(lightbox === imagenes.length - 1 ? 0 : lightbox + 1)
             }}
             className="absolute right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
           >
@@ -129,5 +157,5 @@ export function Gallery() {
         </div>
       )}
     </>
-  );
+  )
 }

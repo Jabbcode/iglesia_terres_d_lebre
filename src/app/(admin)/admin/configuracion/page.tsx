@@ -26,7 +26,10 @@ type ConfigForm = z.infer<typeof configSchema>
 export default function ConfiguracionPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [message, setMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
 
   const {
     register,
@@ -93,8 +96,8 @@ export default function ConfiguracionPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Configuracion</h1>
-        <p className="mt-1 text-muted-foreground">
+        <h1 className="text-foreground text-2xl font-bold">Configuracion</h1>
+        <p className="text-muted-foreground mt-1">
           Gestiona la informacion general del sitio
         </p>
       </div>
@@ -113,123 +116,145 @@ export default function ConfiguracionPage() {
         )}
 
         {/* General */}
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">General</h2>
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <h2 className="text-foreground mb-4 text-lg font-semibold">
+            General
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Nombre de la Iglesia
               </label>
               <input
                 {...register("nombreIglesia")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.nombreIglesia && (
-                <p className="mt-1 text-sm text-red-500">{errors.nombreIglesia.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.nombreIglesia.message}
+                </p>
               )}
             </div>
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Descripcion
               </label>
               <textarea
                 {...register("descripcion")}
                 rows={3}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Redes Sociales */}
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Redes Sociales</h2>
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <h2 className="text-foreground mb-4 text-lg font-semibold">
+            Redes Sociales
+          </h2>
           <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Instagram</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Instagram
+              </label>
               <input
                 {...register("instagram")}
                 placeholder="https://instagram.com/..."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.instagram && (
-                <p className="mt-1 text-sm text-red-500">{errors.instagram.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.instagram.message}
+                </p>
               )}
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Facebook</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Facebook
+              </label>
               <input
                 {...register("facebook")}
                 placeholder="https://facebook.com/..."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">YouTube</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                YouTube
+              </label>
               <input
                 {...register("youtube")}
                 placeholder="https://youtube.com/..."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Contacto */}
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Contacto</h2>
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <h2 className="text-foreground mb-4 text-lg font-semibold">
+            Contacto
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-foreground">Direccion</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Direccion
+              </label>
               <textarea
                 {...register("direccion")}
                 rows={2}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Telefono</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Telefono
+              </label>
               <input
                 {...register("telefono")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Email</label>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Email
+              </label>
               <input
                 {...register("email")}
                 type="email"
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Horario de Atencion
               </label>
               <input
                 {...register("horarioAtencion")}
                 placeholder="Lun-Vie, 9:00-17:00"
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 URL Google Maps
               </label>
               <input
                 {...register("googleMapsUrl")}
                 placeholder="https://maps.google.com/..."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 Embed Google Maps
               </label>
               <input
                 {...register("googleMapsEmbed")}
                 placeholder="https://www.google.com/maps/embed?..."
-                className="w-full rounded-lg border border-border bg-white px-4 py-2 focus:border-amber focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
             </div>
           </div>
@@ -239,7 +264,7 @@ export default function ConfiguracionPage() {
           <Button
             type="submit"
             disabled={saving}
-            className="gap-2 bg-amber hover:bg-amber-dark"
+            className="bg-amber hover:bg-amber-dark gap-2"
           >
             <Save className="size-4" />
             {saving ? "Guardando..." : "Guardar Cambios"}

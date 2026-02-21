@@ -11,12 +11,12 @@ export function Header() {
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" })
-    router.push("/admin/login")
+    router.push("/login")
     router.refresh()
   }
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-border/50 bg-white px-4 lg:px-6">
+    <header className="border-border/50 sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
       {/* Mobile hamburger */}
       <Button
         variant="ghost"
@@ -36,7 +36,7 @@ export function Header() {
         variant="ghost"
         size="sm"
         onClick={handleLogout}
-        className="gap-2 text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground gap-2"
       >
         <LogOut className="size-4" />
         <span className="hidden sm:inline">Cerrar sesion</span>

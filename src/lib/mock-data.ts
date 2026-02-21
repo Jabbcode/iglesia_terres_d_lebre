@@ -8,7 +8,8 @@
 export const mockConfig = {
   general: {
     nombreIglesia: "Iglesia Bíblica Terres de l'Ebre",
-    descripcion: "Somos una familia de fe en Terres de l'Ebre. Un lugar donde cada persona es bienvenida tal como es.",
+    descripcion:
+      "Somos una familia de fe en Terres de l'Ebre. Un lugar donde cada persona es bienvenida tal como es.",
   },
   redesSociales: {
     instagram: "https://instagram.com/iglesiabiblica",
@@ -23,7 +24,7 @@ export const mockConfig = {
     googleMapsUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2987.123456789!2d0.5216!3d40.8125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTortosa%2C+Tarragona!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses",
   },
-};
+}
 
 // Gallery images
 export const mockGalleryImages = [
@@ -77,14 +78,15 @@ export const mockGalleryImages = [
     alt: "Evento comunitario",
     span: "normal" as const,
   },
-];
+]
 
 // Upcoming events
 export const mockEventos = [
   {
     id: "1",
     nombre: "Retiro de Jóvenes",
-    descripcion: "Un fin de semana de comunión, alabanza y crecimiento espiritual para jóvenes de 15 a 25 años.",
+    descripcion:
+      "Un fin de semana de comunión, alabanza y crecimiento espiritual para jóvenes de 15 a 25 años.",
     fecha: getNextSaturday().toISOString(),
     horaInicio: "18:00",
     ubicacion: "Centro de Retiros Montcaro",
@@ -92,7 +94,8 @@ export const mockEventos = [
   {
     id: "2",
     nombre: "Cena de Comunidad",
-    descripcion: "Ven a compartir una cena especial con toda la familia de la iglesia. Trae un plato para compartir.",
+    descripcion:
+      "Ven a compartir una cena especial con toda la familia de la iglesia. Trae un plato para compartir.",
     fecha: getNextFriday().toISOString(),
     horaInicio: "20:00",
     ubicacion: "Salón principal de la iglesia",
@@ -100,12 +103,13 @@ export const mockEventos = [
   {
     id: "3",
     nombre: "Seminario Bíblico",
-    descripcion: "Estudio profundo del libro de Romanos. Abierto para todos los que deseen crecer en el conocimiento de la Palabra.",
+    descripcion:
+      "Estudio profundo del libro de Romanos. Abierto para todos los que deseen crecer en el conocimiento de la Palabra.",
     fecha: getNextWednesday().toISOString(),
     horaInicio: "19:30",
     ubicacion: "Aula 2 de la iglesia",
   },
-];
+]
 
 // Dashboard stats (for future admin reactivation)
 export const mockStats = {
@@ -113,37 +117,37 @@ export const mockStats = {
   eventos: 5,
   imagenes: 24,
   videos: 8,
-};
+}
 
 // Helper functions
 function getNextSaturday(): Date {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  const daysUntilSaturday = (6 - dayOfWeek + 7) % 7 || 7;
-  const nextSaturday = new Date(today);
-  nextSaturday.setDate(today.getDate() + daysUntilSaturday);
-  nextSaturday.setHours(18, 0, 0, 0);
-  return nextSaturday;
+  const today = new Date()
+  const dayOfWeek = today.getDay()
+  const daysUntilSaturday = (6 - dayOfWeek + 7) % 7 || 7
+  const nextSaturday = new Date(today)
+  nextSaturday.setDate(today.getDate() + daysUntilSaturday)
+  nextSaturday.setHours(18, 0, 0, 0)
+  return nextSaturday
 }
 
 function getNextFriday(): Date {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  const daysUntilFriday = (5 - dayOfWeek + 7) % 7 || 7;
-  const nextFriday = new Date(today);
-  nextFriday.setDate(today.getDate() + daysUntilFriday);
-  nextFriday.setHours(20, 0, 0, 0);
-  return nextFriday;
+  const today = new Date()
+  const dayOfWeek = today.getDay()
+  const daysUntilFriday = (5 - dayOfWeek + 7) % 7 || 7
+  const nextFriday = new Date(today)
+  nextFriday.setDate(today.getDate() + daysUntilFriday)
+  nextFriday.setHours(20, 0, 0, 0)
+  return nextFriday
 }
 
 function getNextWednesday(): Date {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7 || 7;
-  const nextWednesday = new Date(today);
-  nextWednesday.setDate(today.getDate() + daysUntilWednesday);
-  nextWednesday.setHours(19, 30, 0, 0);
-  return nextWednesday;
+  const today = new Date()
+  const dayOfWeek = today.getDay()
+  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7 || 7
+  const nextWednesday = new Date(today)
+  nextWednesday.setDate(today.getDate() + daysUntilWednesday)
+  nextWednesday.setHours(19, 30, 0, 0)
+  return nextWednesday
 }
 
 /**
@@ -151,22 +155,22 @@ function getNextWednesday(): Date {
  * Used for the countdown timer
  */
 export function getNextSundayServiceDate(): Date {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  const daysUntilSunday = (7 - dayOfWeek) % 7 || 7;
-  const nextSunday = new Date(today);
-  nextSunday.setDate(today.getDate() + daysUntilSunday);
-  nextSunday.setHours(11, 0, 0, 0);
+  const today = new Date()
+  const dayOfWeek = today.getDay()
+  const daysUntilSunday = (7 - dayOfWeek) % 7 || 7
+  const nextSunday = new Date(today)
+  nextSunday.setDate(today.getDate() + daysUntilSunday)
+  nextSunday.setHours(11, 0, 0, 0)
 
   // If it's Sunday and the service hasn't started yet, use today
   if (dayOfWeek === 0) {
-    const now = new Date();
-    const serviceToday = new Date(now);
-    serviceToday.setHours(11, 0, 0, 0);
+    const now = new Date()
+    const serviceToday = new Date(now)
+    serviceToday.setHours(11, 0, 0, 0)
     if (now < serviceToday) {
-      return serviceToday;
+      return serviceToday
     }
   }
 
-  return nextSunday;
+  return nextSunday
 }

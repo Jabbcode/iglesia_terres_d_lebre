@@ -80,13 +80,13 @@ export default function EventosPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Eventos</h1>
-          <p className="mt-1 text-muted-foreground">
+          <h1 className="text-foreground text-2xl font-bold">Eventos</h1>
+          <p className="text-muted-foreground mt-1">
             Gestiona los eventos de la iglesia
           </p>
         </div>
         <Link href="/admin/eventos/nuevo">
-          <Button className="gap-2 bg-amber hover:bg-amber-dark">
+          <Button className="bg-amber hover:bg-amber-dark gap-2">
             <Plus className="size-4" />
             Agregar Evento
           </Button>
@@ -94,9 +94,11 @@ export default function EventosPage() {
       </div>
 
       {eventos.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-border/50 bg-white p-12 shadow-sm">
-          <Calendar className="size-12 text-muted-foreground/50" />
-          <p className="mt-4 text-muted-foreground">No hay eventos registrados</p>
+        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
+          <Calendar className="text-muted-foreground/50 size-12" />
+          <p className="text-muted-foreground mt-4">
+            No hay eventos registrados
+          </p>
           <Link href="/admin/eventos/nuevo" className="mt-4">
             <Button variant="outline" className="gap-2">
               <Plus className="size-4" />
@@ -109,11 +111,13 @@ export default function EventosPage() {
           {eventos.map((evento) => (
             <div
               key={evento.id}
-              className="group flex items-center justify-between rounded-xl border border-border/50 bg-white p-4 shadow-sm"
+              className="group border-border/50 flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground">{evento.nombre}</h3>
+                  <h3 className="text-foreground font-semibold">
+                    {evento.nombre}
+                  </h3>
                   <span
                     className={`rounded px-2 py-0.5 text-xs ${
                       evento.activo
@@ -125,11 +129,11 @@ export default function EventosPage() {
                   </span>
                 </div>
                 {evento.descripcion && (
-                  <p className="mt-1 text-sm text-muted-foreground line-clamp-1">
+                  <p className="text-muted-foreground mt-1 line-clamp-1 text-sm">
                     {evento.descripcion}
                   </p>
                 )}
-                <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                <div className="text-muted-foreground mt-2 flex flex-wrap gap-4 text-sm">
                   <span className="flex items-center gap-1">
                     <Calendar className="size-4" />
                     {formatDate(evento.fecha)}

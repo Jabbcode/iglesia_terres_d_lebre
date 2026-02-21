@@ -1,31 +1,31 @@
-import { IGLESIA_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constant";
+import { IGLESIA_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constant"
 
 interface OrganizationSchema {
-  "@context": "https://schema.org";
-  "@type": "Organization";
-  name: string;
-  url: string;
-  logo: string;
-  description: string;
-  sameAs?: string[];
+  "@context": "https://schema.org"
+  "@type": "Organization"
+  name: string
+  url: string
+  logo: string
+  description: string
+  sameAs?: string[]
 }
 
 interface LocalBusinessSchema {
-  "@context": "https://schema.org";
-  "@type": "Church";
-  name: string;
-  url: string;
-  logo: string;
-  description: string;
-  image: string;
+  "@context": "https://schema.org"
+  "@type": "Church"
+  name: string
+  url: string
+  logo: string
+  description: string
+  image: string
   address: {
-    "@type": "PostalAddress";
-    streetAddress: string;
-    addressLocality: string;
-    addressRegion: string;
-    postalCode: string;
-    addressCountry: string;
-  };
+    "@type": "PostalAddress"
+    streetAddress: string
+    addressLocality: string
+    addressRegion: string
+    postalCode: string
+    addressCountry: string
+  }
 }
 
 const organizationSchema: OrganizationSchema = {
@@ -35,7 +35,7 @@ const organizationSchema: OrganizationSchema = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   description: SITE_DESCRIPTION,
-};
+}
 
 const localBusinessSchema: LocalBusinessSchema = {
   "@context": "https://schema.org",
@@ -53,7 +53,7 @@ const localBusinessSchema: LocalBusinessSchema = {
     postalCode: "43500",
     addressCountry: "ES",
   },
-};
+}
 
 export function JsonLd() {
   return (
@@ -71,5 +71,5 @@ export function JsonLd() {
         }}
       />
     </>
-  );
+  )
 }

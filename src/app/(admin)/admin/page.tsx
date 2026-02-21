@@ -26,8 +26,8 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">
+        <h1 className="text-foreground text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">
           Bienvenido al panel de administracion
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
           />
         </div>
       ) : (
-        <div className="rounded-xl border border-border/50 bg-white p-6 shadow-sm">
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
           <p className="text-muted-foreground">
             Error al cargar las estadisticas.
           </p>

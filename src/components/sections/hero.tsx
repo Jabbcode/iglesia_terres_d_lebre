@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function Hero() {
   return (
@@ -22,7 +22,7 @@ export function Hero() {
 
       {/* Content */}
       <header className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-        <p className="mb-4 text-xs font-bold tracking-[0.3em] text-amber">
+        <p className="text-amber mb-4 text-xs font-bold tracking-[0.3em]">
           TE ESTÁBAMOS ESPERANDO
         </p>
         <h1
@@ -30,19 +30,19 @@ export function Hero() {
           className="mb-6 text-5xl font-bold text-white sm:text-6xl lg:text-7xl"
         >
           Bienvenidos{" "}
-          <span className="font-serif italic text-amber">a Casa</span>
+          <span className="text-amber font-serif italic">a Casa</span>
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-white/80">
-          Somos una comunidad de fe donde cada persona encuentra su lugar.
-          Un espacio para crecer, servir y vivir en el amor de Dios.
+          Somos una comunidad de fe donde cada persona encuentra su lugar. Un
+          espacio para crecer, servir y vivir en el amor de Dios.
         </p>
         <Button
           asChild
-          className="h-12 rounded-full bg-amber px-8 text-sm font-bold tracking-wider text-white shadow-lg shadow-amber/25 hover:bg-amber-dark hover:shadow-xl hover:shadow-amber/30"
+          className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-12 rounded-full px-8 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
         >
           <Link href="/horarios">Ver servicios</Link>
         </Button>
       </header>
     </section>
-  );
+  )
 }

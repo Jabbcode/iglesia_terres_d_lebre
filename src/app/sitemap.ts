@@ -1,5 +1,5 @@
-import { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/constant";
+import { MetadataRoute } from "next"
+import { SITE_URL } from "@/lib/constant"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -8,6 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${SITE_URL}/nosotros`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
     },
     {
       url: `${SITE_URL}/creencias`,
@@ -33,5 +39,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
-  ];
+  ]
 }

@@ -1,65 +1,65 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
 interface CountdownProps {
-  targetDate: string;
+  targetDate: string
 }
 
 function calcTimeLeft(target: Date) {
-  const now = new Date();
-  const diff = target.getTime() - now.getTime();
+  const now = new Date()
+  const diff = target.getTime() - now.getTime()
 
-  if (diff <= 0) return { dias: 0, horas: 0, min: 0 };
+  if (diff <= 0) return { dias: 0, horas: 0, min: 0 }
 
-  const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const min = Math.floor((diff / (1000 * 60)) % 60);
+  const dias = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const horas = Math.floor((diff / (1000 * 60 * 60)) % 24)
+  const min = Math.floor((diff / (1000 * 60)) % 60)
 
-  return { dias, horas, min };
+  return { dias, horas, min }
 }
 
 export function Countdown({ targetDate }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState(() =>
     calcTimeLeft(new Date(targetDate))
-  );
+  )
 
   useEffect(() => {
-    const target = new Date(targetDate);
+    const target = new Date(targetDate)
 
     const updateTime = () => {
-      setTimeLeft(calcTimeLeft(target));
-    };
+      setTimeLeft(calcTimeLeft(target))
+    }
 
     // Initial update via RAF to avoid setState in effect body
-    const rafId = requestAnimationFrame(updateTime);
+    const rafId = requestAnimationFrame(updateTime)
 
-    const interval = setInterval(updateTime, 60_000);
+    const interval = setInterval(updateTime, 60_000)
 
     return () => {
-      cancelAnimationFrame(rafId);
-      clearInterval(interval);
-    };
-  }, [targetDate]);
+      cancelAnimationFrame(rafId)
+      clearInterval(interval)
+    }
+  }, [targetDate])
 
   const items = [
     { value: String(timeLeft.dias).padStart(2, "0"), label: "Días" },
     { value: String(timeLeft.horas).padStart(2, "0"), label: "Horas" },
     { value: String(timeLeft.min).padStart(2, "0"), label: "Min" },
-  ];
+  ]
 
   return (
     <div className="flex gap-4">
       {items.map((item) => (
         <div key={item.label} className="text-center">
-          <div className="flex size-16 items-center justify-center rounded-xl bg-cream text-2xl font-bold text-foreground">
+          <div className="bg-cream text-foreground flex size-16 items-center justify-center rounded-xl text-2xl font-bold">
             {item.value}
           </div>
-          <span className="mt-1 block text-xs text-muted-foreground">
+          <span className="text-muted-foreground mt-1 block text-xs">
             {item.label}
           </span>
         </div>
       ))}
     </div>
-  );
+  )
 }

@@ -10,6 +10,7 @@ import {
   Calendar,
   Clock,
   LucideIcon,
+  HeartHandshake,
 } from "lucide-react"
 
 interface NavItem {
@@ -20,6 +21,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/comunidad", label: "Comunidad", icon: HeartHandshake },
   { href: "/admin/galeria", label: "Galeria", icon: Image },
   { href: "/admin/eventos", label: "Eventos", icon: Calendar },
   { href: "/admin/horarios", label: "Horarios", icon: Clock },
@@ -42,20 +44,13 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed inset-y-0 left-0 z-30 w-64 transform bg-foreground text-white
-          transition-transform duration-300 ease-in-out
-          lg:static lg:translate-x-0
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
+        className={`bg-foreground fixed inset-y-0 left-0 z-30 w-64 transform text-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} `}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="p-6">
             <Link href="/admin" className="block" onClick={closeSidebar}>
-              <h1 className="text-xl font-bold text-amber">
-                Iglesia Admin
-              </h1>
+              <h1 className="text-amber text-xl font-bold">Iglesia Admin</h1>
               <p className="text-sm text-white/60">Panel de Administracion</p>
             </Link>
           </div>
@@ -73,14 +68,11 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={closeSidebar}
-                  className={`
-                    flex items-center gap-3 px-6 py-3 text-sm transition-colors
-                    ${
-                      isActive
-                        ? "bg-amber text-white"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
-                    }
-                  `}
+                  className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
+                    isActive
+                      ? "bg-amber text-white"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                  } `}
                 >
                   <Icon className="size-5" />
                   {item.label}
