@@ -9,6 +9,7 @@ import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { IconSelector } from "@/components/admin/icon-selector"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 
 const horarioSchema = z.object({
@@ -283,12 +284,13 @@ export default function NuevoHorarioPage() {
           <div className="space-y-4 border-t pt-4">
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                URL de Imagen
+                Imagen
               </label>
-              <input
-                {...register("imagen")}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              <ImageUpload
+                value={imagenValue}
+                onChange={(url) => setValue("imagen", url)}
+                folder="horarios"
+                placeholder="Subir imagen del horario"
               />
               {!imagenValue && (
                 <p className="mt-1 text-xs text-amber-600">

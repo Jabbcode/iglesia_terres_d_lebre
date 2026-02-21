@@ -7,12 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 
 const tarjetaSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
   descripcion: z.string().min(1, "Descripcion requerida"),
-  imagen: z.string().url("URL de imagen invalida"),
+  imagen: z.string().min(1, "Imagen requerida"),
   linkHref: z.string().url("URL invalida").or(z.literal("")),
   linkLabel: z.string(),
   order: z.number().int(),
@@ -29,10 +30,13 @@ export default function NuevaTarjetaPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<TarjetaForm>({
     resolver: zodResolver(tarjetaSchema),
     defaultValues: {
+      imagen: "",
       linkHref: "",
       linkLabel: "",
       order: 0,
@@ -133,12 +137,13 @@ export default function NuevaTarjetaPage() {
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                URL de Imagen
+                Imagen
               </label>
-              <input
-                {...register("imagen")}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              <ImageUpload
+                value={watch("imagen")}
+                onChange={(url) => setValue("imagen", url)}
+                folder="comunidad"
+                placeholder="Subir imagen de la tarjeta"
               />
               {errors.imagen && (
                 <p className="mt-1 text-sm text-red-500">

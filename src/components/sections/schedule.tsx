@@ -204,7 +204,7 @@ export function Schedule() {
             return (
               <div
                 key={horario.id}
-                className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
+                className="mx-auto max-w-7xl px-4 py-8 sm:py-8 lg:px-8 lg:py-20"
               >
                 <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
                   {/* Text */}
