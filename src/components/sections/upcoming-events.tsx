@@ -4,6 +4,14 @@ import { useEffect, useState } from "react"
 import { CalendarDays, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 
 interface Evento {
   id: string
@@ -32,7 +40,7 @@ export function UpcomingEvents() {
     fetch("/api/public/eventos")
       .then((res) => res.json())
       .then((data) => {
-        setEventos(data.slice(0, 3))
+        setEventos(data)
         setLoading(false)
       })
       .catch(() => {
@@ -73,40 +81,94 @@ export function UpcomingEvents() {
           </p>
         </div>
 
-        {/* Events grid */}
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {eventos.map((evento) => (
-            <div
-              key={evento.id}
-              className="border-border/50 bg-cream flex flex-col rounded-2xl border p-6 shadow-sm"
-            >
-              <div className="text-amber mb-4 flex items-center gap-2">
-                <CalendarDays className="size-5" />
-                <span className="text-sm font-semibold capitalize">
-                  {formatDate(evento.fecha)}
-                </span>
-              </div>
-              <h3 className="text-foreground mb-2 text-lg font-bold">
-                {evento.nombre}
-              </h3>
-              <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
-                {evento.descripcion}
-              </p>
-              <div className="text-muted-foreground space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <Clock className="size-4" />
-                  <span>{evento.horaInicio}</span>
+        {/* Events */}
+        {eventos.length <= 3 ? (
+          <div className="flex flex-wrap justify-center gap-6">
+            {eventos.map((evento) => (
+              <div
+                key={evento.id}
+                className="border-border/50 bg-cream flex w-full max-w-sm flex-col rounded-2xl border p-6 shadow-sm"
+              >
+                <div className="text-amber mb-4 flex items-center gap-2">
+                  <CalendarDays className="size-5" />
+                  <span className="text-sm font-semibold capitalize">
+                    {formatDate(evento.fecha)}
+                  </span>
                 </div>
-                {evento.ubicacion && (
+                <h3 className="text-foreground mb-2 text-lg font-bold">
+                  {evento.nombre}
+                </h3>
+                <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
+                  {evento.descripcion}
+                </p>
+                <div className="text-muted-foreground space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <MapPin className="size-4" />
-                    <span className="line-clamp-1">{evento.ubicacion}</span>
+                    <Clock className="size-4" />
+                    <span>{evento.horaInicio}</span>
                   </div>
-                )}
+                  {evento.ubicacion && (
+                    <div className="flex items-center gap-2">
+                      <MapPin className="size-4" />
+                      <span className="line-clamp-1">{evento.ubicacion}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+                stopOnInteraction: true,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {eventos.map((evento) => (
+                <CarouselItem
+                  key={evento.id}
+                  className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                >
+                  <div className="border-border/50 bg-cream flex h-full flex-col rounded-2xl border p-6 shadow-sm">
+                    <div className="text-amber mb-4 flex items-center gap-2">
+                      <CalendarDays className="size-5" />
+                      <span className="text-sm font-semibold capitalize">
+                        {formatDate(evento.fecha)}
+                      </span>
+                    </div>
+                    <h3 className="text-foreground mb-2 text-lg font-bold">
+                      {evento.nombre}
+                    </h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
+                      {evento.descripcion}
+                    </p>
+                    <div className="text-muted-foreground space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Clock className="size-4" />
+                        <span>{evento.horaInicio}</span>
+                      </div>
+                      {evento.ubicacion && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="size-4" />
+                          <span className="line-clamp-1">{evento.ubicacion}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0 -translate-x-1/2" />
+            <CarouselNext className="right-0 translate-x-1/2" />
+          </Carousel>
+        )}
 
         {/* CTA */}
         <div className="mt-10 text-center">
