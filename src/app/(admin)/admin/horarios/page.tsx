@@ -7,31 +7,34 @@ import {
   Trash2,
   Clock,
   Church,
-  Book,
-  Heart,
+  BookOpen,
+  HeartHandshake,
   Users,
   Music,
   Mic2,
   Sun,
   Moon,
   Star,
-  Cross,
+  Smile,
+  Calendar,
   LucideIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 const iconMap: Record<string, LucideIcon> = {
   Church,
-  Book,
-  Heart,
+  BookOpen,
+  HeartHandshake,
   Users,
   Music,
   Mic2,
   Sun,
   Moon,
   Star,
-  Cross,
+  Smile,
+  Calendar,
   Clock,
 }
 
@@ -44,12 +47,14 @@ interface Horario {
   icono: string
   order: number
   activo: boolean
+  mostrarDetalle: boolean
 }
 
 export default function HorariosPage() {
   const [horarios, setHorarios] = useState<Horario[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [toggling, setToggling] = useState<string | null>(null)
 
   useEffect(() => {
     fetchHorarios()
@@ -80,6 +85,32 @@ export default function HorariosPage() {
       console.error("Error deleting schedule")
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const handleToggle = async (
+    id: string,
+    field: "activo" | "mostrarDetalle",
+    currentValue: boolean
+  ) => {
+    setToggling(`${id}-${field}`)
+    try {
+      const res = await fetch(`/api/admin/horarios/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: !currentValue }),
+      })
+      if (res.ok) {
+        setHorarios(
+          horarios.map((h) =>
+            h.id === id ? { ...h, [field]: !currentValue } : h
+          )
+        )
+      }
+    } catch {
+      console.error("Error toggling horario")
+    } finally {
+      setToggling(null)
     }
   }
 
@@ -145,20 +176,9 @@ export default function HorariosPage() {
                   {getIcon(horario.icono)}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-foreground font-semibold">
-                      {horario.titulo}
-                    </h3>
-                    <span
-                      className={`rounded px-2 py-0.5 text-xs ${
-                        horario.activo
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      {horario.activo ? "Activo" : "Inactivo"}
-                    </span>
-                  </div>
+                  <h3 className="text-foreground font-semibold">
+                    {horario.titulo}
+                  </h3>
                   {horario.descripcion && (
                     <p className="text-muted-foreground text-sm">
                       {horario.descripcion}
@@ -169,7 +189,35 @@ export default function HorariosPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={horario.activo}
+                    onCheckedChange={() =>
+                      handleToggle(horario.id, "activo", horario.activo)
+                    }
+                    disabled={toggling === `${horario.id}-activo`}
+                  />
+                  <span className="text-muted-foreground w-16 text-xs">
+                    {horario.activo ? "Activo" : "Inactivo"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={horario.mostrarDetalle}
+                    onCheckedChange={() =>
+                      handleToggle(
+                        horario.id,
+                        "mostrarDetalle",
+                        horario.mostrarDetalle
+                      )
+                    }
+                    disabled={toggling === `${horario.id}-mostrarDetalle`}
+                  />
+                  <span className="text-muted-foreground w-14 text-xs">
+                    Detalle
+                  </span>
+                </div>
                 <span className="text-muted-foreground text-sm">
                   Orden: {horario.order}
                 </span>
