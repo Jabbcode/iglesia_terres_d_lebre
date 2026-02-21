@@ -28,7 +28,9 @@ export function Gallery() {
     fetch("/api/public/galeria")
       .then((res) => res.json())
       .then((data) => {
-        setImagenes(data)
+        if (Array.isArray(data)) {
+          setImagenes(data)
+        }
         setLoading(false)
       })
       .catch(() => {

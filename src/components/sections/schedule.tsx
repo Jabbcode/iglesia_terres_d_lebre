@@ -62,7 +62,9 @@ export function Schedule() {
     fetch("/api/public/horarios")
       .then((res) => res.json())
       .then((data) => {
-        setHorarios(data)
+        if (Array.isArray(data)) {
+          setHorarios(data)
+        }
         setLoading(false)
       })
       .catch(() => {

@@ -89,7 +89,11 @@ export function AboutUs() {
   useEffect(() => {
     fetch("/api/public/testimonios")
       .then((res) => res.json())
-      .then((data) => setTestimonios(data))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTestimonios(data)
+        }
+      })
       .catch(() => setTestimonios([]))
       .finally(() => setLoadingTestimonios(false))
   }, [])

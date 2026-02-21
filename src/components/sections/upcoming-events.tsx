@@ -43,7 +43,9 @@ export function UpcomingEvents() {
     fetch("/api/public/eventos")
       .then((res) => res.json())
       .then((data) => {
-        setEventos(data)
+        if (Array.isArray(data)) {
+          setEventos(data)
+        }
         setLoading(false)
       })
       .catch(() => {
