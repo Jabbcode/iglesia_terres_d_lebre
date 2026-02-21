@@ -3,7 +3,86 @@
 import { useEffect, useState } from "react"
 import { CalendarDays, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FadeInUp } from "@/components/ui/motion"
 import Link from "next/link"
+
+function NoEventsIllustration() {
+  return (
+    <svg
+      width="140"
+      height="140"
+      viewBox="0 0 140 140"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="text-amber"
+    >
+      {/* Calendar base */}
+      <rect
+        x="25"
+        y="35"
+        width="90"
+        height="80"
+        rx="8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeDasharray="4 4"
+        opacity="0.2"
+      />
+      <rect
+        x="30"
+        y="30"
+        width="80"
+        height="75"
+        rx="6"
+        fill="currentColor"
+        opacity="0.08"
+      />
+      <rect
+        x="30"
+        y="25"
+        width="80"
+        height="75"
+        rx="6"
+        stroke="currentColor"
+        strokeWidth="2.5"
+      />
+      <path d="M30 50 L110 50" stroke="currentColor" strokeWidth="2" />
+
+      {/* Calendar pins */}
+      <rect x="45" y="15" width="4" height="20" rx="2" fill="currentColor" />
+      <rect x="91" y="15" width="4" height="20" rx="2" fill="currentColor" />
+
+      {/* Empty calendar dots */}
+      <circle cx="50" cy="65" r="3" fill="currentColor" opacity="0.2" />
+      <circle cx="70" cy="65" r="3" fill="currentColor" opacity="0.2" />
+      <circle cx="90" cy="65" r="3" fill="currentColor" opacity="0.2" />
+      <circle cx="50" cy="82" r="3" fill="currentColor" opacity="0.2" />
+      <circle cx="70" cy="82" r="3" fill="currentColor" opacity="0.2" />
+      <circle cx="90" cy="82" r="3" fill="currentColor" opacity="0.2" />
+
+      {/* Peaceful elements */}
+      <circle cx="115" cy="45" r="3" fill="currentColor" opacity="0.4" />
+      <circle cx="25" cy="60" r="2" fill="currentColor" opacity="0.3" />
+      <circle cx="120" cy="75" r="2" fill="currentColor" opacity="0.3" />
+
+      {/* Subtle church cross */}
+      <path
+        d="M70 108 L70 125"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      <path
+        d="M63 115 L77 115"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+    </svg>
+  )
+}
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +91,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { FadeInUp } from "@/components/ui/motion"
 import { useIsMobile } from "@/hooks/use-media-query"
 
 interface Evento {
@@ -66,7 +144,30 @@ export function UpcomingEvents() {
   }
 
   if (eventos.length === 0) {
-    return null
+    return (
+      <section className="border-border border-t bg-white py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FadeInUp>
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <NoEventsIllustration />
+              <h2 className="text-foreground mt-6 text-2xl font-bold sm:text-3xl">
+                No hay eventos proximos
+              </h2>
+              <p className="text-muted-foreground mt-3 max-w-md text-base leading-relaxed">
+                Por el momento no tenemos eventos programados, pero te invitamos
+                a conocer nuestros horarios de servicios regulares.
+              </p>
+              <Button
+                asChild
+                className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
+              >
+                <Link href="/horarios">Ver horarios de servicios</Link>
+              </Button>
+            </div>
+          </FadeInUp>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -189,8 +290,7 @@ export function UpcomingEvents() {
         <div className="mt-10 text-center">
           <Button
             asChild
-            variant="outline"
-            className="border-amber text-amber hover:bg-amber h-11 rounded-full px-8 text-sm font-semibold hover:text-white"
+            className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
           >
             <Link href="/horarios">Ver todos los horarios</Link>
           </Button>

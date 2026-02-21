@@ -1,9 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, MessageCircle } from "lucide-react"
+import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 interface Testimonio {
@@ -21,6 +23,7 @@ export default function TestimoniosPage() {
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [toggling, setToggling] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchTestimonios()
@@ -39,7 +42,16 @@ export default function TestimoniosPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar este testimonio?")) return
+    const confirmed = await confirm({
+      title: "Eliminar testimonio",
+      description:
+        "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {
@@ -109,18 +121,13 @@ export default function TestimoniosPage() {
       </div>
 
       {testimonios.length === 0 ? (
-        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
-          <MessageCircle className="text-muted-foreground/50 size-12" />
-          <p className="text-muted-foreground mt-4">
-            No hay testimonios configurados
-          </p>
-          <Link href="/admin/testimonios/nuevo" className="mt-4">
-            <Button variant="outline" className="gap-2">
-              <Plus className="size-4" />
-              Agregar primer testimonio
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          variant="testimonios"
+          title="Sin testimonios"
+          description="Comparte las historias de fe y transformacion de los miembros de tu comunidad."
+          ctaLabel="Agregar primer testimonio"
+          ctaHref="/admin/testimonios/nuevo"
+        />
       ) : (
         <div className="space-y-3">
           {testimonios.map((testimonio) => (

@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 const imagenSchema = z.object({
@@ -30,6 +31,7 @@ export default function EditarImagenPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   const {
     register,
@@ -85,7 +87,16 @@ export default function EditarImagenPage({
   }
 
   const handleDelete = async () => {
-    if (!confirm("¿Estas seguro de eliminar esta imagen?")) return
+    const confirmed = await confirm({
+      title: "Eliminar imagen",
+      description:
+        "¿Estas seguro de eliminar esta imagen? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(true)
     try {

@@ -21,6 +21,8 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 const iconMap: Record<string, LucideIcon> = {
@@ -55,6 +57,7 @@ export default function HorariosPage() {
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [toggling, setToggling] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchHorarios()
@@ -73,7 +76,16 @@ export default function HorariosPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar este horario?")) return
+    const confirmed = await confirm({
+      title: "Eliminar horario",
+      description:
+        "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {
@@ -152,18 +164,13 @@ export default function HorariosPage() {
       </div>
 
       {horarios.length === 0 ? (
-        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
-          <Clock className="text-muted-foreground/50 size-12" />
-          <p className="text-muted-foreground mt-4">
-            No hay horarios configurados
-          </p>
-          <Link href="/admin/horarios/nuevo" className="mt-4">
-            <Button variant="outline" className="gap-2">
-              <Plus className="size-4" />
-              Agregar primer horario
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          variant="horarios"
+          title="Sin horarios"
+          description="Configura los horarios de los servicios y actividades para que tu comunidad sepa cuando reunirse."
+          ctaLabel="Agregar primer horario"
+          ctaHref="/admin/horarios/nuevo"
+        />
       ) : (
         <div className="space-y-3">
           {horarios.map((horario) => (
