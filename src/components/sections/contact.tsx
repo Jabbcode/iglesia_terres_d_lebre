@@ -62,7 +62,7 @@ export function Contact() {
                 <MapPin className="text-amber size-6" />
               </div>
               <h3 className="text-foreground mb-2 font-bold">Visítanos</h3>
-              <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                 {direccion}
               </p>
             </div>

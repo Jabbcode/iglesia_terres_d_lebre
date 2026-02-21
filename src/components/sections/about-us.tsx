@@ -265,7 +265,9 @@ export function AboutUs() {
                   </div>
                 ))}
               </div>
-            ) : (isMobile ? testimonios.length <= 1 : testimonios.length <= 3) ? (
+            ) : (
+                isMobile ? testimonios.length <= 1 : testimonios.length <= 3
+              ) ? (
               <div className="flex flex-wrap justify-center gap-6">
                 {testimonios.map((testimonio) => (
                   <div

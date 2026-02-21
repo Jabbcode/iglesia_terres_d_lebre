@@ -7,7 +7,7 @@ export function CtaNew() {
     <aside
       id="nuevos"
       aria-label="Llamada a la acción para nuevos visitantes"
-      className="py-16"
+      className="pb-16"
     >
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <Button

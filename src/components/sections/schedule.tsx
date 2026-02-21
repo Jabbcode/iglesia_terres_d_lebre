@@ -104,8 +104,8 @@ export function Schedule() {
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
               Únete a nuestra comunidad. Un espacio para{" "}
               <em className="text-amber not-italic">crecer en la fe</em>,
-              compartir en <em className="text-amber not-italic">comunión</em>{" "}
-              y adorar juntos.
+              compartir en <em className="text-amber not-italic">comunión</em> y
+              adorar juntos.
             </p>
           </div>
         </FadeInUp>

@@ -127,7 +127,7 @@ export function Beliefs() {
       </section>
 
       {/* Top 3 icon cards */}
-      <section className="bg-cream py-20">
+      <section className="border-t bg-white pt-20 pb-10">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
           {topCards.map((card, index) => (
             <FadeInUp key={card.title} delay={index * 0.1}>
@@ -137,8 +137,19 @@ export function Beliefs() {
         </div>
       </section>
 
+      {/* Bottom 3 icon cards */}
+      <section className="border-border bg-white py-20">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
+          {bottomCards.map((card, index) => (
+            <FadeInUp key={card.title} delay={index * 0.1}>
+              <IconCard {...card} />
+            </FadeInUp>
+          ))}
+        </div>
+      </section>
+
       {/* Alternating belief sections */}
-      <section className="bg-white">
+      <section className="bg-cream border-t">
         {alternatingBeliefs.map((belief, index) => {
           const isReversed = index % 2 !== 0
           return (
@@ -178,17 +189,6 @@ export function Beliefs() {
             </FadeInUp>
           )
         })}
-      </section>
-
-      {/* Bottom 3 icon cards */}
-      <section className="border-border bg-cream border-t py-20">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {bottomCards.map((card, index) => (
-            <FadeInUp key={card.title} delay={index * 0.1}>
-              <IconCard {...card} />
-            </FadeInUp>
-          ))}
-        </div>
       </section>
     </>
   )

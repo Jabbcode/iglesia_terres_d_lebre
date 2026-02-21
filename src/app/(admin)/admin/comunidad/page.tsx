@@ -154,7 +154,9 @@ export default function ComunidadPage() {
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={tarjeta.activo}
-                    onCheckedChange={() => handleToggle(tarjeta.id, tarjeta.activo)}
+                    onCheckedChange={() =>
+                      handleToggle(tarjeta.id, tarjeta.activo)
+                    }
                     disabled={toggling === tarjeta.id}
                   />
                   <span className="text-muted-foreground w-16 text-xs">
