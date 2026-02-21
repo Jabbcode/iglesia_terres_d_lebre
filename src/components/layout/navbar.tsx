@@ -51,14 +51,16 @@ export function Navbar() {
           <img
             src="/logo_black.png"
             alt="Logo Iglesia Bíblica Terres de l'Ebre"
-            className="size-20 object-contain"
+            className="size-28 object-contain"
           />
-          <span className="text-foreground relative right-5">
+          <span className="relative right-7">
             <div className="flex flex-col">
-              <span className="text-muted-foreground relative top-0.5 left-0.5 text-xs">
+              <span className="text-muted-foreground relative top-1 left-0.5 text-sm">
                 Iglesia Biblica
               </span>
-              <span className="text-md">{config?.nombreIglesia}</span>
+              <span className="relative top-0.5 text-lg">
+                {config?.nombreIglesia}
+              </span>
             </div>
           </span>
         </Link>
@@ -105,14 +107,16 @@ export function Navbar() {
                 <img
                   src="/logo_black.png"
                   alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                  className="size-20 object-contain"
+                  className="size-28 object-contain"
                 />
-                <span className="text-foreground relative right-5">
+                <span className="relative right-7">
                   <div className="flex flex-col">
-                    <span className="text-muted-foreground relative top-0.5 left-0.5 text-xs">
+                    <span className="text-muted-foreground relative top-1 left-0.5 text-sm">
                       Iglesia Biblica
                     </span>
-                    <span className="text-md">{config?.nombreIglesia}</span>
+                    <span className="text-md text-md relative">
+                      {config?.nombreIglesia}
+                    </span>
                   </div>
                 </span>
               </Link>
