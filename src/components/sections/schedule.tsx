@@ -85,11 +85,34 @@ export function Schedule() {
 
   if (loading) {
     return (
-      <section className="bg-cream py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="bg-muted mx-auto h-8 w-48 animate-pulse rounded" />
-        </div>
-      </section>
+      <>
+        {/* Header skeleton */}
+        <section className="bg-cream pt-20 pb-6">
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+            <div className="bg-muted mx-auto mb-6 h-12 w-72 animate-pulse rounded-lg sm:h-14 sm:w-96" />
+            <div className="bg-muted mx-auto h-5 w-full max-w-xl animate-pulse rounded" />
+            <div className="bg-muted mx-auto mt-2 h-5 w-3/4 max-w-md animate-pulse rounded" />
+          </div>
+        </section>
+
+        {/* Cards skeleton */}
+        <section className="bg-cream pt-10 pb-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap justify-center gap-5">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="border-border/50 hidden w-full max-w-[280px] rounded-2xl border bg-white p-8 shadow-sm first:block sm:block"
+                >
+                  <div className="bg-muted mx-auto mb-4 size-14 animate-pulse rounded-full" />
+                  <div className="bg-muted mx-auto mb-2 h-5 w-32 animate-pulse rounded" />
+                  <div className="bg-muted mx-auto h-4 w-24 animate-pulse rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
     )
   }
 
