@@ -153,34 +153,43 @@ export function Schedule() {
               ]}
               className="w-full"
             >
-              <CarouselContent className="-ml-4">
-                {horarios.map((horario) => {
-                  const Icon = getIcon(horario.icono)
-                  return (
-                    <CarouselItem
-                      key={horario.id}
-                      className="basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-                    >
-                      <div className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md">
-                        <div className="mx-auto mb-4 flex size-14 items-center justify-center">
-                          <Icon
-                            className="text-amber size-9"
-                            strokeWidth={1.5}
-                          />
+              {/* Contenedor con espacio para flechas en desktop */}
+              <div className="relative md:px-12">
+                <CarouselContent className="-ml-4">
+                  {horarios.map((horario) => {
+                    const Icon = getIcon(horario.icono)
+                    return (
+                      <CarouselItem
+                        key={horario.id}
+                        className="basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                      >
+                        <div className="border-border/50 rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md">
+                          <div className="mx-auto mb-4 flex size-14 items-center justify-center">
+                            <Icon
+                              className="text-amber size-9"
+                              strokeWidth={1.5}
+                            />
+                          </div>
+                          <h3 className="text-foreground mb-1 text-lg font-bold">
+                            {horario.titulo}
+                          </h3>
+                          <p className="text-muted-foreground text-sm">
+                            {horario.dia}, {horario.hora}
+                          </p>
                         </div>
-                        <h3 className="text-foreground mb-1 text-lg font-bold">
-                          {horario.titulo}
-                        </h3>
-                        <p className="text-muted-foreground text-sm">
-                          {horario.dia}, {horario.hora}
-                        </p>
-                      </div>
-                    </CarouselItem>
-                  )
-                })}
-              </CarouselContent>
-              <CarouselPrevious className="left-0 -translate-x-1/2" />
-              <CarouselNext className="right-0 translate-x-1/2" />
+                      </CarouselItem>
+                    )
+                  })}
+                </CarouselContent>
+                {/* Flechas a los lados en desktop */}
+                <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+                <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+              </div>
+              {/* Flechas centradas en móvil */}
+              <div className="mt-6 flex justify-center gap-4 md:hidden">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
             </Carousel>
           )}
         </div>

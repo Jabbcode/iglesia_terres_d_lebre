@@ -134,45 +134,54 @@ export function UpcomingEvents() {
             ]}
             className="w-full"
           >
-            <CarouselContent className="-ml-4">
-              {eventos.map((evento) => (
-                <CarouselItem
-                  key={evento.id}
-                  className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
-                >
-                  <div className="border-border/50 bg-cream flex h-full flex-col rounded-2xl border p-6 shadow-sm">
-                    <div className="text-amber mb-4 flex items-center gap-2">
-                      <CalendarDays className="size-5" />
-                      <span className="text-sm font-semibold capitalize">
-                        {formatDate(evento.fecha)}
-                      </span>
-                    </div>
-                    <h3 className="text-foreground mb-2 text-lg font-bold">
-                      {evento.nombre}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
-                      {evento.descripcion}
-                    </p>
-                    <div className="text-muted-foreground space-y-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Clock className="size-4" />
-                        <span>{evento.horaInicio}</span>
+            {/* Contenedor con espacio para flechas en desktop */}
+            <div className="relative md:px-12">
+              <CarouselContent className="-ml-4">
+                {eventos.map((evento) => (
+                  <CarouselItem
+                    key={evento.id}
+                    className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
+                  >
+                    <div className="border-border/50 bg-cream flex h-full flex-col rounded-2xl border p-6 shadow-sm">
+                      <div className="text-amber mb-4 flex items-center gap-2">
+                        <CalendarDays className="size-5" />
+                        <span className="text-sm font-semibold capitalize">
+                          {formatDate(evento.fecha)}
+                        </span>
                       </div>
-                      {evento.ubicacion && (
+                      <h3 className="text-foreground mb-2 text-lg font-bold">
+                        {evento.nombre}
+                      </h3>
+                      <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
+                        {evento.descripcion}
+                      </p>
+                      <div className="text-muted-foreground space-y-2 text-sm">
                         <div className="flex items-center gap-2">
-                          <MapPin className="size-4" />
-                          <span className="line-clamp-1">
-                            {evento.ubicacion}
-                          </span>
+                          <Clock className="size-4" />
+                          <span>{evento.horaInicio}</span>
                         </div>
-                      )}
+                        {evento.ubicacion && (
+                          <div className="flex items-center gap-2">
+                            <MapPin className="size-4" />
+                            <span className="line-clamp-1">
+                              {evento.ubicacion}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-0 -translate-x-1/2" />
-            <CarouselNext className="right-0 translate-x-1/2" />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {/* Flechas a los lados en desktop */}
+              <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+              <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+            </div>
+            {/* Flechas centradas en móvil */}
+            <div className="mt-6 flex justify-center gap-4 md:hidden">
+              <CarouselPrevious className="static translate-y-0" />
+              <CarouselNext className="static translate-y-0" />
+            </div>
           </Carousel>
         )}
 

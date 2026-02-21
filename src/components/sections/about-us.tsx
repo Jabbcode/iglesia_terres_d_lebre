@@ -322,49 +322,58 @@ export function AboutUs() {
                 ]}
                 className="w-full"
               >
-                <CarouselContent className="-ml-4">
-                  {testimonios.map((testimonio) => (
-                    <CarouselItem
-                      key={testimonio.id}
-                      className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
-                    >
-                      <div className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm">
-                        <div className="relative aspect-video">
-                          <img
-                            src={testimonio.thumbnail}
-                            alt={`Testimonio de ${testimonio.nombre}`}
-                            className="h-full w-full object-cover"
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
-                            <button
-                              onClick={() =>
-                                setActiveVideo(
-                                  getYouTubeEmbedUrl(testimonio.videoUrl)
-                                )
-                              }
-                              className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                            >
-                              <Play
-                                className="ml-1 size-7"
-                                fill="currentColor"
-                              />
-                            </button>
+                {/* Contenedor con espacio para flechas en desktop */}
+                <div className="relative md:px-12">
+                  <CarouselContent className="-ml-4">
+                    {testimonios.map((testimonio) => (
+                      <CarouselItem
+                        key={testimonio.id}
+                        className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
+                      >
+                        <div className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm">
+                          <div className="relative aspect-video">
+                            <img
+                              src={testimonio.thumbnail}
+                              alt={`Testimonio de ${testimonio.nombre}`}
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
+                              <button
+                                onClick={() =>
+                                  setActiveVideo(
+                                    getYouTubeEmbedUrl(testimonio.videoUrl)
+                                  )
+                                }
+                                className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                              >
+                                <Play
+                                  className="ml-1 size-7"
+                                  fill="currentColor"
+                                />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="p-5">
+                            <h3 className="text-foreground mb-2 font-bold">
+                              {testimonio.nombre}
+                            </h3>
+                            <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
+                              {testimonio.descripcion}
+                            </p>
                           </div>
                         </div>
-                        <div className="p-5">
-                          <h3 className="text-foreground mb-2 font-bold">
-                            {testimonio.nombre}
-                          </h3>
-                          <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                            {testimonio.descripcion}
-                          </p>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-0 -translate-x-1/2" />
-                <CarouselNext className="right-0 translate-x-1/2" />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  {/* Flechas a los lados en desktop */}
+                  <CarouselPrevious className="absolute -left-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+                  <CarouselNext className="absolute -right-1 top-1/2 hidden -translate-y-1/2 md:flex" />
+                </div>
+                {/* Flechas centradas en móvil */}
+                <div className="mt-6 flex justify-center gap-4 md:hidden">
+                  <CarouselPrevious className="static translate-y-0" />
+                  <CarouselNext className="static translate-y-0" />
+                </div>
               </Carousel>
             )}
           </div>
