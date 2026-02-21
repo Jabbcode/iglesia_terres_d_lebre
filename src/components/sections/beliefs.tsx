@@ -8,6 +8,14 @@ import {
   Clock,
   CalendarCheck,
 } from "lucide-react"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 import { FadeInUp } from "@/components/ui/motion"
 
 const topCards = [
@@ -92,11 +100,11 @@ function IconCard({
   description: string
 }) {
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
+    <div className="flex h-full flex-col items-center rounded-2xl border bg-cream p-8 text-center shadow-sm">
+      <div className="bg-amber/10 mb-5 flex size-16 shrink-0 items-center justify-center rounded-full">
         <Icon className="text-amber size-7" />
       </div>
-      <h3 className="text-foreground mb-2 font-serif text-lg font-bold italic">
+      <h3 className="text-foreground mb-3 font-serif text-lg font-bold italic">
         {title}
       </h3>
       <p className="text-muted-foreground text-sm leading-relaxed">
@@ -105,6 +113,8 @@ function IconCard({
     </div>
   )
 }
+
+const allCards = [...topCards, ...bottomCards]
 
 export function Beliefs() {
   return (
@@ -126,26 +136,40 @@ export function Beliefs() {
         </FadeInUp>
       </section>
 
-      {/* Top 3 icon cards */}
-      <section className="border-t bg-white pt-20 pb-10">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {topCards.map((card, index) => (
-            <FadeInUp key={card.title} delay={index * 0.1}>
-              <IconCard {...card} />
-            </FadeInUp>
-          ))}
-        </div>
-      </section>
-
-      {/* Bottom 3 icon cards */}
-      <section className="border-border bg-white py-20">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {bottomCards.map((card, index) => (
-            <FadeInUp key={card.title} delay={index * 0.1}>
-              <IconCard {...card} />
-            </FadeInUp>
-          ))}
-        </div>
+      {/* Cards slider */}
+      <section className="border-t bg-white py-16">
+        <FadeInUp>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 4000,
+                  stopOnInteraction: true,
+                }),
+              ]}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {allCards.map((card, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
+                  >
+                    <IconCard {...card} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="mt-8 flex justify-center gap-4">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
+            </Carousel>
+          </div>
+        </FadeInUp>
       </section>
 
       {/* Alternating belief sections */}
