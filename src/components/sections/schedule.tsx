@@ -66,7 +66,9 @@ export function Schedule() {
     return Calendar
   }
 
-  const horariosConDetalle = horarios.filter((h) => h.mostrarDetalle)
+  const horariosConDetalle = horarios.filter(
+    (h) => h.mostrarDetalle && h.imagen
+  )
 
   if (loading) {
     return (
@@ -132,13 +134,11 @@ export function Schedule() {
                 key={horario.id}
                 className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
               >
-                <div
-                  className={`flex flex-col items-center gap-10 lg:gap-16 ${
-                    isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
-                  }`}
-                >
+                <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
                   {/* Text */}
-                  <div className="flex-1">
+                  <div
+                    className={`flex-1 ${isReversed ? "lg:order-2" : "lg:order-1"}`}
+                  >
                     <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
                       {horario.titulo}{" "}
                       {horario.subtitulo && (
@@ -160,7 +160,9 @@ export function Schedule() {
 
                   {/* Image */}
                   {horario.imagen && (
-                    <div className="flex-1">
+                    <div
+                      className={`flex-1 ${isReversed ? "lg:order-1" : "lg:order-2"}`}
+                    >
                       <div className="bg-muted overflow-hidden rounded-2xl">
                         <img
                           src={horario.imagen}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -76,6 +76,14 @@ export default function NuevoHorarioPage() {
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
+  const imagenValue = watch("imagen")
+
+  // Desactivar mostrarDetalle si se elimina la imagen
+  useEffect(() => {
+    if (!imagenValue && mostrarDetalle) {
+      setValue("mostrarDetalle", false)
+    }
+  }, [imagenValue, mostrarDetalle, setValue])
 
   const onSubmit = async (data: HorarioForm) => {
     setSaving(true)
@@ -283,10 +291,16 @@ export default function NuevoHorarioPage() {
               <p className="text-muted-foreground text-sm">
                 Muestra este horario con imagen y descripcion ampliada
               </p>
+              {!imagenValue && (
+                <p className="mt-1 text-xs text-amber-600">
+                  Agrega una imagen para habilitar esta opcion
+                </p>
+              )}
             </div>
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
+              disabled={!imagenValue}
             />
           </div>
 

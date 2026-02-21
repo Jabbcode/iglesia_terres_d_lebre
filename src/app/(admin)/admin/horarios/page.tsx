@@ -202,22 +202,6 @@ export default function HorariosPage() {
                     {horario.activo ? "Activo" : "Inactivo"}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={horario.mostrarDetalle}
-                    onCheckedChange={() =>
-                      handleToggle(
-                        horario.id,
-                        "mostrarDetalle",
-                        horario.mostrarDetalle
-                      )
-                    }
-                    disabled={toggling === `${horario.id}-mostrarDetalle`}
-                  />
-                  <span className="text-muted-foreground w-14 text-xs">
-                    Detalle
-                  </span>
-                </div>
                 <span className="text-muted-foreground text-sm">
                   Orden: {horario.order}
                 </span>

@@ -89,6 +89,14 @@ export default function EditarHorarioPage({
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
+  const imagenValue = watch("imagen")
+
+  // Desactivar mostrarDetalle si se elimina la imagen
+  useEffect(() => {
+    if (!imagenValue && mostrarDetalle) {
+      setValue("mostrarDetalle", false)
+    }
+  }, [imagenValue, mostrarDetalle, setValue])
 
   useEffect(() => {
     fetch("/api/admin/horarios")
@@ -345,10 +353,16 @@ export default function EditarHorarioPage({
               <p className="text-muted-foreground text-sm">
                 Muestra este horario con imagen y descripcion ampliada
               </p>
+              {!imagenValue && (
+                <p className="mt-1 text-xs text-amber-600">
+                  Agrega una imagen para habilitar esta opcion
+                </p>
+              )}
             </div>
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
+              disabled={!imagenValue}
             />
           </div>
 
