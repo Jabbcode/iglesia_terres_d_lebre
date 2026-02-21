@@ -35,8 +35,7 @@ export function Hero() {
       <figure
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop')",
+          backgroundImage: "url('/hero/hero_bg.png')",
         }}
         role="img"
         aria-label="Comunidad reunida en adoración"
