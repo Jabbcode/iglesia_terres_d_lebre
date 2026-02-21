@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, Users } from "lucide-react"
+import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { EmptyState } from "@/components/admin/empty-state"
 import Link from "next/link"
 
 interface TarjetaComunidad {
@@ -112,18 +113,13 @@ export default function ComunidadPage() {
       </div>
 
       {tarjetas.length === 0 ? (
-        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
-          <Users className="text-muted-foreground/50 size-12" />
-          <p className="text-muted-foreground mt-4">
-            No hay tarjetas configuradas
-          </p>
-          <Link href="/admin/comunidad/nueva" className="mt-4">
-            <Button variant="outline" className="gap-2">
-              <Plus className="size-4" />
-              Agregar primera tarjeta
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          variant="comunidad"
+          title="Sin tarjetas"
+          description="Crea tarjetas para mostrar los diferentes grupos y ministerios de tu comunidad."
+          ctaLabel="Crear primera tarjeta"
+          ctaHref="/admin/comunidad/nueva"
+        />
       ) : (
         <div className="space-y-3">
           {tarjetas.map((tarjeta) => (

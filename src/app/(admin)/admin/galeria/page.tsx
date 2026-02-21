@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, Image as ImageIcon } from "lucide-react"
+import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/admin/empty-state"
 import Link from "next/link"
-import Image from "next/image"
 
 interface Imagen {
   id: string
@@ -88,18 +88,13 @@ export default function GaleriaPage() {
       </div>
 
       {imagenes.length === 0 ? (
-        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
-          <ImageIcon className="text-muted-foreground/50 size-12" />
-          <p className="text-muted-foreground mt-4">
-            No hay imagenes en la galeria
-          </p>
-          <Link href="/admin/galeria/nueva" className="mt-4">
-            <Button variant="outline" className="gap-2">
-              <Plus className="size-4" />
-              Agregar primera imagen
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          variant="galeria"
+          title="Sin imagenes"
+          description="Agrega fotos para mostrar los momentos especiales de tu comunidad en la galeria del sitio."
+          ctaLabel="Agregar primera imagen"
+          ctaHref="/admin/galeria/nueva"
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {imagenes.map((imagen) => (

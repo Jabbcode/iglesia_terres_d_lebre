@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { EmptyState } from "@/components/admin/empty-state"
 import Link from "next/link"
 
 interface Evento {
@@ -118,18 +119,13 @@ export default function EventosPage() {
       </div>
 
       {eventos.length === 0 ? (
-        <div className="border-border/50 flex flex-col items-center justify-center rounded-xl border bg-white p-12 shadow-sm">
-          <Calendar className="text-muted-foreground/50 size-12" />
-          <p className="text-muted-foreground mt-4">
-            No hay eventos registrados
-          </p>
-          <Link href="/admin/eventos/nuevo" className="mt-4">
-            <Button variant="outline" className="gap-2">
-              <Plus className="size-4" />
-              Agregar primer evento
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          variant="eventos"
+          title="Sin eventos"
+          description="Crea eventos para mantener a tu comunidad informada sobre las proximas actividades y celebraciones."
+          ctaLabel="Crear primer evento"
+          ctaHref="/admin/eventos/nuevo"
+        />
       ) : (
         <div className="space-y-3">
           {eventos.map((evento) => (
