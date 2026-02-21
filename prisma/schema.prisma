@@ -91,21 +91,6 @@ model Horario {
   updatedAt        DateTime @updatedAt
 }
 
-model TarjetaComunidad {
-  id          String   @id @default(cuid())
-  titulo      String
-  descripcion String
-  imagen      String
-  linkHref    String?
-  linkLabel   String?
-  order       Int      @default(0)
-  activo      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("TarjetaComunidad")
-}
-
 model Testimonio {
   id          String   @id @default(cuid())
   nombre      String

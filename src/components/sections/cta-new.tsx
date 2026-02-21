@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function CtaNew() {
@@ -13,10 +13,11 @@ export function CtaNew() {
         <Button
           asChild
           className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-14 rounded-full px-10 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
+          size={"lg"}
         >
           <Link href="/creencias" className="gap-3">
-            ¿Eres nuevo? Empieza aquí
-            <ArrowRight className="size-4" aria-hidden="true" />
+            Conócenos un poco más
+            <ChevronRight className="size-4" aria-hidden="true" />
           </Link>
         </Button>
       </div>
