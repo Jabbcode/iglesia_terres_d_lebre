@@ -1,7 +1,30 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { motion, useReducedMotion, Variants } from "framer-motion"
 
 export function Hero() {
+  const shouldReduceMotion = useReducedMotion()
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.15,
+      },
+    },
+  }
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  }
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -21,28 +44,42 @@ export function Hero() {
       <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
 
       {/* Content */}
-      <header className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-        <p className="text-amber mb-4 text-xs font-bold tracking-[0.3em]">
+      <motion.header
+        className="relative z-10 mx-auto max-w-4xl px-4 text-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.p
+          variants={itemVariants}
+          className="text-amber mb-4 text-xs font-bold tracking-[0.3em]"
+        >
           TE ESTÁBAMOS ESPERANDO
-        </p>
-        <h1
+        </motion.p>
+        <motion.h1
+          variants={itemVariants}
           id="hero-heading"
           className="mb-6 text-5xl font-bold text-white sm:text-6xl lg:text-7xl"
         >
           Bienvenidos{" "}
           <span className="text-amber font-serif italic">a Casa</span>
-        </h1>
-        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-white/80">
+        </motion.h1>
+        <motion.p
+          variants={itemVariants}
+          className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-white/80"
+        >
           Somos una comunidad de fe donde cada persona encuentra su lugar. Un
           espacio para crecer, servir y vivir en el amor de Dios.
-        </p>
-        <Button
-          asChild
-          className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-12 rounded-full px-8 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
-        >
-          <Link href="/horarios">Ver servicios</Link>
-        </Button>
-      </header>
+        </motion.p>
+        <motion.div variants={itemVariants}>
+          <Button
+            asChild
+            className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-12 rounded-full px-8 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
+          >
+            <Link href="/horarios">Ver servicios</Link>
+          </Button>
+        </motion.div>
+      </motion.header>
     </section>
   )
 }

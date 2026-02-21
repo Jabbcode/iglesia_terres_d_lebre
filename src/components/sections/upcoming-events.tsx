@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { FadeInUp } from "@/components/ui/motion"
 
 interface Evento {
   id: string
@@ -84,11 +85,9 @@ export function UpcomingEvents() {
         {/* Events */}
         {eventos.length <= 3 ? (
           <div className="flex flex-wrap justify-center gap-6">
-            {eventos.map((evento) => (
-              <div
-                key={evento.id}
-                className="border-border/50 bg-cream flex w-full max-w-sm flex-col rounded-2xl border p-6 shadow-sm"
-              >
+            {eventos.map((evento, index) => (
+              <FadeInUp key={evento.id} delay={index * 0.1}>
+                <div className="border-border/50 bg-cream flex h-full w-full max-w-sm flex-col rounded-2xl border p-6 shadow-sm">
                 <div className="text-amber mb-4 flex items-center gap-2">
                   <CalendarDays className="size-5" />
                   <span className="text-sm font-semibold capitalize">
@@ -113,7 +112,8 @@ export function UpcomingEvents() {
                     </div>
                   )}
                 </div>
-              </div>
+                </div>
+              </FadeInUp>
             ))}
           </div>
         ) : (

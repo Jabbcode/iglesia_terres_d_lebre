@@ -10,6 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
+import { FadeInUp } from "@/components/ui/motion"
 
 interface Testimonio {
   id: string
@@ -174,21 +176,20 @@ export function AboutUs() {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {missionVision.map((item) => (
-              <div
-                key={item.title}
-                className="border-border/50 flex flex-col items-center rounded-2xl border bg-white p-8 text-center shadow-sm md:items-start md:text-left"
-              >
-                <div className="bg-amber/10 mb-4 flex size-14 items-center justify-center rounded-full">
-                  <item.icon className="text-amber size-7" />
+            {missionVision.map((item, index) => (
+              <FadeInUp key={item.title} delay={index * 0.1}>
+                <div className="border-border/50 flex h-full flex-col items-center rounded-2xl border bg-white p-8 text-center shadow-sm md:items-start md:text-left">
+                  <div className="bg-amber/10 mb-4 flex size-14 items-center justify-center rounded-full">
+                    <item.icon className="text-amber size-7" />
+                  </div>
+                  <h3 className="text-foreground mb-3 text-xl font-bold">
+                    {item.title}
+                  </h3>
+                  <p className="text-muted-foreground text-base leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-                <h3 className="text-foreground mb-3 text-xl font-bold">
-                  {item.title}
-                </h3>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
+              </FadeInUp>
             ))}
           </div>
         </div>
@@ -207,21 +208,20 @@ export function AboutUs() {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {values.map((value) => (
-              <div
-                key={value.title}
-                className="flex flex-col items-center text-center"
-              >
-                <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
-                  <value.icon className="text-amber size-7" />
+            {values.map((value, index) => (
+              <FadeInUp key={value.title} delay={index * 0.1}>
+                <div className="flex flex-col items-center text-center">
+                  <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
+                    <value.icon className="text-amber size-7" />
+                  </div>
+                  <h3 className="text-foreground mb-2 font-serif text-lg font-bold italic">
+                    {value.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {value.description}
+                  </p>
                 </div>
-                <h3 className="text-foreground mb-2 font-serif text-lg font-bold italic">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {value.description}
-                </p>
-              </div>
+              </FadeInUp>
             ))}
           </div>
         </div>
@@ -364,33 +364,43 @@ export function AboutUs() {
       )}
 
       {/* Video Modal */}
-      {activeVideo && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-          onClick={() => setActiveVideo(null)}
-        >
-          <button
+      <AnimatePresence>
+        {activeVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
             onClick={() => setActiveVideo(null)}
-            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
-            <span className="text-2xl">&times;</span>
-            <span className="sr-only">Cerrar</span>
-          </button>
+            <button
+              onClick={() => setActiveVideo(null)}
+              className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            >
+              <span className="text-2xl">&times;</span>
+              <span className="sr-only">Cerrar</span>
+            </button>
 
-          <div
-            className="aspect-video w-full max-w-4xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              src={activeVideo}
-              title="Video testimonio"
-              className="h-full w-full rounded-lg"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="aspect-video w-full max-w-4xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={activeVideo}
+                title="Video testimonio"
+                className="h-full w-full rounded-lg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { FadeInUp } from "@/components/ui/motion"
 
 interface TarjetaComunidad {
   id: string
@@ -85,45 +86,44 @@ export function Community() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => (
-            <article
-              key={card.id}
-              className="group relative h-96 overflow-hidden rounded-2xl"
-            >
-              {/* Background image */}
-              <figure
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                style={{ backgroundImage: `url('${card.imagen}')` }}
-                role="img"
-                aria-label={card.titulo}
-              />
-              {/* Gradient overlay */}
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
-                aria-hidden="true"
-              />
+          {cards.map((card, index) => (
+            <FadeInUp key={card.id} delay={index * 0.1}>
+              <article className="group relative h-96 overflow-hidden rounded-2xl">
+                {/* Background image */}
+                <figure
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: `url('${card.imagen}')` }}
+                  role="img"
+                  aria-label={card.titulo}
+                />
+                {/* Gradient overlay */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+                  aria-hidden="true"
+                />
 
-              {/* Content with glassmorphism */}
-              <div className="absolute inset-x-0 bottom-0 p-6">
-                <div className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
-                  <h3 className="mb-2 text-lg font-bold text-white">
-                    {card.titulo}
-                  </h3>
-                  <p className="mb-4 text-sm leading-relaxed text-white/80">
-                    {card.descripcion}
-                  </p>
-                  {card.linkHref && card.linkLabel && (
-                    <Link
-                      href={card.linkHref}
-                      className="text-amber inline-flex items-center gap-2 text-xs font-bold tracking-wider transition-colors hover:text-white"
-                    >
-                      {card.linkLabel}
-                      <ArrowRight className="size-3.5" aria-hidden="true" />
-                    </Link>
-                  )}
+                {/* Content with glassmorphism */}
+                <div className="absolute inset-x-0 bottom-0 p-6">
+                  <div className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+                    <h3 className="mb-2 text-lg font-bold text-white">
+                      {card.titulo}
+                    </h3>
+                    <p className="mb-4 text-sm leading-relaxed text-white/80">
+                      {card.descripcion}
+                    </p>
+                    {card.linkHref && card.linkLabel && (
+                      <Link
+                        href={card.linkHref}
+                        className="text-amber inline-flex items-center gap-2 text-xs font-bold tracking-wider transition-colors hover:text-white"
+                      >
+                        {card.linkLabel}
+                        <ArrowRight className="size-3.5" aria-hidden="true" />
+                      </Link>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </FadeInUp>
           ))}
         </div>
       </div>
