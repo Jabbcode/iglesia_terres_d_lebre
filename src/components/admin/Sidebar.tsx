@@ -21,10 +21,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/testimonios", label: "Testimonios", icon: MessageCircle },
   { href: "/admin/galeria", label: "Galeria", icon: Image },
-  { href: "/admin/eventos", label: "Eventos", icon: Calendar },
   { href: "/admin/horarios", label: "Horarios", icon: Clock },
+  { href: "/admin/eventos", label: "Eventos", icon: Calendar },
+  { href: "/admin/testimonios", label: "Testimonios", icon: MessageCircle },
   { href: "/admin/configuracion", label: "Configuracion", icon: Settings },
 ]
 
