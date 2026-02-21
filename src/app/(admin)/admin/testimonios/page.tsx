@@ -154,7 +154,7 @@ export default function TestimoniosPage() {
                     }
                     disabled={toggling === testimonio.id}
                   />
-                  <span className="text-muted-foreground text-xs w-14">
+                  <span className="text-muted-foreground w-14 text-xs">
                     {testimonio.activo ? "Activo" : "Inactivo"}
                   </span>
                 </div>

@@ -85,11 +85,13 @@ export function AboutUs() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-cream pb-16 pt-20">
+      <section className="bg-cream pt-20 pb-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
             Conoce{" "}
-            <span className="text-amber font-serif italic">Nuestra Iglesia</span>
+            <span className="text-amber font-serif italic">
+              Nuestra Iglesia
+            </span>
           </h1>
           <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
             Somos una comunidad de fe comprometida con el amor de Cristo.
@@ -198,7 +200,10 @@ export function AboutUs() {
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             {values.map((value) => (
-              <div key={value.title} className="flex flex-col items-center text-center">
+              <div
+                key={value.title}
+                className="flex flex-col items-center text-center"
+              >
                 <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
                   <value.icon className="text-amber size-7" />
                 </div>
@@ -224,7 +229,9 @@ export function AboutUs() {
               </p>
               <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
                 Vidas{" "}
-                <span className="text-amber font-serif italic">transformadas</span>
+                <span className="text-amber font-serif italic">
+                  transformadas
+                </span>
               </h2>
               <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
                 Escucha las historias de personas cuyas vidas han sido
@@ -240,7 +247,7 @@ export function AboutUs() {
                     className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm"
                   >
                     <div className="aspect-video bg-gray-200" />
-                    <div className="p-5 space-y-2">
+                    <div className="space-y-2 p-5">
                       <div className="h-5 w-32 rounded bg-gray-200" />
                       <div className="h-4 w-full rounded bg-gray-200" />
                       <div className="h-4 w-3/4 rounded bg-gray-200" />
@@ -264,7 +271,11 @@ export function AboutUs() {
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
                         <button
-                          onClick={() => setActiveVideo(getYouTubeEmbedUrl(testimonio.videoUrl))}
+                          onClick={() =>
+                            setActiveVideo(
+                              getYouTubeEmbedUrl(testimonio.videoUrl)
+                            )
+                          }
                           className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
                         >
                           <Play className="ml-1 size-7" fill="currentColor" />
@@ -297,7 +308,7 @@ export function AboutUs() {
         >
           <button
             onClick={() => setActiveVideo(null)}
-            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
             <span className="text-2xl">&times;</span>
             <span className="sr-only">Cerrar</span>

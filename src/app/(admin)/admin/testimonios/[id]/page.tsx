@@ -127,7 +127,9 @@ export default function EditarTestimonioPage({
           <ArrowLeft className="size-4" />
           Volver a testimonios
         </Link>
-        <h1 className="text-foreground text-2xl font-bold">Editar Testimonio</h1>
+        <h1 className="text-foreground text-2xl font-bold">
+          Editar Testimonio
+        </h1>
         <p className="text-muted-foreground mt-1">
           Modifica los datos del testimonio
         </p>
@@ -185,7 +187,8 @@ export default function EditarTestimonioPage({
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               <p className="text-muted-foreground mt-1 text-xs">
-                Usa el formato embed de YouTube (ej: https://www.youtube.com/embed/VIDEO_ID)
+                Usa el formato embed de YouTube (ej:
+                https://www.youtube.com/embed/VIDEO_ID)
               </p>
               {errors.videoUrl && (
                 <p className="mt-1 text-sm text-red-500">
