@@ -75,16 +75,20 @@ model Evento {
 }
 
 model Horario {
-  id          String   @id @default(cuid())
-  titulo      String
-  descripcion String?
-  dia         String   // "Domingos", "Miercoles", "Sabados"
-  hora        String   // "11:00h"
-  icono       String   @default("Church") // Lucide icon name
-  order       Int      @default(0)
-  activo      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  titulo           String
+  subtitulo        String?  // Para formato "Estudio Bíblico *semanal*"
+  descripcion      String?
+  descripcionLarga String?  // Descripción extendida para sección de detalle
+  dia              String   // "Domingos", "Miercoles", "Sabados"
+  hora             String   // "11:00h"
+  icono            String   @default("Church") // Lucide icon name
+  imagen           String?  // URL de imagen para sección de detalle
+  mostrarDetalle   Boolean  @default(false) // Si aparece en la sección inferior
+  order            Int      @default(0)
+  activo           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model TarjetaComunidad {

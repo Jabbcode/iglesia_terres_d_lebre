@@ -4,10 +4,14 @@ import { z } from "zod"
 
 const updateSchema = z.object({
   titulo: z.string().min(1).optional(),
+  subtitulo: z.string().nullable().optional(),
   descripcion: z.string().nullable().optional(),
+  descripcionLarga: z.string().nullable().optional(),
   dia: z.string().min(1).optional(),
   hora: z.string().min(1).optional(),
   icono: z.string().optional(),
+  imagen: z.string().nullable().optional(),
+  mostrarDetalle: z.boolean().optional(),
   order: z.number().int().optional(),
   activo: z.boolean().optional(),
 })

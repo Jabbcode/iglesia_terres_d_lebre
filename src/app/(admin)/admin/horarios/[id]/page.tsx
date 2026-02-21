@@ -7,14 +7,19 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
+  subtitulo: z.string(),
   descripcion: z.string(),
+  descripcionLarga: z.string(),
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
+  imagen: z.string(),
+  mostrarDetalle: z.boolean(),
   order: z.number().int(),
   activo: z.boolean(),
 })
@@ -24,25 +29,30 @@ type HorarioForm = z.infer<typeof horarioSchema>
 interface Horario {
   id: string
   titulo: string
+  subtitulo: string | null
   descripcion: string | null
+  descripcionLarga: string | null
   dia: string
   hora: string
   icono: string
+  imagen: string | null
+  mostrarDetalle: boolean
   order: number
   activo: boolean
 }
 
 const iconOptions = [
   "Church",
-  "Book",
-  "Heart",
+  "BookOpen",
+  "HeartHandshake",
   "Users",
+  "Smile",
   "Music",
   "Mic2",
   "Sun",
   "Moon",
   "Star",
-  "Cross",
+  "Calendar",
 ]
 
 const diaOptions = [
@@ -71,10 +81,14 @@ export default function EditarHorarioPage({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<HorarioForm>({
     resolver: zodResolver(horarioSchema),
   })
+
+  const mostrarDetalle = watch("mostrarDetalle")
 
   useEffect(() => {
     fetch("/api/admin/horarios")
@@ -84,10 +98,14 @@ export default function EditarHorarioPage({
         if (horario) {
           reset({
             titulo: horario.titulo,
+            subtitulo: horario.subtitulo || "",
             descripcion: horario.descripcion || "",
+            descripcionLarga: horario.descripcionLarga || "",
             dia: horario.dia,
             hora: horario.hora,
             icono: horario.icono,
+            imagen: horario.imagen || "",
+            mostrarDetalle: horario.mostrarDetalle,
             order: horario.order,
             activo: horario.activo,
           })
@@ -103,10 +121,14 @@ export default function EditarHorarioPage({
     try {
       const payload = {
         titulo: data.titulo,
+        subtitulo: data.subtitulo || null,
         descripcion: data.descripcion || null,
+        descripcionLarga: data.descripcionLarga || null,
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
+        imagen: data.imagen || null,
+        mostrarDetalle: data.mostrarDetalle,
         order: data.order,
         activo: data.activo,
       }
@@ -177,27 +199,47 @@ export default function EditarHorarioPage({
           </div>
         )}
 
+        {/* Información básica */}
         <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <h2 className="text-foreground mb-4 font-semibold">
+            Informacion Basica
+          </h2>
           <div className="space-y-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Titulo
-              </label>
-              <input
-                {...register("titulo")}
-                placeholder="Ej: Culto Dominical"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.titulo && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.titulo.message}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Titulo
+                </label>
+                <input
+                  {...register("titulo")}
+                  placeholder="Ej: Culto Dominical"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                {errors.titulo && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.titulo.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Subtitulo (opcional)
+                </label>
+                <input
+                  {...register("subtitulo")}
+                  placeholder="Ej: semanal"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Se muestra en cursiva junto al titulo
                 </p>
-              )}
+              </div>
             </div>
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion
+                Descripcion corta (opcional)
               </label>
               <textarea
                 {...register("descripcion")}
@@ -291,6 +333,51 @@ export default function EditarHorarioPage({
               </label>
             </div>
           </div>
+        </div>
+
+        {/* Sección de detalle */}
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-foreground font-semibold">
+                Seccion de Detalle
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Muestra este horario con imagen y descripcion ampliada
+              </p>
+            </div>
+            <Switch
+              checked={mostrarDetalle}
+              onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
+            />
+          </div>
+
+          {mostrarDetalle && (
+            <div className="space-y-4 border-t pt-4">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Descripcion Larga
+                </label>
+                <textarea
+                  {...register("descripcionLarga")}
+                  rows={4}
+                  placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  URL de Imagen
+                </label>
+                <input
+                  {...register("imagen")}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between">

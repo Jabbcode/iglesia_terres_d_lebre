@@ -4,10 +4,14 @@ import { z } from "zod"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
+  subtitulo: z.string().nullable().optional(),
   descripcion: z.string().nullable().optional(),
+  descripcionLarga: z.string().nullable().optional(),
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string().default("Church"),
+  imagen: z.string().nullable().optional(),
+  mostrarDetalle: z.boolean().default(false),
   order: z.number().int().default(0),
   activo: z.boolean().default(true),
 })

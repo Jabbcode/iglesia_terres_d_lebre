@@ -8,16 +8,25 @@ import {
   BookOpen,
   Smile,
   Calendar,
+  Music,
+  Mic2,
+  Sun,
+  Moon,
+  Star,
   type LucideIcon,
 } from "lucide-react"
 
 interface Horario {
   id: string
   titulo: string
+  subtitulo: string | null
   descripcion: string | null
+  descripcionLarga: string | null
   dia: string
   hora: string
   icono: string | null
+  imagen: string | null
+  mostrarDetalle: boolean
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -27,35 +36,12 @@ const iconMap: Record<string, LucideIcon> = {
   BookOpen,
   Smile,
   Calendar,
+  Music,
+  Mic2,
+  Sun,
+  Moon,
+  Star,
 }
-
-const detailSections = [
-  {
-    title: "Estudio Bíblico",
-    subtitle: "semanal",
-    description:
-      "Profundiza en las Escrituras con nosotros. Un tiempo para aprender y dialogar en un ambiente de hermandad.",
-    emphasis: "¡Todos son bienvenidos!",
-    icon: BookOpen,
-    schedule: "Cada Miércoles a las 20:00h",
-    image:
-      "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=1200&auto=format&fit=crop",
-    imageAlt: "Estudio bíblico",
-  },
-  {
-    title: "Actividades para",
-    subtitle: "niños",
-    description:
-      "Durante el culto de adoración, los más pequeños disfrutan de un tiempo especial en la",
-    emphasis: "Escuela Dominical,",
-    afterEmphasis: " aprendiendo de la Biblia de forma divertida y creativa.",
-    icon: Smile,
-    schedule: "Domingos a las 11:00h",
-    image:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1200&auto=format&fit=crop",
-    imageAlt: "Actividades para niños",
-  },
-]
 
 export function Schedule() {
   const [horarios, setHorarios] = useState<Horario[]>([])
@@ -79,6 +65,8 @@ export function Schedule() {
     }
     return Calendar
   }
+
+  const horariosConDetalle = horarios.filter((h) => h.mostrarDetalle)
 
   if (loading) {
     return (
@@ -134,58 +122,61 @@ export function Schedule() {
       </section>
 
       {/* Detail sections (alternating) */}
-      <section className="bg-white">
-        {detailSections.map((section, index) => {
-          const isReversed = index % 2 !== 0
-          return (
-            <div
-              key={section.title}
-              className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
-            >
+      {horariosConDetalle.length > 0 && (
+        <section className="bg-white">
+          {horariosConDetalle.map((horario, index) => {
+            const isReversed = index % 2 !== 0
+            const Icon = getIcon(horario.icono)
+            return (
               <div
-                className={`flex flex-col items-center gap-10 lg:gap-16 ${
-                  isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
-                }`}
+                key={horario.id}
+                className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
               >
-                {/* Text */}
-                <div className="flex-1">
-                  <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
-                    {section.title}{" "}
-                    <span className="text-amber font-serif italic">
-                      {section.subtitle}
-                    </span>
-                  </h2>
-                  <p className="text-muted-foreground mb-6 text-base leading-relaxed">
-                    {section.description} <em>{section.emphasis}</em>
-                    {section.afterEmphasis}
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <section.icon
-                      className="text-amber size-5"
-                      strokeWidth={1.5}
-                    />
-                    <span className="text-foreground text-sm font-semibold">
-                      {section.schedule}
-                    </span>
+                <div
+                  className={`flex flex-col items-center gap-10 lg:gap-16 ${
+                    isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
+                  }`}
+                >
+                  {/* Text */}
+                  <div className="flex-1">
+                    <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
+                      {horario.titulo}{" "}
+                      {horario.subtitulo && (
+                        <span className="text-amber font-serif italic">
+                          {horario.subtitulo}
+                        </span>
+                      )}
+                    </h2>
+                    <p className="text-muted-foreground mb-6 text-base leading-relaxed">
+                      {horario.descripcionLarga || horario.descripcion}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Icon className="text-amber size-5" strokeWidth={1.5} />
+                      <span className="text-foreground text-sm font-semibold">
+                        {horario.dia} a las {horario.hora}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Image */}
-                <div className="flex-1">
-                  <div className="bg-muted overflow-hidden rounded-2xl">
-                    <img
-                      src={section.image}
-                      alt={section.imageAlt}
-                      loading="lazy"
-                      className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                  </div>
+                  {/* Image */}
+                  {horario.imagen && (
+                    <div className="flex-1">
+                      <div className="bg-muted overflow-hidden rounded-2xl">
+                        <img
+                          src={horario.imagen}
+                          alt={horario.titulo}
+                          loading="lazy"
+                          className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </section>
+            )
+          })}
+        </section>
+      )}
     </>
   )
 }
