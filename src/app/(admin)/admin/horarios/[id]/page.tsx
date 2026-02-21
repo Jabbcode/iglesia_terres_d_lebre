@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 const horarioSchema = z.object({
@@ -64,6 +65,7 @@ export default function EditarHorarioPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   const {
     register,
@@ -148,7 +150,16 @@ export default function EditarHorarioPage({
   }
 
   const handleDelete = async () => {
-    if (!confirm("¿Estas seguro de eliminar este horario?")) return
+    const confirmed = await confirm({
+      title: "Eliminar horario",
+      description:
+        "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(true)
     try {

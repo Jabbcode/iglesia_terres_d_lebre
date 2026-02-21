@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 const eventoSchema = z.object({
@@ -43,6 +44,7 @@ export default function EditarEventoPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   const {
     register,
@@ -108,7 +110,16 @@ export default function EditarEventoPage({
   }
 
   const handleDelete = async () => {
-    if (!confirm("¿Estas seguro de eliminar este evento?")) return
+    const confirmed = await confirm({
+      title: "Eliminar evento",
+      description:
+        "¿Estas seguro de eliminar este evento? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(true)
     try {

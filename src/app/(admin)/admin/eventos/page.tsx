@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 interface Evento {
@@ -23,6 +24,7 @@ export default function EventosPage() {
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [toggling, setToggling] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchEventos()
@@ -41,7 +43,16 @@ export default function EventosPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar este evento?")) return
+    const confirmed = await confirm({
+      title: "Eliminar evento",
+      description:
+        "¿Estas seguro de eliminar este evento? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {

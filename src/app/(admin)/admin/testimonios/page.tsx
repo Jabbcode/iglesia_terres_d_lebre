@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 interface Testimonio {
@@ -22,6 +23,7 @@ export default function TestimoniosPage() {
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [toggling, setToggling] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchTestimonios()
@@ -40,7 +42,16 @@ export default function TestimoniosPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar este testimonio?")) return
+    const confirmed = await confirm({
+      title: "Eliminar testimonio",
+      description:
+        "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {

@@ -290,8 +290,7 @@ export function UpcomingEvents() {
         <div className="mt-10 text-center">
           <Button
             asChild
-            variant="outline"
-            className="border-amber text-amber hover:bg-amber h-11 rounded-full px-8 text-sm font-semibold hover:text-white"
+            className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
           >
             <Link href="/horarios">Ver todos los horarios</Link>
           </Button>

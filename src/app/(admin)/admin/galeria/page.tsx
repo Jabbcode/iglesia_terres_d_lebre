@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 interface Imagen {
@@ -18,6 +19,7 @@ export default function GaleriaPage() {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchImagenes()
@@ -36,7 +38,16 @@ export default function GaleriaPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar esta imagen?")) return
+    const confirmed = await confirm({
+      title: "Eliminar imagen",
+      description:
+        "¿Estas seguro de eliminar esta imagen? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {

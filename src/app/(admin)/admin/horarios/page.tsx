@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
+import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 
 const iconMap: Record<string, LucideIcon> = {
@@ -56,6 +57,7 @@ export default function HorariosPage() {
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [toggling, setToggling] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   useEffect(() => {
     fetchHorarios()
@@ -74,7 +76,16 @@ export default function HorariosPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estas seguro de eliminar este horario?")) return
+    const confirmed = await confirm({
+      title: "Eliminar horario",
+      description:
+        "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
+      confirmLabel: "Eliminar",
+      cancelLabel: "Cancelar",
+      variant: "danger",
+    })
+
+    if (!confirmed) return
 
     setDeleting(id)
     try {
