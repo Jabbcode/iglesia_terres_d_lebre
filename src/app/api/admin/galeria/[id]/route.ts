@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { deleteImage } from "@/lib/supabase"
 import { z } from "zod"
 
 const updateSchema = z.object({
@@ -48,6 +49,24 @@ export async function DELETE(
   try {
     const { id } = await params
 
+    // Get the image first to have the URL for storage deletion
+    const imagen = await prisma.imagen.findUnique({
+      where: { id },
+    })
+
+    if (!imagen) {
+      return NextResponse.json(
+        { error: "Imagen no encontrada" },
+        { status: 404 }
+      )
+    }
+
+    // Delete from Supabase Storage (only if it's a Supabase URL)
+    if (imagen.src.includes("supabase")) {
+      await deleteImage(imagen.src)
+    }
+
+    // Delete from database
     await prisma.imagen.delete({
       where: { id },
     })

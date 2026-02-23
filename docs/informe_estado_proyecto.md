@@ -31,7 +31,7 @@
 - **Middleware de protección** para rutas `/admin/*` y `/api/admin/*`
 - **Dashboard** con estadísticas en tiempo real (imágenes, eventos, horarios, próximos eventos)
 - **CRUD Eventos** completo: listado, crear (`/nuevo`), editar (`/[id]`), eliminar
-- **CRUD Galería** completo: listado, añadir imagen (`/nueva`), editar (`/[id]`), eliminar
+- **CRUD Galería** completo: listado, añadir imagen (`/nueva`), editar (`/[id]`), eliminar, **subida masiva** (`/masiva`)
 - **CRUD Horarios** completo: listado, crear (`/nuevo`), editar (`/[id]`), eliminar
 - **Configuración del sitio** desde panel (datos generales, redes sociales, contacto, maps)
 
@@ -45,6 +45,7 @@
 | `/api/admin/eventos/[id]` | PUT, DELETE |
 | `/api/admin/galeria` | GET, POST |
 | `/api/admin/galeria/[id]` | PUT, DELETE |
+| `/api/admin/galeria/bulk` | POST (subida masiva 1-10 imagenes) |
 | `/api/admin/horarios` | GET, POST |
 | `/api/admin/horarios/[id]` | PUT, DELETE |
 | `/api/admin/config` | GET, PUT |
@@ -79,7 +80,7 @@ Modelos definidos en `schema.prisma`:
 1. **Verificar** que las secciones públicas (`schedule.tsx`, `gallery.tsx`, `upcoming-events.tsx`) consumen datos reales de la BD y no el mock
 2. **Añadir** countdown de próximo culto a la Home
 3. **Conectar** galería pública a BD
-4. **Upload de imágenes** real (actualmente se guardan URLs directamente)
+4. ~~**Upload de imágenes**~~ ✅ Implementado via Supabase Storage con subida masiva (hasta 10 imagenes)
 5. **Seed de producción** / usuario admin inicial
 
 ---
@@ -98,7 +99,7 @@ src/
 │   ├── (admin)/admin/    ← Panel de administración
 │   │   ├── page.tsx      ← Dashboard
 │   │   ├── eventos/
-│   │   ├── galeria/
+│   │   ├── galeria/      ← incluye /masiva para subida multiple
 │   │   ├── horarios/
 │   │   ├── configuracion/
 │   │   └── login/

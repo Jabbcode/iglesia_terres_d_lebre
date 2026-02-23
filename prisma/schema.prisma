@@ -62,10 +62,10 @@ model ConfigSitio {
 model Imagen {
   id        String    @id @default(cuid())
   src       String
-  alt       String
+  alt       String    @default("")
   span      ImageSpan @default(normal)
   order     Int       @default(0)
-  activo    Boolean   @default(true)
+  activo    Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
