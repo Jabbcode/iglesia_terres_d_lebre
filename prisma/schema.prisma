@@ -65,6 +65,7 @@ model Imagen {
   alt       String
   span      ImageSpan @default(normal)
   order     Int       @default(0)
+  activo    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

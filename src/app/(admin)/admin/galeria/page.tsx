@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
@@ -13,12 +14,14 @@ interface Imagen {
   alt: string
   span: "normal" | "tall" | "wide"
   order: number
+  activo: boolean
 }
 
 export default function GaleriaPage() {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [toggling, setToggling] = useState<string | null>(null)
   const confirm = useConfirm()
 
   useEffect(() => {
@@ -59,6 +62,28 @@ export default function GaleriaPage() {
       console.error("Error deleting image")
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const handleToggle = async (id: string, currentValue: boolean) => {
+    setToggling(id)
+    try {
+      const res = await fetch(`/api/admin/galeria/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !currentValue }),
+      })
+      if (res.ok) {
+        setImagenes(
+          imagenes.map((img) =>
+            img.id === id ? { ...img, activo: !currentValue } : img
+          )
+        )
+      }
+    } catch {
+      console.error("Error toggling image")
+    } finally {
+      setToggling(null)
     }
   }
 
@@ -121,14 +146,29 @@ export default function GaleriaPage() {
                 />
               </div>
               <div className="p-4">
-                <p className="text-foreground truncate font-medium">
-                  {imagen.alt}
-                </p>
-                <div className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
-                  <span className="bg-amber/10 text-amber rounded px-2 py-0.5">
-                    {spanLabels[imagen.span]}
-                  </span>
-                  <span>Orden: {imagen.order}</span>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-foreground truncate font-medium">
+                      {imagen.alt}
+                    </p>
+                    <div className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
+                      <span className="bg-amber/10 text-amber rounded px-2 py-0.5">
+                        {spanLabels[imagen.span]}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <Switch
+                      checked={imagen.activo}
+                      onCheckedChange={() =>
+                        handleToggle(imagen.id, imagen.activo)
+                      }
+                      disabled={toggling === imagen.id}
+                    />
+                    <span className="text-muted-foreground w-14 text-xs">
+                      {imagen.activo ? "Activa" : "Inactiva"}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">

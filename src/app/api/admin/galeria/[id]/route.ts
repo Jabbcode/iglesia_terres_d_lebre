@@ -7,6 +7,7 @@ const updateSchema = z.object({
   alt: z.string().min(1).optional(),
   span: z.enum(["normal", "tall", "wide"]).optional(),
   order: z.number().int().optional(),
+  activo: z.boolean().optional(),
 })
 
 export async function PATCH(
