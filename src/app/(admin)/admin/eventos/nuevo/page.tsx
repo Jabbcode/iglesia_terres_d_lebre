@@ -5,9 +5,17 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Save, ArrowLeft } from "lucide-react"
+import { Save, ArrowLeft, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
+const periodicidadOptions = [
+  { value: "ninguna", label: "Sin repeticion" },
+  { value: "semanal", label: "Semanal" },
+  { value: "quincenal", label: "Quincenal" },
+  { value: "mensual", label: "Mensual" },
+  { value: "anual", label: "Anual" },
+] as const
 
 const eventoSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -16,6 +24,8 @@ const eventoSchema = z.object({
   horaInicio: z.string().min(1, "Hora de inicio requerida"),
   horaFin: z.string(),
   ubicacion: z.string(),
+  periodicidad: z.enum(["ninguna", "semanal", "quincenal", "mensual", "anual"]),
+  repetirHasta: z.string(),
   activo: z.boolean(),
 })
 
@@ -29,6 +39,7 @@ export default function NuevoEventoPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),
@@ -36,9 +47,14 @@ export default function NuevoEventoPage() {
       descripcion: "",
       horaFin: "",
       ubicacion: "",
+      periodicidad: "ninguna",
+      repetirHasta: "",
       activo: true,
     },
   })
+
+  const periodicidad = watch("periodicidad")
+  const esPeriodico = periodicidad !== "ninguna"
 
   const onSubmit = async (data: EventoForm) => {
     setSaving(true)
@@ -52,6 +68,11 @@ export default function NuevoEventoPage() {
         horaInicio: data.horaInicio,
         horaFin: data.horaFin || null,
         ubicacion: data.ubicacion || null,
+        periodicidad: data.periodicidad,
+        repetirHasta:
+          esPeriodico && data.repetirHasta
+            ? new Date(data.repetirHasta).toISOString()
+            : null,
         activo: data.activo,
       }
 
@@ -194,6 +215,63 @@ export default function NuevoEventoPage() {
                 Evento activo
               </label>
             </div>
+          </div>
+        </div>
+
+        {/* Seccion de periodicidad */}
+        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <RefreshCw className="text-amber size-5" />
+            <h2 className="text-foreground font-semibold">
+              Evento Periodico
+            </h2>
+          </div>
+          <p className="text-muted-foreground mb-4 text-sm">
+            Configura si este evento se repite automaticamente.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Repeticion
+              </label>
+              <select
+                {...register("periodicidad")}
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              >
+                {periodicidadOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {esPeriodico && (
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Repetir hasta (opcional)
+                </label>
+                <input
+                  {...register("repetirHasta")}
+                  type="date"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Si no se especifica, el evento se repetira indefinidamente.
+                </p>
+              </div>
+            )}
+
+            {esPeriodico && (
+              <div className="rounded-lg bg-amber-50 p-3">
+                <p className="text-sm text-amber-800">
+                  <strong>Nota:</strong> La fecha del evento se usara como fecha
+                  base. El sistema calculara automaticamente la proxima
+                  ocurrencia.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

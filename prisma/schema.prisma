@@ -20,6 +20,14 @@ enum ImageSpan {
   wide
 }
 
+enum Periodicidad {
+  ninguna
+  semanal
+  quincenal
+  mensual
+  anual
+}
+
 // ==================== MODELS ====================
 
 model User {
@@ -62,16 +70,18 @@ model Imagen {
 }
 
 model Evento {
-  id          String   @id @default(cuid())
-  nombre      String
-  descripcion String?
-  fecha       DateTime
-  horaInicio  String
-  horaFin     String?
-  ubicacion   String?
-  activo      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String       @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  fecha         DateTime     // Fecha base del evento
+  horaInicio    String
+  horaFin       String?
+  ubicacion     String?
+  periodicidad  Periodicidad @default(ninguna)
+  repetirHasta  DateTime?    // Fecha límite para eventos periódicos
+  activo        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Horario {

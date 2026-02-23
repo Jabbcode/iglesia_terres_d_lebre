@@ -1,12 +1,29 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react"
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Calendar,
+  MapPin,
+  Clock,
+  RefreshCw,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { formatearPeriodicidad } from "@/lib/event-utils"
 import Link from "next/link"
+
+const PERIODICIDAD = {
+  NINGUNA: "ninguna",
+  SEMANAL: "semanal",
+  QUINCENAL: "quincenal",
+  MENSUAL: "mensual",
+  ANUAL: "anual",
+} as const
 
 interface Evento {
   id: string
@@ -16,6 +33,8 @@ interface Evento {
   horaInicio: string
   horaFin: string | null
   ubicacion: string | null
+  periodicidad: "ninguna" | "semanal" | "quincenal" | "mensual" | "anual"
+  repetirHasta: string | null
   activo: boolean
 }
 
@@ -145,9 +164,17 @@ export default function EventosPage() {
               className="group border-border/50 flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm"
             >
               <div className="flex-1">
-                <h3 className="text-foreground font-semibold">
-                  {evento.nombre}
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-foreground font-semibold">
+                    {evento.nombre}
+                  </h3>
+                  {evento.periodicidad !== PERIODICIDAD.NINGUNA && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                      <RefreshCw className="size-3" />
+                      {formatearPeriodicidad(evento.periodicidad)}
+                    </span>
+                  )}
+                </div>
                 {evento.descripcion && (
                   <p className="text-muted-foreground mt-1 line-clamp-1 text-sm">
                     {evento.descripcion}
@@ -157,6 +184,8 @@ export default function EventosPage() {
                   <span className="flex items-center gap-1">
                     <Calendar className="size-4" />
                     {formatDate(evento.fecha)}
+                    {evento.periodicidad !== PERIODICIDAD.NINGUNA &&
+                      " (fecha base)"}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="size-4" />
