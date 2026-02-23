@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+const MAX_IMAGES = 20
+
 export async function GET() {
   try {
     const imagenes = await prisma.imagen.findMany({
-      orderBy: { order: "asc" },
+      where: {
+        activo: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: MAX_IMAGES,
       select: {
         id: true,
         src: true,

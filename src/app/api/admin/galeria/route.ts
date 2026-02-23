@@ -7,12 +7,13 @@ const imagenSchema = z.object({
   alt: z.string().min(1, "Texto alternativo requerido"),
   span: z.enum(["normal", "tall", "wide"]).default("normal"),
   order: z.number().int().default(0),
+  activo: z.boolean().default(true),
 })
 
 export async function GET() {
   try {
     const imagenes = await prisma.imagen.findMany({
-      orderBy: { order: "asc" },
+      orderBy: { createdAt: "desc" },
     })
 
     return NextResponse.json(imagenes)
