@@ -8,6 +8,7 @@ import {
   SITE_KEYWORDS,
 } from "@/lib/constant"
 import { JsonLd } from "@/components/seo/json-ld"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -79,6 +80,7 @@ export default function RootLayout({
       >
         <JsonLd />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   )
