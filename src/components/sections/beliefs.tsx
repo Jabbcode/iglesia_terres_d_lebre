@@ -14,6 +14,7 @@ import {
   Heart,
   CloudSun,
   type LucideIcon,
+  HeartHandshake,
 } from "lucide-react"
 import {
   Carousel,
@@ -167,6 +168,19 @@ const creencias: Creencia[] = [
     image:
       "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/bautismo.jpeg",
     imageAlt: "Bautismo y Santa Cena",
+    mostrarDetalle: true,
+  },
+  {
+    id: "matrimonio",
+    icon: HeartHandshake,
+    title: "El Matrimonio",
+    subtitle: "El diseño de Dios",
+    shortDescription: "El diseño de Dios",
+    longDescription:
+      "Creemos que el matrimonio es una institución sagrada creada por Dios desde el principio. Según lo que Él demanda en la Biblia, el matrimonio es la unión exclusiva y fiel entre un hombre y una mujer. Este diseño divino tiene como propósito reflejar el amor de Cristo por Su Iglesia, proporcionar compañía mutua y ser la base para la familia.",
+    image:
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/matrimonio.png",
+    imageAlt: "Matrimonio cristiano",
     mostrarDetalle: true,
   },
   {
