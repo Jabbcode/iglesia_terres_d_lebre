@@ -5,7 +5,7 @@ import { z } from "zod"
 
 const updateSchema = z.object({
   src: z.string().url("URL de imagen invalida").optional(),
-  alt: z.string().min(1).optional(),
+  alt: z.string().optional(),
   span: z.enum(["normal", "tall", "wide"]).optional(),
   order: z.number().int().optional(),
   activo: z.boolean().optional(),
