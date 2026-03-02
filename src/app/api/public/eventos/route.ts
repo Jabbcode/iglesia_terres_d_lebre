@@ -1,14 +1,11 @@
-import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { calcularProximaOcurrencia } from "@/lib/event-utils"
+import { success, handleError } from "@/shared/api"
 
 export async function GET() {
   try {
-    // Obtener todos los eventos activos
     const eventos = await prisma.evento.findMany({
-      where: {
-        activo: true,
-      },
+      where: { activo: true },
       select: {
         id: true,
         nombre: true,
@@ -22,7 +19,7 @@ export async function GET() {
       },
     })
 
-    // Calcular próxima ocurrencia y filtrar eventos vigentes
+    // Calculate next occurrence and filter active events
     const eventosConProximaFecha = eventos
       .map((evento) => {
         const proximaOcurrencia = calcularProximaOcurrencia({
@@ -37,8 +34,8 @@ export async function GET() {
           id: evento.id,
           nombre: evento.nombre,
           descripcion: evento.descripcion,
-          fecha: proximaOcurrencia, // Fecha calculada
-          fechaBase: evento.fecha, // Fecha original
+          fecha: proximaOcurrencia,
+          fechaBase: evento.fecha,
           horaInicio: evento.horaInicio,
           horaFin: evento.horaFin,
           ubicacion: evento.ubicacion,
@@ -48,12 +45,8 @@ export async function GET() {
       .filter((e): e is NonNullable<typeof e> => e !== null)
       .sort((a, b) => a.fecha.getTime() - b.fecha.getTime())
 
-    return NextResponse.json(eventosConProximaFecha)
+    return success(eventosConProximaFecha)
   } catch (error) {
-    console.error("Error fetching public events:", error)
-    return NextResponse.json(
-      { error: "Error al obtener eventos" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
 }

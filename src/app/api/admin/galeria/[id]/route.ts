@@ -1,82 +1,35 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { deleteImage } from "@/lib/supabase"
-import { z } from "zod"
+import { NextRequest } from "next/server"
+import { imagenService, updateImagenSchema } from "@/modules/galeria"
+import { withAuth, type RouteContext } from "@/modules/auth"
+import { success, notFound, handleError } from "@/shared/api"
 
-const updateSchema = z.object({
-  src: z.string().url("URL de imagen invalida").optional(),
-  alt: z.string().optional(),
-  span: z.enum(["normal", "tall", "wide"]).optional(),
-  order: z.number().int().optional(),
-  activo: z.boolean().optional(),
-})
-
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params
-    const body = await request.json()
-    const validatedData = updateSchema.parse(body)
-
-    const imagen = await prisma.imagen.update({
-      where: { id },
-      data: validatedData,
-    })
-
-    return NextResponse.json(imagen)
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
+export const PATCH = withAuth(
+  async (request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const body = await request.json()
+      const data = updateImagenSchema.parse(body)
+      const imagen = await imagenService.update(id, data)
+      return success(imagen)
+    } catch (error) {
+      return handleError(error)
     }
-
-    console.error("Error updating image:", error)
-    return NextResponse.json(
-      { error: "Error al actualizar imagen" },
-      { status: 500 }
-    )
   }
-}
+)
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params
+export const DELETE = withAuth(
+  async (_request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const deleted = await imagenService.delete(id)
 
-    // Get the image first to have the URL for storage deletion
-    const imagen = await prisma.imagen.findUnique({
-      where: { id },
-    })
+      if (!deleted) {
+        return notFound("Imagen no encontrada")
+      }
 
-    if (!imagen) {
-      return NextResponse.json(
-        { error: "Imagen no encontrada" },
-        { status: 404 }
-      )
+      return success({ deleted: true })
+    } catch (error) {
+      return handleError(error)
     }
-
-    // Delete from Supabase Storage (only if it's a Supabase URL)
-    if (imagen.src.includes("supabase")) {
-      await deleteImage(imagen.src)
-    }
-
-    // Delete from database
-    await prisma.imagen.delete({
-      where: { id },
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Error deleting image:", error)
-    return NextResponse.json(
-      { error: "Error al eliminar imagen" },
-      { status: 500 }
-    )
   }
-}
+)

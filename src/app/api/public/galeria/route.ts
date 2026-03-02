@@ -1,30 +1,13 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { imagenService } from "@/modules/galeria"
+import { success, handleError } from "@/shared/api"
 
 const MAX_IMAGES = 20
 
 export async function GET() {
   try {
-    const imagenes = await prisma.imagen.findMany({
-      where: {
-        activo: true,
-      },
-      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-      take: MAX_IMAGES,
-      select: {
-        id: true,
-        src: true,
-        alt: true,
-        span: true,
-      },
-    })
-
-    return NextResponse.json(imagenes)
+    const imagenes = await imagenService.getPublic(MAX_IMAGES)
+    return success(imagenes)
   } catch (error) {
-    console.error("Error fetching public galeria:", error)
-    return NextResponse.json(
-      { error: "Error al obtener galería" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
 }

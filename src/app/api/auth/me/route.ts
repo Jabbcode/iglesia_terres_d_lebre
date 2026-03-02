@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
+import { success } from "@/shared/api"
 
 export async function GET() {
   const session = await getSession()
 
   if (!session) {
-    return NextResponse.json({ user: null })
+    return success({ user: null })
   }
 
-  return NextResponse.json({
+  return success({
     user: {
       userId: session.userId,
       email: session.email,
