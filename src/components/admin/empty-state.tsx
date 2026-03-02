@@ -144,13 +144,7 @@ function HorariosIllustration() {
         opacity="0.3"
       />
       <circle cx="60" cy="60" r="38" fill="currentColor" opacity="0.1" />
-      <circle
-        cx="60"
-        cy="60"
-        r="35"
-        stroke="currentColor"
-        strokeWidth="2.5"
-      />
+      <circle cx="60" cy="60" r="35" stroke="currentColor" strokeWidth="2.5" />
       <circle cx="60" cy="60" r="3" fill="currentColor" />
       <path
         d="M60 35 L60 60"
