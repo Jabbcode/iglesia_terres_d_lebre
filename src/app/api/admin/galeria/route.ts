@@ -13,7 +13,7 @@ const imagenSchema = z.object({
 export async function GET() {
   try {
     const imagenes = await prisma.imagen.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     })
 
     return NextResponse.json(imagenes)

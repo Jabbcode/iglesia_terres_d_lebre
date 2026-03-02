@@ -9,7 +9,7 @@ export async function GET() {
       where: {
         activo: true,
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
       take: MAX_IMAGES,
       select: {
         id: true,
