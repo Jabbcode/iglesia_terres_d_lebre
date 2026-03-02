@@ -6,11 +6,13 @@ import {
   Triangle,
   Users,
   Church,
-  Clock,
-  CalendarCheck,
   Cross,
   Flame,
   Gift,
+  Sunset,
+  Wine,
+  Heart,
+  CloudSun,
   type LucideIcon,
 } from "lucide-react"
 import {
@@ -41,9 +43,10 @@ const creencias: Creencia[] = [
     id: "biblia",
     icon: BookOpen,
     title: "La Biblia",
-    shortDescription: "Palabra inspirada de Dios",
+    subtitle: "Nuestra base",
+    shortDescription: "Nuestra base",
     longDescription:
-      "Es la Palabra inspirada de Dios, infalible y autoritativa en todos los asuntos de fe y vida. Es nuestra guía suprema para conocer a Dios y vivir de acuerdo a su voluntad.",
+      "Creemos que la Biblia es el mensaje de Dios para la humanidad. Tanto el Antiguo como el Nuevo Testamento fueron inspirados por Él y no contienen errores en sus escritos originales. Es la revelación completa de Su voluntad para salvarnos y la autoridad final que guía nuestra vida, nuestra fe y nuestra conducta. Por eso, creemos que su mensaje está cerrado: no se le puede quitar ni añadir nada.",
     image:
       "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Biblia abierta",
@@ -53,10 +56,10 @@ const creencias: Creencia[] = [
     id: "trinidad",
     icon: Triangle,
     title: "Dios",
-    subtitle: "Trino",
+    subtitle: "Uno en tres personas",
     shortDescription: "Padre, Hijo y Espíritu Santo",
     longDescription:
-      "Creemos en un solo Dios, eterno, que existe en tres personas: Padre, Hijo y Espíritu Santo, creador y sustentador de todo el universo.",
+      "Creemos en un solo Dios eterno que existe en tres personas: el Padre, el Hijo y el Espíritu Santo. Aunque son tres, son un solo Dios con la misma naturaleza, los mismos atributos y la misma perfección. Por lo tanto, los tres merecen el mismo respeto, confianza y obediencia de nuestra parte.",
     image:
       "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Luz divina",
@@ -66,10 +69,10 @@ const creencias: Creencia[] = [
     id: "jesucristo",
     icon: Cross,
     title: "Jesucristo",
-    subtitle: "nuestro Salvador",
+    subtitle: "Dios hecho hombre",
     shortDescription: "Plenamente Dios y hombre",
     longDescription:
-      "Creemos que Jesucristo, el Hijo de Dios, es plenamente Dios y plenamente hombre. Nació de una virgen, vivió una vida sin pecado, murió en la cruz por nuestros pecados, resucitó al tercer día, ascendió al cielo y vendrá otra vez en gloria.",
+      "Creemos que Jesucristo es plenamente Dios y plenamente hombre a la vez. Él ya existía desde siempre como Dios, pero se hizo hombre al ser concebido por el Espíritu Santo y nacer de una virgen, sin dejar de ser divino. Murió en la cruz como el sacrificio perfecto en nuestro lugar, resucitó al tercer día y ascendió al cielo. Hoy, desde allí, actúa como nuestro defensor y representante ante Dios mientras esperamos Su regreso.",
     image:
       "https://images.unsplash.com/photo-1445633629932-0029acc44e88?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Cruz al atardecer",
@@ -79,10 +82,10 @@ const creencias: Creencia[] = [
     id: "espiritu-santo",
     icon: Flame,
     title: "El Espíritu Santo",
-    subtitle: "nuestro Consolador",
+    subtitle: "Nuestra guía",
     shortDescription: "Mora en los creyentes",
     longDescription:
-      "Creemos en el Espíritu Santo, que convence al mundo de pecado, regenera a los creyentes, mora en ellos, los sella para el día de la redención, y los capacita para vivir una vida santa y de servicio.",
+      "Creemos que el Espíritu Santo es la tercera persona de la Trinidad. Su labor es darle la gloria a Jesús y ayudar a las personas a reconocer su pecado y su necesidad de Dios. Cuando alguien confía en Jesús, el Espíritu lo transforma y lo une a la Iglesia en ese mismo instante. Además, vive en el creyente para guiarlo, enseñarle y darle las fuerzas para vivir una vida que agrade a Dios.",
     image:
       "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Luz y espiritualidad",
@@ -92,10 +95,10 @@ const creencias: Creencia[] = [
     id: "salvacion",
     icon: Gift,
     title: "La Salvación",
-    subtitle: "un regalo de Dios",
+    subtitle: "Un regalo eterno",
     shortDescription: "Por gracia mediante la fe",
     longDescription:
-      "La salvación es un don de Dios, recibido por gracia mediante la fe en Jesucristo. No se basa en méritos humanos, sino en el sacrificio de Cristo. La fe genuina se manifiesta en obras de obediencia.",
+      "Creemos que cuando alguien confía en el Señor Jesucristo y en Su obra, pasa de inmediato de la muerte espiritual a la vida. En ese momento, Dios lo acepta y lo declara <em><strong>justo</strong></em>, tal como acepta a Jesús mismo. Esta unión con Cristo es para siempre. Somos salvos únicamente por Su sacrificio en la cruz. Al creer, somos <em><strong>nacidos de nuevo</strong></em> y sellados por el Espíritu Santo, confiando en que Dios siempre cumple Sus promesas.",
     image:
       "https://images.unsplash.com/photo-1490730141103-6cac27abb37f?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Luz de esperanza",
@@ -105,48 +108,78 @@ const creencias: Creencia[] = [
     id: "humanidad",
     icon: Users,
     title: "El Ser Humano",
+    subtitle: "Nuestra condición",
     shortDescription: "Creado a imagen de Dios",
     longDescription:
-      "El ser humano fue creado a imagen de Dios, pero cayó en pecado, lo que resultó en separación de Dios. Sin embargo, por medio de Cristo tenemos la oportunidad de ser reconciliados con nuestro Creador.",
+      "Creemos que fuimos creados a imagen de Dios, pero el pecado nos separó de Él. Como resultado, la humanidad perdió su conexión espiritual con Dios y quedó bajo una <em><strong>depravación total</strong></em>, lo que significa que estamos espiritualmente incapacitados para salvarnos por nosotros mismos. Esta condición se transmite a toda la raza humana, siendo Jesucristo la única excepción.",
     image:
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Comunidad de personas",
-    mostrarDetalle: false,
+    mostrarDetalle: true,
+  },
+  {
+    id: "regreso-cristo",
+    icon: Sunset,
+    title: "El Regreso de Cristo",
+    subtitle: "Nuestra esperanza",
+    shortDescription: "Segunda venida de Cristo",
+    longDescription:
+      "Creemos que después de un tiempo de gran dificultad en el mundo (la gran tribulación), el Señor Jesucristo regresará de forma física y personal. Vendrá con todo Su poder y gloria para establecer Su reino de mil años (el Milenio), derrotar el mal, restaurar la Creación de su actual sufrimiento, cumplir Sus promesas con Israel y ser reconocido por todo el mundo como Dios.",
+    image:
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
+    imageAlt: "Regreso de Cristo",
+    mostrarDetalle: true,
+  },
+  {
+    id: "resurreccion",
+    icon: CloudSun,
+    title: "La Resurrección",
+    subtitle: "El futuro eterno",
+    shortDescription: "El futuro eterno",
+    longDescription:
+      "Creemos que todas las personas que han muerto volverán a vivir físicamente. Quienes confiaron en Dios resucitarán para vivir en una alegría eterna junto a Él. Por otro lado, quienes rechazaron Su amor resucitarán para enfrentar un juicio y una separación consciente y eterna de Dios.",
+    image:
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
+    imageAlt: "Resurrección de los muertos",
+    mostrarDetalle: true,
   },
   {
     id: "iglesia",
     icon: Church,
     title: "La Iglesia",
+    subtitle: "Una familia unida",
     shortDescription: "El cuerpo de Cristo",
     longDescription:
-      "El cuerpo de Cristo, la comunidad de los creyentes, llamada a adorar a Dios, edificarse mutuamente y compartir el evangelio con el mundo.",
+      "Creemos que la Iglesia no es un lugar, sino la unión de todas las personas que han sido transformadas por el Espíritu Santo mediante la fe. En el momento en que alguien recibe a Cristo en su corazón, pasa a formar parte de esta gran familia espiritual que llamamos la 'iglesia universal'.",
     image:
       "https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=2940&auto=format&fit=crop",
     imageAlt: "Iglesia reunida",
     mostrarDetalle: true,
   },
   {
-    id: "futuro",
-    icon: Clock,
-    title: "El Futuro",
-    shortDescription: "Segunda venida de Cristo",
-    longDescription:
-      "Creemos en la segunda venida de Cristo, la resurrección de los muertos, el juicio final y la vida eterna con Dios para todos los que creen en Él.",
-    image:
-      "https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=2940&auto=format&fit=crop",
-    imageAlt: "Cielo y estrellas",
-    mostrarDetalle: false,
-  },
-  {
-    id: "ordenanzas",
-    icon: CalendarCheck,
-    title: "Las Ordenanzas",
+    id: "bautismo-santa-cena",
+    icon: Wine,
+    title: "El Bautismo",
+    subtitle: "y la Santa Cena",
     shortDescription: "Bautismo y Santa Cena",
     longDescription:
-      "Practicamos el Bautismo del creyente por inmersión y la Cena del Señor como símbolos de nuestra fe y comunión con Cristo y su iglesia.",
+      "Creemos que Jesús nos dejó dos ceremonias especiales: el Bautismo en agua y la Santa Cena. Queremos ser claros: participar en ellas no nos salva, pero son medios muy importantes para dar testimonio público de nuestra fe y recordar el sacrificio de Jesús por nosotros.",
+    image:
+      "https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=2940&auto=format&fit=crop",
+    imageAlt: "Bautismo y Santa Cena",
+    mostrarDetalle: true,
+  },
+  {
+    id: "estilo-vida-cristiana",
+    icon: Heart,
+    title: "Una vida santa",
+    subtitle: "El estilo de vida cristiano",
+    shortDescription: "El Estilo de Vida Cristiano",
+    longDescription:
+      "Creemos que hemos sido llamados a vivir de una manera santa, guiados por el Espíritu de Dios y no por nuestros impulsos egoístas. Aunque mientras estemos en este mundo seguiremos luchando con nuestra naturaleza humana (la carne), nuestra meta es someter cada área de nuestra vida al control de Cristo con la ayuda del Espíritu Santo.",
     image:
       "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2940&auto=format&fit=crop",
-    imageAlt: "Bautismo",
+    imageAlt: "Vida cristiana",
     mostrarDetalle: true,
   },
 ]
@@ -311,9 +344,12 @@ export function Beliefs() {
                         </span>
                       )}
                     </h2>
-                    <p className="text-muted-foreground mb-6 text-base leading-relaxed">
-                      {creencia.longDescription}
-                    </p>
+                    <p
+                      className="text-muted-foreground mb-6 text-base leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: creencia.longDescription,
+                      }}
+                    />
                     <div className="flex items-center gap-3">
                       <Icon className="text-amber size-5" strokeWidth={1.5} />
                       <span className="text-foreground text-sm font-semibold">
