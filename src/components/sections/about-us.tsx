@@ -123,11 +123,11 @@ export function AboutUs() {
           <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
             {/* Image */}
             <div className="flex-1">
-              <div className="overflow-hidden rounded-2xl">
+              <div className="flex items-center justify-center overflow-hidden rounded-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1200&auto=format&fit=crop"
+                  src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_principal.png"
                   alt="Interior de la iglesia"
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="max-h-[500px] w-auto max-w-full rounded-2xl object-contain"
                   loading="lazy"
                 />
               </div>
