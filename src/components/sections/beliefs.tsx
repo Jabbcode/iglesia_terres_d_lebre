@@ -48,7 +48,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que la Biblia es el mensaje de Dios para la humanidad. Tanto el Antiguo como el Nuevo Testamento fueron inspirados por Él y no contienen errores en sus escritos originales. Es la revelación completa de Su voluntad para salvarnos y la autoridad final que guía nuestra vida, nuestra fe y nuestra conducta. Por eso, creemos que su mensaje está cerrado: no se le puede quitar ni añadir nada.",
     image:
-      "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/biblia.jpeg",
     imageAlt: "Biblia abierta",
     mostrarDetalle: true,
   },
@@ -61,7 +61,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos en un solo Dios eterno que existe en tres personas: el Padre, el Hijo y el Espíritu Santo. Aunque son tres, son un solo Dios con la misma naturaleza, los mismos atributos y la misma perfección. Por lo tanto, los tres merecen el mismo respeto, confianza y obediencia de nuestra parte.",
     image:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/dios.jpg",
     imageAlt: "Luz divina",
     mostrarDetalle: true,
   },
@@ -74,7 +74,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que Jesucristo es plenamente Dios y plenamente hombre a la vez. Él ya existía desde siempre como Dios, pero se hizo hombre al ser concebido por el Espíritu Santo y nacer de una virgen, sin dejar de ser divino. Murió en la cruz como el sacrificio perfecto en nuestro lugar, resucitó al tercer día y ascendió al cielo. Hoy, desde allí, actúa como nuestro defensor y representante ante Dios mientras esperamos Su regreso.",
     image:
-      "https://images.unsplash.com/photo-1445633629932-0029acc44e88?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/jesus.jpg",
     imageAlt: "Cruz al atardecer",
     mostrarDetalle: true,
   },
@@ -87,7 +87,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que el Espíritu Santo es la tercera persona de la Trinidad. Su labor es darle la gloria a Jesús y ayudar a las personas a reconocer su pecado y su necesidad de Dios. Cuando alguien confía en Jesús, el Espíritu lo transforma y lo une a la Iglesia en ese mismo instante. Además, vive en el creyente para guiarlo, enseñarle y darle las fuerzas para vivir una vida que agrade a Dios.",
     image:
-      "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/espiritu_santo.jpg",
     imageAlt: "Luz y espiritualidad",
     mostrarDetalle: true,
   },
@@ -100,7 +100,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que cuando alguien confía en el Señor Jesucristo y en Su obra, pasa de inmediato de la muerte espiritual a la vida. En ese momento, Dios lo acepta y lo declara <em><strong>justo</strong></em>, tal como acepta a Jesús mismo. Esta unión con Cristo es para siempre. Somos salvos únicamente por Su sacrificio en la cruz. Al creer, somos <em><strong>nacidos de nuevo</strong></em> y sellados por el Espíritu Santo, confiando en que Dios siempre cumple Sus promesas.",
     image:
-      "https://images.unsplash.com/photo-1490730141103-6cac27abb37f?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/salvacion.jpg",
     imageAlt: "Luz de esperanza",
     mostrarDetalle: true,
   },
@@ -113,7 +113,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que fuimos creados a imagen de Dios, pero el pecado nos separó de Él. Como resultado, la humanidad perdió su conexión espiritual con Dios y quedó bajo una <em><strong>depravación total</strong></em>, lo que significa que estamos espiritualmente incapacitados para salvarnos por nosotros mismos. Esta condición se transmite a toda la raza humana, siendo Jesucristo la única excepción.",
     image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/ser_humano_1.jpg",
     imageAlt: "Comunidad de personas",
     mostrarDetalle: true,
   },
@@ -126,7 +126,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que después de un tiempo de gran dificultad en el mundo (la gran tribulación), el Señor Jesucristo regresará de forma física y personal. Vendrá con todo Su poder y gloria para establecer Su reino de mil años (el Milenio), derrotar el mal, restaurar la Creación de su actual sufrimiento, cumplir Sus promesas con Israel y ser reconocido por todo el mundo como Dios.",
     image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/regreso_cristo.jpg",
     imageAlt: "Regreso de Cristo",
     mostrarDetalle: true,
   },
@@ -139,7 +139,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que todas las personas que han muerto volverán a vivir físicamente. Quienes confiaron en Dios resucitarán para vivir en una alegría eterna junto a Él. Por otro lado, quienes rechazaron Su amor resucitarán para enfrentar un juicio y una separación consciente y eterna de Dios.",
     image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/resureccion.jpg",
     imageAlt: "Resurrección de los muertos",
     mostrarDetalle: true,
   },
@@ -152,7 +152,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que la Iglesia no es un lugar, sino la unión de todas las personas que han sido transformadas por el Espíritu Santo mediante la fe. En el momento en que alguien recibe a Cristo en su corazón, pasa a formar parte de esta gran familia espiritual que llamamos la 'iglesia universal'.",
     image:
-      "https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/iglesia.png",
     imageAlt: "Iglesia reunida",
     mostrarDetalle: true,
   },
@@ -165,7 +165,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que Jesús nos dejó dos ceremonias especiales: el Bautismo en agua y la Santa Cena. Queremos ser claros: participar en ellas no nos salva, pero son medios muy importantes para dar testimonio público de nuestra fe y recordar el sacrificio de Jesús por nosotros.",
     image:
-      "https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/bautismo.jpeg",
     imageAlt: "Bautismo y Santa Cena",
     mostrarDetalle: true,
   },
@@ -178,7 +178,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que hemos sido llamados a vivir de una manera santa, guiados por el Espíritu de Dios y no por nuestros impulsos egoístas. Aunque mientras estemos en este mundo seguiremos luchando con nuestra naturaleza humana (la carne), nuestra meta es someter cada área de nuestra vida al control de Cristo con la ayuda del Espíritu Santo.",
     image:
-      "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2940&auto=format&fit=crop",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/vida_santa.jpg",
     imageAlt: "Vida cristiana",
     mostrarDetalle: true,
   },
