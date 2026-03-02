@@ -113,7 +113,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que fuimos creados a imagen de Dios, pero el pecado nos separó de Él. Como resultado, la humanidad perdió su conexión espiritual con Dios y quedó bajo una <em><strong>depravación total</strong></em>, lo que significa que estamos espiritualmente incapacitados para salvarnos por nosotros mismos. Esta condición se transmite a toda la raza humana, siendo Jesucristo la única excepción.",
     image:
-      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/ser_humano_1.jpg",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/ser_humano.jpg",
     imageAlt: "Comunidad de personas",
     mostrarDetalle: true,
   },
