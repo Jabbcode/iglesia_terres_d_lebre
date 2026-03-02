@@ -8,6 +8,7 @@ export async function GET() {
       select: {
         nombreIglesia: true,
         descripcion: true,
+        videoHero: true,
         instagram: true,
         facebook: true,
         youtube: true,

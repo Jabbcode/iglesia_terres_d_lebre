@@ -31,6 +31,7 @@ const configSchema = z.object({
   // Non-nullable fields (have defaults in Prisma)
   nombreIglesia: z.string().min(1).optional(),
   descripcion: z.string().optional(),
+  videoHero: z.string().min(1, "Video requerido").optional(),
   // Nullable fields
   instagram: optionalUrl,
   facebook: optionalUrl,
