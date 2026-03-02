@@ -37,11 +37,8 @@ export async function uploadImage(
 }
 
 export async function deleteImage(url: string): Promise<boolean> {
-  // Use admin client for deletions (requires service role key)
   const client = supabaseAdmin || supabase
 
-  // Extract path from URL
-  // URL format: https://xxx.supabase.co/storage/v1/object/public/images/galeria/filename.jpg
   const match = url.match(/\/storage\/v1\/object\/public\/images\/(.+)$/)
   const path = match ? match[1] : null
 
@@ -61,4 +58,23 @@ export async function deleteImage(url: string): Promise<boolean> {
 
   console.log("Delete result:", data)
   return true
+}
+
+export async function uploadVideo(file: File, folder: string) {
+  const fileName = `${Date.now()}-${file.name}`
+
+  const { error } = await supabase.storage
+    .from("videos")
+    .upload(`${folder}/${fileName}`, file)
+
+  if (error) {
+    console.error(error)
+    return null
+  }
+
+  const { data } = supabase.storage
+    .from("videos")
+    .getPublicUrl(`${folder}/${fileName}`)
+
+  return data.publicUrl
 }

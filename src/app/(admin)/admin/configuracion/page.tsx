@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { VideoUpload } from "@/components/admin/video-uplodad"
 
 const configSchema = z.object({
   nombreIglesia: z.string().min(1, "Nombre requerido"),
@@ -19,6 +20,7 @@ const configSchema = z.object({
   horarioAtencion: z.string(),
   googleMapsUrl: z.string().url("URL invalida").or(z.literal("")),
   googleMapsEmbed: z.string(),
+  videoHero: z.string().min(1, "Video requerido"),
 })
 
 type ConfigForm = z.infer<typeof configSchema>
@@ -34,10 +36,26 @@ export default function ConfiguracionPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<ConfigForm>({
     resolver: zodResolver(configSchema),
+    defaultValues: {
+      nombreIglesia: "",
+      descripcion: "",
+      instagram: "",
+      facebook: "",
+      youtube: "",
+      direccion: "",
+      telefono: "",
+      email: "",
+      horarioAtencion: "",
+      googleMapsUrl: "",
+      googleMapsEmbed: "",
+      videoHero: "",
+    },
   })
 
   useEffect(() => {
@@ -47,6 +65,7 @@ export default function ConfiguracionPage() {
         reset({
           nombreIglesia: data.nombreIglesia || "",
           descripcion: data.descripcion || "",
+          videoHero: data.videoHero || "",
           instagram: data.instagram || "",
           facebook: data.facebook || "",
           youtube: data.youtube || "",
@@ -62,6 +81,7 @@ export default function ConfiguracionPage() {
   }, [reset])
 
   const onSubmit = async (data: ConfigForm) => {
+    console.log(data)
     setSaving(true)
     setMessage(null)
 
@@ -115,35 +135,59 @@ export default function ConfiguracionPage() {
           </div>
         )}
 
-        {/* General */}
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <h2 className="text-foreground mb-4 text-lg font-semibold">
-            General
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="md:col-span-2">
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Nombre de la Iglesia
-              </label>
-              <input
-                {...register("nombreIglesia")}
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.nombreIglesia && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.nombreIglesia.message}
-                </p>
-              )}
+        <div className="grid grid-cols-2 gap-3">
+          {/* General */}
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="text-foreground mb-4 text-lg font-semibold">
+              General
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Nombre de la Iglesia
+                </label>
+                <input
+                  {...register("nombreIglesia")}
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                {errors.nombreIglesia && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.nombreIglesia.message}
+                  </p>
+                )}
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Descripcion
+                </label>
+                <textarea
+                  {...register("descripcion")}
+                  rows={3}
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
             </div>
-            <div className="md:col-span-2">
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={3}
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
+          </div>
+
+          {/* Imagen Principal */}
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <div className="space-y-4">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Video Principal
+                </label>
+                <VideoUpload
+                  value={watch("videoHero")}
+                  onChange={(url) => setValue("videoHero", url)}
+                  folder="site_setting"
+                  placeholder="Subir video para el hero"
+                />
+                {errors.videoHero && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.videoHero.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

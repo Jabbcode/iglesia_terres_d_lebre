@@ -45,6 +45,8 @@ model ConfigSitio {
   // General
   nombreIglesia     String   @default("Iglesia Biblica Terres de l'Ebre")
   descripcion       String   @default("Somos una familia de fe")
+  // Hero
+  videoHero         String?  
   // Redes sociales
   instagram         String?
   facebook          String?

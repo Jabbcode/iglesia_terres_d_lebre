@@ -3,6 +3,7 @@ import { create } from "zustand"
 interface ConfigSitio {
   nombreIglesia: string
   descripcion: string | null
+  videoHero: string
   instagram: string | null
   facebook: string | null
   youtube: string | null

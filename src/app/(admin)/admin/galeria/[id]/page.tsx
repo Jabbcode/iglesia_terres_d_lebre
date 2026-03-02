@@ -13,7 +13,7 @@ import Link from "next/link"
 
 const imagenSchema = z.object({
   src: z.string().min(1, "Imagen requerida"),
-  alt: z.string().min(1, "Texto alternativo requerido"),
+  alt: z.string().optional(),
   span: z.enum(["normal", "tall", "wide"]),
   order: z.number().int(),
 })
