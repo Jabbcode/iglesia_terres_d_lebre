@@ -1,37 +1,34 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSession, type JWTPayload } from "@/lib/auth"
+import { getSession } from "@/lib/auth"
 import { unauthorized, forbidden } from "@/shared/api"
 
 export type RouteContext = { params: Promise<Record<string, string>> }
 
-type RouteHandler = (
+type RouteHandlerWithContext = (
   request: NextRequest,
-  context: RouteContext,
-  session: JWTPayload
+  context: RouteContext
 ) => Promise<NextResponse>
 
-type SimpleHandler = (
-  request: NextRequest,
-  session: JWTPayload
-) => Promise<NextResponse>
+type RouteHandlerSimple = (request: NextRequest) => Promise<NextResponse>
+
+type RouteHandler = RouteHandlerWithContext | RouteHandlerSimple
 
 /**
  * Middleware wrapper that requires authentication
  *
  * @example
- * // With route params
- * export const GET = withAuth(async (request, context, session) => {
+ * // With route params (e.g., /api/admin/eventos/[id])
+ * export const PATCH = withAuth(async (request, context) => {
  *   const { id } = await context.params
- *   // session.userId, session.email, session.role available
  *   return success(data)
  * })
  *
- * // Without route params
- * export const GET = withAuth(async (request, session) => {
+ * // Without route params (e.g., /api/admin/eventos)
+ * export const GET = withAuth(async () => {
  *   return success(data)
  * })
  */
-export function withAuth(handler: RouteHandler | SimpleHandler) {
+export function withAuth(handler: RouteHandler) {
   return async (
     request: NextRequest,
     context?: RouteContext
@@ -42,12 +39,12 @@ export function withAuth(handler: RouteHandler | SimpleHandler) {
       return unauthorized()
     }
 
-    // Check if handler expects context (has 3 params) or not (has 2 params)
-    if (handler.length === 3 && context) {
-      return (handler as RouteHandler)(request, context, session)
+    // If context is provided (route has params like [id]), pass it
+    if (context) {
+      return (handler as RouteHandlerWithContext)(request, context)
     }
 
-    return (handler as SimpleHandler)(request, session)
+    return (handler as RouteHandlerSimple)(request)
   }
 }
 
@@ -55,12 +52,12 @@ export function withAuth(handler: RouteHandler | SimpleHandler) {
  * Middleware wrapper that requires admin role
  *
  * @example
- * export const DELETE = withAdmin(async (request, context, session) => {
- *   // Only admins can reach here
+ * export const DELETE = withAdmin(async (request, context) => {
+ *   const { id } = await context.params
  *   return success({ deleted: true })
  * })
  */
-export function withAdmin(handler: RouteHandler | SimpleHandler) {
+export function withAdmin(handler: RouteHandler) {
   return async (
     request: NextRequest,
     context?: RouteContext
@@ -75,10 +72,10 @@ export function withAdmin(handler: RouteHandler | SimpleHandler) {
       return forbidden("Se requiere rol de administrador")
     }
 
-    if (handler.length === 3 && context) {
-      return (handler as RouteHandler)(request, context, session)
+    if (context) {
+      return (handler as RouteHandlerWithContext)(request, context)
     }
 
-    return (handler as SimpleHandler)(request, session)
+    return (handler as RouteHandlerSimple)(request)
   }
 }
