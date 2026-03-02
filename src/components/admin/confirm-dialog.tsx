@@ -40,7 +40,9 @@ interface ConfirmDialogProviderProps {
   children: React.ReactNode
 }
 
-export function ConfirmDialogProvider({ children }: ConfirmDialogProviderProps) {
+export function ConfirmDialogProvider({
+  children,
+}: ConfirmDialogProviderProps) {
   const [open, setOpen] = useState(false)
   const [options, setOptions] = useState<ConfirmOptions | null>(null)
   const [resolveRef, setResolveRef] = useState<
@@ -99,9 +101,7 @@ export function ConfirmDialogProvider({ children }: ConfirmDialogProviderProps) 
             <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-gray-100">
               {getIcon()}
             </div>
-            <DialogTitle className="text-center">
-              {options?.title}
-            </DialogTitle>
+            <DialogTitle className="text-center">{options?.title}</DialogTitle>
             <DialogDescription className="text-center">
               {options?.description}
             </DialogDescription>

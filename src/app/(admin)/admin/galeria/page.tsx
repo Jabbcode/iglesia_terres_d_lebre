@@ -1,7 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, ImagePlus, CheckSquare, Square, X } from "lucide-react"
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  ImagePlus,
+  CheckSquare,
+  Square,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
@@ -155,7 +163,7 @@ export default function GaleriaPage() {
     return (
       <div className="animate-pulse space-y-4">
         <div className="h-8 w-48 rounded bg-gray-200" />
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {[...Array(10)].map((_, i) => (
             <div key={i} className="aspect-square rounded-xl bg-gray-200" />
           ))}
@@ -166,7 +174,7 @@ export default function GaleriaPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-foreground text-2xl font-bold">Galeria</h1>
           <p className="text-muted-foreground mt-1">
@@ -174,7 +182,7 @@ export default function GaleriaPage() {
             {imagenes.length > 0 && ` (${imagenes.length} imagenes)`}
           </p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {imagenes.length > 0 && (
             <Button
               variant={isSelectionMode ? "secondary" : "outline"}
@@ -211,7 +219,7 @@ export default function GaleriaPage() {
 
       {/* Selection toolbar */}
       {isSelectionMode && imagenes.length > 0 && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-amber/30 bg-amber/5 p-3">
+        <div className="border-amber/30 bg-amber/5 mb-4 flex items-center justify-between rounded-lg border p-3">
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium">
               {selectedIds.size} de {imagenes.length} seleccionadas
@@ -259,14 +267,14 @@ export default function GaleriaPage() {
           ctaHref="/admin/galeria/nueva"
         />
       ) : (
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {imagenes.map((imagen) => (
             <div
               key={imagen.id}
               className={cn(
                 "group border-border/50 relative overflow-hidden rounded-xl border bg-white shadow-sm transition-all",
                 isSelectionMode && "cursor-pointer",
-                selectedIds.has(imagen.id) && "ring-2 ring-amber ring-offset-2"
+                selectedIds.has(imagen.id) && "ring-amber ring-2 ring-offset-2"
               )}
               onClick={() => isSelectionMode && toggleSelection(imagen.id)}
             >
@@ -279,7 +287,7 @@ export default function GaleriaPage() {
                       "flex size-6 items-center justify-center rounded border-2 transition-colors",
                       selectedIds.has(imagen.id)
                         ? "border-amber bg-amber text-white"
-                        : "border-white bg-white/80 text-gray-400 hover:border-amber"
+                        : "hover:border-amber border-white bg-white/80 text-gray-400"
                     )}
                     onClick={(e) => {
                       e.stopPropagation()
@@ -304,8 +312,8 @@ export default function GaleriaPage() {
                 />
                 {/* Inactive overlay */}
                 {!imagen.activo && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <span className="bg-black/60 text-white text-xs px-2 py-1 rounded">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <span className="rounded bg-black/60 px-2 py-1 text-xs text-white">
                       Inactiva
                     </span>
                   </div>
@@ -319,7 +327,7 @@ export default function GaleriaPage() {
                     <p className="text-foreground truncate text-sm font-medium">
                       {imagen.alt || "Sin descripcion"}
                     </p>
-                    <span className="bg-amber/10 text-amber text-xs rounded px-1.5 py-0.5">
+                    <span className="bg-amber/10 text-amber rounded px-1.5 py-0.5 text-xs">
                       {spanLabels[imagen.span]}
                     </span>
                   </div>

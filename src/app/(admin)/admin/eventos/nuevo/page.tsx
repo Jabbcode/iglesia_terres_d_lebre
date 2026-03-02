@@ -222,9 +222,7 @@ export default function NuevoEventoPage() {
         <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
             <RefreshCw className="text-amber size-5" />
-            <h2 className="text-foreground font-semibold">
-              Evento Periodico
-            </h2>
+            <h2 className="text-foreground font-semibold">Evento Periodico</h2>
           </div>
           <p className="text-muted-foreground mb-4 text-sm">
             Configura si este evento se repite automaticamente.

@@ -1,7 +1,14 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
-import { Upload, X, ImagePlus, Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import {
+  Upload,
+  X,
+  ImagePlus,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { uploadImage } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
@@ -153,9 +160,7 @@ export function MultiImageUpload({
 
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === fileItem.id
-              ? { ...f, status: "success" as const, url }
-              : f
+            f.id === fileItem.id ? { ...f, status: "success" as const, url } : f
           )
         )
 
@@ -308,7 +313,7 @@ export function MultiImageUpload({
                       e.stopPropagation()
                       removeFile(fileItem.id)
                     }}
-                    className="absolute top-1 right-1 rounded-full bg-black/50 p-1 opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
+                    className="absolute top-1 right-1 rounded-full bg-black/50 p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/70"
                     title="Eliminar"
                   >
                     <X className="size-4 text-white" />
