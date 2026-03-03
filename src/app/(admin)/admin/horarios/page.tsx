@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import {
   Plus,
   Pencil,
@@ -23,7 +22,9 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { useAdminData } from "@/hooks/use-admin-data"
 import Link from "next/link"
+import type { Horario } from "@/modules/horarios"
 
 const iconMap: Record<string, LucideIcon> = {
   Church,
@@ -40,40 +41,16 @@ const iconMap: Record<string, LucideIcon> = {
   Clock,
 }
 
-interface Horario {
-  id: string
-  titulo: string
-  descripcion: string | null
-  dia: string
-  hora: string
-  icono: string
-  order: number
-  activo: boolean
-  mostrarDetalle: boolean
-}
-
 export default function HorariosPage() {
-  const [horarios, setHorarios] = useState<Horario[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [toggling, setToggling] = useState<string | null>(null)
+  const {
+    data: horarios,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Horario>({
+    endpoint: "/api/admin/horarios",
+  })
   const confirm = useConfirm()
-
-  useEffect(() => {
-    fetchHorarios()
-  }, [])
-
-  const fetchHorarios = async () => {
-    try {
-      const res = await fetch("/api/admin/horarios")
-      const data = await res.json()
-      setHorarios(data)
-    } catch {
-      console.error("Error fetching schedules")
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleDelete = async (id: string) => {
     const confirmed = await confirm({
@@ -87,43 +64,21 @@ export default function HorariosPage() {
 
     if (!confirmed) return
 
-    setDeleting(id)
     try {
-      const res = await fetch(`/api/admin/horarios/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setHorarios(horarios.filter((h) => h.id !== id))
-      }
+      await deleteItem(id)
     } catch {
       console.error("Error deleting schedule")
-    } finally {
-      setDeleting(null)
     }
   }
 
-  const handleToggle = async (
+  const handleToggle = (
     id: string,
     field: "activo" | "mostrarDetalle",
     currentValue: boolean
   ) => {
-    setToggling(`${id}-${field}`)
-    try {
-      const res = await fetch(`/api/admin/horarios/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: !currentValue }),
-      })
-      if (res.ok) {
-        setHorarios(
-          horarios.map((h) =>
-            h.id === id ? { ...h, [field]: !currentValue } : h
-          )
-        )
-      }
-    } catch {
+    toggleField(id, field, currentValue).catch(() => {
       console.error("Error toggling horario")
-    } finally {
-      setToggling(null)
-    }
+    })
   }
 
   const getIcon = (iconName: string) => {
@@ -131,7 +86,7 @@ export default function HorariosPage() {
     return <IconComponent className="size-5" />
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
         <div className="h-8 w-48 rounded bg-gray-200" />
@@ -203,7 +158,6 @@ export default function HorariosPage() {
                     onCheckedChange={() =>
                       handleToggle(horario.id, "activo", horario.activo)
                     }
-                    disabled={toggling === `${horario.id}-activo`}
                   />
                   <span className="text-muted-foreground w-16 text-xs">
                     {horario.activo ? "Activo" : "Inactivo"}
@@ -223,7 +177,6 @@ export default function HorariosPage() {
                     variant="destructive"
                     className="size-8"
                     onClick={() => handleDelete(horario.id)}
-                    disabled={deleting === horario.id}
                   >
                     <Trash2 className="size-4" />
                   </Button>

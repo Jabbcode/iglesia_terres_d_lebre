@@ -9,6 +9,7 @@ import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
+import { api } from "@/shared/api"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -46,17 +47,8 @@ export default function NuevoTestimonioPage() {
     setError(null)
 
     try {
-      const res = await fetch("/api/admin/testimonios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/testimonios")
-      } else {
-        setError("Error al crear el testimonio")
-      }
+      await api.post("/api/admin/testimonios", data)
+      router.push("/admin/testimonios")
     } catch {
       setError("Error de conexion")
     } finally {

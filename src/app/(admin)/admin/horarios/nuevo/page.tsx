@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch"
 import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
+import { api } from "@/shared/api"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -92,17 +93,8 @@ export default function NuevoHorarioPage() {
         activo: data.activo,
       }
 
-      const res = await fetch("/api/admin/horarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/horarios")
-      } else {
-        setError("Error al crear el horario")
-      }
+      await api.post("/api/admin/horarios", payload)
+      router.push("/admin/horarios")
     } catch {
       setError("Error de conexion")
     } finally {

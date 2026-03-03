@@ -1,45 +1,24 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { useAdminData } from "@/hooks/use-admin-data"
 import Link from "next/link"
-
-interface Testimonio {
-  id: string
-  nombre: string
-  descripcion: string
-  videoUrl: string
-  thumbnail: string
-  order: number
-  activo: boolean
-}
+import type { Testimonio } from "@/modules/testimonios"
 
 export default function TestimoniosPage() {
-  const [testimonios, setTestimonios] = useState<Testimonio[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [toggling, setToggling] = useState<string | null>(null)
+  const {
+    data: testimonios,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Testimonio>({
+    endpoint: "/api/admin/testimonios",
+  })
   const confirm = useConfirm()
-
-  useEffect(() => {
-    fetchTestimonios()
-  }, [])
-
-  const fetchTestimonios = async () => {
-    try {
-      const res = await fetch("/api/admin/testimonios")
-      const data = await res.json()
-      setTestimonios(data)
-    } catch {
-      console.error("Error fetching testimonios")
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleDelete = async (id: string) => {
     const confirmed = await confirm({
@@ -53,44 +32,20 @@ export default function TestimoniosPage() {
 
     if (!confirmed) return
 
-    setDeleting(id)
     try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "DELETE",
-      })
-      if (res.ok) {
-        setTestimonios(testimonios.filter((t) => t.id !== id))
-      }
+      await deleteItem(id)
     } catch {
       console.error("Error deleting testimonio")
-    } finally {
-      setDeleting(null)
     }
   }
 
-  const handleToggleActivo = async (id: string, currentActivo: boolean) => {
-    setToggling(id)
-    try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activo: !currentActivo }),
-      })
-      if (res.ok) {
-        setTestimonios(
-          testimonios.map((t) =>
-            t.id === id ? { ...t, activo: !currentActivo } : t
-          )
-        )
-      }
-    } catch {
+  const handleToggleActivo = (id: string, currentActivo: boolean) => {
+    toggleField(id, "activo", currentActivo).catch(() => {
       console.error("Error toggling testimonio")
-    } finally {
-      setToggling(null)
-    }
+    })
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
         <div className="h-8 w-48 rounded bg-gray-200" />
@@ -159,7 +114,6 @@ export default function TestimoniosPage() {
                     onCheckedChange={() =>
                       handleToggleActivo(testimonio.id, testimonio.activo)
                     }
-                    disabled={toggling === testimonio.id}
                   />
                   <span className="text-muted-foreground w-14 text-xs">
                     {testimonio.activo ? "Activo" : "Inactivo"}
@@ -176,7 +130,6 @@ export default function TestimoniosPage() {
                     variant="destructive"
                     className="size-8"
                     onClick={() => handleDelete(testimonio.id)}
-                    disabled={deleting === testimonio.id}
                   >
                     <Trash2 className="size-4" />
                   </Button>

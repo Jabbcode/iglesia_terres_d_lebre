@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { useConfigStore } from "@/stores/config-store"
 import { cn } from "@/lib/utils"
+import { api } from "@/shared/api"
 
 const navLinks = [
   { href: "/", label: "INICIO" },
@@ -35,11 +36,9 @@ export function Navbar() {
   }
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        setIsAdmin(!!data.user)
-      })
+    api
+      .get<{ user: unknown }>("/api/auth/me")
+      .then((data) => setIsAdmin(!!data.user))
       .catch(() => setIsAdmin(false))
   }, [])
 

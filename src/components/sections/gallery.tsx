@@ -6,13 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useConfigStore } from "@/stores/config-store"
 import { motion, AnimatePresence } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
-
-interface Imagen {
-  id: string
-  src: string
-  alt: string
-  span: string | null
-}
+import { api } from "@/shared/api"
+import type { Imagen } from "@/modules/galeria"
 
 export function Gallery() {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
@@ -25,17 +20,11 @@ export function Gallery() {
   }, [fetchConfig])
 
   useEffect(() => {
-    fetch("/api/public/galeria")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setImagenes(data)
-        }
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
+    api
+      .get<Imagen[]>("/api/public/galeria")
+      .then(setImagenes)
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   const instagramUrl = config?.instagram

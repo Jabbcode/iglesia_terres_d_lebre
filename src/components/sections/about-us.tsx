@@ -13,14 +13,8 @@ import Autoplay from "embla-carousel-autoplay"
 import { motion, AnimatePresence } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { useIsMobile } from "@/hooks/use-media-query"
-
-interface Testimonio {
-  id: string
-  nombre: string
-  descripcion: string
-  videoUrl: string
-  thumbnail: string
-}
+import { api } from "@/shared/api"
+import type { Testimonio } from "@/modules/testimonios"
 
 const missionVision = [
   {
@@ -87,14 +81,10 @@ export function AboutUs() {
   const isMobile = useIsMobile()
 
   useEffect(() => {
-    fetch("/api/public/testimonios")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setTestimonios(data)
-        }
-      })
-      .catch(() => setTestimonios([]))
+    api
+      .get<Testimonio[]>("/api/public/testimonios")
+      .then(setTestimonios)
+      .catch(() => {})
       .finally(() => setLoadingTestimonios(false))
   }, [])
 

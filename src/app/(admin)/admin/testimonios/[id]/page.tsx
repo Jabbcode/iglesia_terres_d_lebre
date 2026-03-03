@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Testimonio } from "@/modules/testimonios"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -21,16 +23,6 @@ const testimonioSchema = z.object({
 })
 
 type TestimonioForm = z.infer<typeof testimonioSchema>
-
-interface Testimonio {
-  id: string
-  nombre: string
-  descripcion: string
-  videoUrl: string
-  thumbnail: string
-  order: number
-  activo: boolean
-}
 
 export default function EditarTestimonioPage({
   params,
@@ -57,9 +49,9 @@ export default function EditarTestimonioPage({
   })
 
   useEffect(() => {
-    fetch(`/api/admin/testimonios/${id}`)
-      .then((res) => res.json())
-      .then((data: Testimonio) => {
+    api
+      .get<Testimonio>(`/api/admin/testimonios/${id}`)
+      .then((data) => {
         reset({
           nombre: data.nombre,
           descripcion: data.descripcion,
@@ -69,6 +61,7 @@ export default function EditarTestimonioPage({
           activo: data.activo,
         })
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -77,17 +70,8 @@ export default function EditarTestimonioPage({
     setError(null)
 
     try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/testimonios")
-      } else {
-        setError("Error al actualizar el testimonio")
-      }
+      await api.put(`/api/admin/testimonios/${id}`, data)
+      router.push("/admin/testimonios")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -109,12 +93,8 @@ export default function EditarTestimonioPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "DELETE",
-      })
-      if (res.ok) {
-        router.push("/admin/testimonios")
-      }
+      await api.delete(`/api/admin/testimonios/${id}`)
+      router.push("/admin/testimonios")
     } catch {
       setError("Error al eliminar")
     } finally {

@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { GalleryImage, SpanType } from "@/components/admin/gallery-item"
 import { ViewMode, FilterType } from "@/components/admin/gallery-toolbar"
+import { api } from "@/shared/api"
 
 interface UseGalleryOrganizerOptions {
   onDeleteImage: (id: string) => Promise<void>
@@ -85,12 +86,9 @@ export function useGalleryOrganizer({
   const fetchImages = useCallback(async () => {
     setIsLoading(true)
     try {
-      const res = await fetch("/api/admin/galeria")
-      const data = await res.json()
-      if (Array.isArray(data)) {
-        setOriginalImages(data)
-        setImages(data)
-      }
+      const data = await api.get<GalleryImage[]>("/api/admin/galeria")
+      setOriginalImages(data)
+      setImages(data)
     } catch (error) {
       console.error("Error fetching images:", error)
     } finally {
@@ -167,18 +165,9 @@ export function useGalleryOrganizer({
         activo: img.activo,
       }))
 
-      const res = await fetch("/api/admin/galeria/bulk", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items }),
-      })
-
-      if (res.ok) {
-        // Update original state to match current state
-        setOriginalImages([...images])
-      } else {
-        console.error("Error saving changes")
-      }
+      await api.put("/api/admin/galeria/bulk", { items })
+      // Update original state to match current state
+      setOriginalImages([...images])
     } catch (error) {
       console.error("Error saving changes:", error)
     } finally {

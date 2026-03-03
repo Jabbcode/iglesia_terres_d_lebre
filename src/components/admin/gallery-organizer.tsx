@@ -10,6 +10,7 @@ import { GalleryGrid } from "./gallery-grid"
 import { GalleryPreview } from "./gallery-preview"
 import { useGalleryOrganizer } from "@/hooks/use-gallery-organizer"
 import Link from "next/link"
+import { api } from "@/shared/api"
 
 export function GalleryOrganizer() {
   const confirm = useConfirm()
@@ -47,10 +48,7 @@ export function GalleryOrganizer() {
         throw new Error("Cancelled")
       }
 
-      const res = await fetch(`/api/admin/galeria/${id}`, { method: "DELETE" })
-      if (!res.ok) {
-        throw new Error("Error deleting image")
-      }
+      await api.delete(`/api/admin/galeria/${id}`)
     },
   })
 

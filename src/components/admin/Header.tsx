@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation"
 import { useAdmin } from "./AdminContext"
 import { Menu, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { api } from "@/shared/api"
 
 export function Header() {
   const router = useRouter()
   const { toggleSidebar } = useAdmin()
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
+    await api.post("/api/auth/logout", {})
     router.push("/login")
     router.refresh()
   }

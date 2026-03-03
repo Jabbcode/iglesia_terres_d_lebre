@@ -12,6 +12,8 @@ import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Horario } from "@/modules/horarios"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -28,21 +30,6 @@ const horarioSchema = z.object({
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
-
-interface Horario {
-  id: string
-  titulo: string
-  subtitulo: string | null
-  descripcion: string | null
-  descripcionLarga: string | null
-  dia: string
-  hora: string
-  icono: string
-  imagen: string | null
-  mostrarDetalle: boolean
-  order: number
-  activo: boolean
-}
 
 const diaOptions = [
   "Lunes",
@@ -89,9 +76,9 @@ export default function EditarHorarioPage({
   }, [imagenValue, mostrarDetalle, setValue])
 
   useEffect(() => {
-    fetch("/api/admin/horarios")
-      .then((res) => res.json())
-      .then((data: Horario[]) => {
+    api
+      .get<Horario[]>("/api/admin/horarios")
+      .then((data) => {
         const horario = data.find((h) => h.id === id)
         if (horario) {
           reset({
@@ -109,6 +96,7 @@ export default function EditarHorarioPage({
           })
         }
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -131,17 +119,8 @@ export default function EditarHorarioPage({
         activo: data.activo,
       }
 
-      const res = await fetch(`/api/admin/horarios/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/horarios")
-      } else {
-        setError("Error al actualizar el horario")
-      }
+      await api.patch(`/api/admin/horarios/${id}`, payload)
+      router.push("/admin/horarios")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -163,10 +142,8 @@ export default function EditarHorarioPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/horarios/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        router.push("/admin/horarios")
-      }
+      await api.delete(`/api/admin/horarios/${id}`)
+      router.push("/admin/horarios")
     } catch {
       setError("Error al eliminar")
     } finally {
