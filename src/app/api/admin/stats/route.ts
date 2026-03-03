@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { withAuth } from "@/modules/auth"
+import { success, handleError } from "@/shared/api"
 
-export async function GET() {
+export const GET = withAuth(async () => {
   try {
     const [imagenes, eventos, horarios] = await Promise.all([
       prisma.imagen.count(),
@@ -9,7 +10,7 @@ export async function GET() {
       prisma.horario.count({ where: { activo: true } }),
     ])
 
-    // Próximos eventos (próximos 7 días)
+    // Upcoming events (next 7 days)
     const now = new Date()
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
     const proximosEventos = await prisma.evento.count({
@@ -22,17 +23,13 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json({
+    return success({
       imagenes,
       eventos,
       horarios,
       proximosEventos,
     })
   } catch (error) {
-    console.error("Error fetching stats:", error)
-    return NextResponse.json(
-      { error: "Error al obtener estadisticas" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})

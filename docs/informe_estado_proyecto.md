@@ -1,122 +1,171 @@
-# 📊 Estado del Proyecto — Iglesia Bíblica Terres de l'Ebre
+# Estado del Proyecto — Iglesia Biblica Terres de l'Ebre
 
-## 🏗️ Stack Tecnológico
+## Stack Tecnologico
 
-| Capa | Tecnología |
+| Capa | Tecnologia |
 |------|-----------|
 | Framework | **Next.js 16.1.6** (App Router) |
 | Lenguaje | **TypeScript 5** |
 | Estilos | **Tailwind CSS v4** + shadcn/ui (new-york) |
 | Base de datos | **PostgreSQL** (Supabase) via **Prisma ORM 5.22** |
-| Autenticación | **JWT** (`jose`) + cookies HTTP |
+| Autenticacion | **JWT** (`jose`) + cookies HTTP |
 | Formularios | `react-hook-form` + `zod` |
 | Estado global | `zustand` |
 | Iconos | `lucide-react` |
+| Drag & Drop | `@dnd-kit` |
 
 ---
 
-## ✅ Funcionalidades Implementadas
+## Arquitectura Modular
 
-### 🌐 Sitio Público (`/`)
-- **Home page** con: Hero, NextService (próximo culto), Community, CTA
-- **Página `/horarios`** — horarios de cultos
-- **Página `/galeria`** — galería fotográfica
-- **Página `/creencias`** — declaración de fe (con sección detallada de creencias)
-- **Página `/contacto`** — formulario e info de contacto
-- **SEO completo**: metadata, OpenGraph, sitemap, robots, manifest
-- Navbar + Footer globales para el sitio público
+El proyecto sigue una arquitectura modular con separacion clara de responsabilidades:
 
-### 🔐 Panel Admin (`/admin`)
-- **Autenticación JWT** completa (login, logout, `/api/auth/me`)
-- **Middleware de protección** para rutas `/admin/*` y `/api/admin/*`
-- **Dashboard** con estadísticas en tiempo real (imágenes, eventos, horarios, próximos eventos)
-- **CRUD Eventos** completo: listado, crear (`/nuevo`), editar (`/[id]`), eliminar
-- **CRUD Galería** completo: listado, añadir imagen (`/nueva`), editar (`/[id]`), eliminar, **subida masiva** (`/masiva`)
-- **CRUD Horarios** completo: listado, crear (`/nuevo`), editar (`/[id]`), eliminar
-- **Configuración del sitio** desde panel (datos generales, redes sociales, contacto, maps)
-
-### 🔌 API Routes (`/api`)
-| Endpoint | Métodos |
-|----------|---------|
-| `/api/auth/login` | POST |
-| `/api/auth/logout` | POST |
-| `/api/auth/me` | GET |
-| `/api/admin/eventos` | GET, POST |
-| `/api/admin/eventos/[id]` | PUT, DELETE |
-| `/api/admin/galeria` | GET, POST |
-| `/api/admin/galeria/[id]` | PUT, DELETE |
-| `/api/admin/galeria/bulk` | POST (subida masiva 1-10 imagenes) |
-| `/api/admin/horarios` | GET, POST |
-| `/api/admin/horarios/[id]` | PUT, DELETE |
-| `/api/admin/config` | GET, PUT |
-| `/api/admin/stats` | GET |
-
-### 🗄️ Base de Datos (Prisma + Supabase)
-Modelos definidos en `schema.prisma`:
-- `User` (auth, roles ADMIN/EDITOR)
-- `ConfigSitio` (configuración general del sitio)
-- `Imagen` (galería con spans: normal/tall/wide)
-- `Evento` (nombre, fecha, hora, ubicación, activo)
-- `Horario` (día, hora, icono Lucide, orden, activo)
-
----
-
-## ⚠️ Estado Actual y Pendientes
-
-### 🟡 Puntos a revisar
-- **`src/lib/mock-data.ts`** — Existe un archivo de datos mock (_UI-only mode_). Hay que verificar si todas las secciones públicas ya consumen la API/DB o alguna todavía usa este mock.
-- **Sin tests** — No hay test runner configurado.
-- **Home page simplificada** — La Home solo renderiza 4 secciones; no incluye galería, horarios ni eventos directamente.
-- **`countdown.tsx`** — Componente de cuenta atrás al próximo culto existe pero no aparece en la Home.
-
-### 🟢 Lo que está listo para producción
-- Autenticación y autorización con JWT ✅
-- BD conectada a Supabase (`.env` configurado) ✅
-- API completa para admin ✅
-- UI pública con SEO ✅
-- CRUD completo de Eventos, Galería, Horarios y Configuración ✅
-
-### 🔴 Posibles siguientes pasos
-1. **Verificar** que las secciones públicas (`schedule.tsx`, `gallery.tsx`, `upcoming-events.tsx`) consumen datos reales de la BD y no el mock
-2. **Añadir** countdown de próximo culto a la Home
-3. **Conectar** galería pública a BD
-4. ~~**Upload de imágenes**~~ ✅ Implementado via Supabase Storage con subida masiva (hasta 10 imagenes)
-5. **Seed de producción** / usuario admin inicial
-
----
-
-## 📁 Estructura de Carpetas Clave
+### Estructura de Carpetas
 
 ```
 src/
-├── app/
-│   ├── (public)/         ← Sitio público
-│   │   ├── page.tsx      ← Home
-│   │   ├── horarios/
-│   │   ├── galeria/
-│   │   ├── creencias/
-│   │   └── contacto/
-│   ├── (admin)/admin/    ← Panel de administración
-│   │   ├── page.tsx      ← Dashboard
-│   │   ├── eventos/
-│   │   ├── galeria/      ← incluye /masiva para subida multiple
-│   │   ├── horarios/
-│   │   ├── configuracion/
-│   │   └── login/
-│   └── api/
-│       ├── auth/
-│       └── admin/
-├── components/
-│   ├── ui/               ← shadcn/ui primitives (16 componentes)
-│   ├── admin/            ← Sidebar, Header, StatCard
-│   ├── layout/           ← Navbar, Footer
-│   └── sections/         ← 11 secciones de la página pública
-├── lib/
-│   ├── prisma.ts
-│   ├── auth.ts
-│   ├── constant.ts
-│   ├── format.ts
-│   ├── mock-data.ts      ⚠️ Datos mock (verificar uso)
-│   └── utils.ts
-└── middleware.ts          ← Protección JWT de rutas
+├── app/                          # Solo routing y UI
+│   ├── (public)/                 # Sitio publico
+│   ├── (admin)/admin/            # Panel de administracion
+│   └── api/                      # API routes (delgadas)
+│
+├── modules/                      # Logica de negocio por dominio
+│   ├── auth/                     # Autenticacion y middleware
+│   │   ├── auth.middleware.ts    # withAuth, withAdmin
+│   │   ├── auth.schema.ts        # Zod schemas
+│   │   └── index.ts
+│   ├── eventos/
+│   │   ├── evento.schema.ts      # Zod schemas (create, update)
+│   │   ├── evento.service.ts     # Business logic (CRUD)
+│   │   ├── evento.types.ts       # Types derivados de Prisma
+│   │   └── index.ts
+│   ├── galeria/
+│   ├── horarios/
+│   ├── testimonios/
+│   └── config/
+│
+├── shared/                       # Utilidades transversales
+│   ├── api/
+│   │   ├── api-client.ts         # Cliente fetch tipado (frontend)
+│   │   ├── api-response.ts       # Helpers: success(), error(), etc
+│   │   ├── api-error.ts          # Clases de error tipadas
+│   │   └── index.ts
+│   └── types/
+│       └── index.ts              # Tipos compartidos
+│
+├── components/                   # Componentes UI
+├── hooks/                        # Custom hooks
+├── stores/                       # Zustand stores
+└── lib/                          # Utilidades legacy
 ```
+
+### Patron de API Routes
+
+Las rutas API siguen un patron simplificado:
+
+```typescript
+// Antes (codigo duplicado)
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const data = schema.parse(body)
+    const result = await prisma.model.create({ data })
+    return NextResponse.json(result, { status: 201 })
+  } catch (error) {
+    if (error instanceof ZodError) { ... }
+    return NextResponse.json({ error }, { status: 500 })
+  }
+}
+
+// Ahora (limpio y protegido)
+export const POST = withAuth(async (request: NextRequest) => {
+  try {
+    const body = await request.json()
+    const data = createSchema.parse(body)
+    const result = await service.create(data)
+    return created(result)
+  } catch (error) {
+    return handleError(error)
+  }
+})
+```
+
+### Beneficios
+
+| Aspecto | Mejora |
+|---------|--------|
+| **Seguridad** | Todas las rutas admin protegidas con `withAuth` |
+| **Tipos** | Un archivo `.types.ts` por modulo, derivado de Prisma |
+| **Logica** | Servicios reutilizables, testables sin HTTP |
+| **Errores** | Manejo centralizado con `handleError()` |
+| **API Client** | Cliente tipado para frontend |
+
+---
+
+## Funcionalidades Implementadas
+
+### Sitio Publico (`/`)
+- **Home page** con: Hero, NextService, Community, CTA
+- **Pagina `/horarios`** — horarios de cultos
+- **Pagina `/galeria`** — galeria fotografica con masonry
+- **Pagina `/creencias`** — declaracion de fe
+- **Pagina `/contacto`** — formulario e info de contacto
+- **SEO completo**: metadata, OpenGraph, sitemap, robots, manifest
+
+### Panel Admin (`/admin`)
+- **Autenticacion JWT** con middleware `withAuth`
+- **Dashboard** con estadisticas en tiempo real
+- **CRUD Eventos** completo con periodicidad
+- **CRUD Galeria** con organizador avanzado (drag & drop, bulk update)
+- **CRUD Horarios** completo
+- **CRUD Testimonios** completo
+- **Configuracion del sitio** desde panel
+
+### API Routes (`/api`)
+
+| Endpoint | Metodos | Protegido |
+|----------|---------|-----------|
+| `/api/auth/login` | POST | No |
+| `/api/auth/logout` | POST | No |
+| `/api/auth/me` | GET | No |
+| `/api/admin/eventos` | GET, POST | Si |
+| `/api/admin/eventos/[id]` | PATCH, DELETE | Si |
+| `/api/admin/galeria` | GET, POST | Si |
+| `/api/admin/galeria/[id]` | PATCH, DELETE | Si |
+| `/api/admin/galeria/bulk` | POST, PUT | Si |
+| `/api/admin/horarios` | GET, POST | Si |
+| `/api/admin/horarios/[id]` | PATCH, DELETE | Si |
+| `/api/admin/testimonios` | GET, POST | Si |
+| `/api/admin/testimonios/[id]` | GET, PUT, DELETE | Si |
+| `/api/admin/config` | GET, PATCH | Si |
+| `/api/admin/stats` | GET | Si |
+| `/api/public/*` | GET | No |
+
+---
+
+## Base de Datos (Prisma)
+
+Modelos en `schema.prisma`:
+- `User` (auth, roles ADMIN/EDITOR)
+- `ConfigSitio` (configuracion general)
+- `Imagen` (galeria con spans: normal/tall/wide)
+- `Evento` (con periodicidad: semanal/quincenal/mensual/anual)
+- `Horario` (dia, hora, icono Lucide, orden)
+- `Testimonio` (videos de testimonios)
+
+---
+
+## Estado Actual
+
+### Listo para produccion
+- Arquitectura modular implementada
+- Autenticacion JWT con middleware
+- API protegida con `withAuth`
+- CRUD completo para todos los recursos
+- Organizador de galeria con drag & drop
+- SEO completo
+
+### Pendientes
+- Migrar componentes para usar `api` client tipado
+- Tests unitarios para servicios
+- Eliminar archivos legacy (`mock-data.ts`, `supabase.ts`)

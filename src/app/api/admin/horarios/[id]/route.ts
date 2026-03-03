@@ -1,69 +1,30 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import { NextRequest } from "next/server"
+import { horarioService, updateHorarioSchema } from "@/modules/horarios"
+import { withAuth, type RouteContext } from "@/modules/auth"
+import { success, handleError } from "@/shared/api"
 
-const updateSchema = z.object({
-  titulo: z.string().min(1).optional(),
-  subtitulo: z.string().nullable().optional(),
-  descripcion: z.string().nullable().optional(),
-  descripcionLarga: z.string().nullable().optional(),
-  dia: z.string().min(1).optional(),
-  hora: z.string().min(1).optional(),
-  icono: z.string().optional(),
-  imagen: z.string().nullable().optional(),
-  mostrarDetalle: z.boolean().optional(),
-  order: z.number().int().optional(),
-  activo: z.boolean().optional(),
-})
-
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params
-    const body = await request.json()
-    const validatedData = updateSchema.parse(body)
-
-    const horario = await prisma.horario.update({
-      where: { id },
-      data: validatedData,
-    })
-
-    return NextResponse.json(horario)
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
+export const PATCH = withAuth(
+  async (request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const body = await request.json()
+      const data = updateHorarioSchema.parse(body)
+      const horario = await horarioService.update(id, data)
+      return success(horario)
+    } catch (error) {
+      return handleError(error)
     }
-
-    console.error("Error updating schedule:", error)
-    return NextResponse.json(
-      { error: "Error al actualizar horario" },
-      { status: 500 }
-    )
   }
-}
+)
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params
-
-    await prisma.horario.delete({
-      where: { id },
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Error deleting schedule:", error)
-    return NextResponse.json(
-      { error: "Error al eliminar horario" },
-      { status: 500 }
-    )
+export const DELETE = withAuth(
+  async (_request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      await horarioService.delete(id)
+      return success({ deleted: true })
+    } catch (error) {
+      return handleError(error)
+    }
   }
-}
+)

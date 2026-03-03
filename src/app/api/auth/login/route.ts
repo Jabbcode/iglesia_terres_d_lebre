@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { signToken } from "@/lib/auth"
 import bcrypt from "bcryptjs"
-import { z } from "zod"
-
-const loginSchema = z.object({
-  email: z.string().email("Email invalido"),
-  password: z.string().min(1, "Password requerido"),
-})
+import { loginSchema } from "@/modules/auth"
+import { validationError, unauthorized, serverError } from "@/shared/api"
+import { ZodError } from "zod"
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,18 +16,12 @@ export async function POST(request: NextRequest) {
     })
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Credenciales incorrectas" },
-        { status: 401 }
-      )
+      return unauthorized("Credenciales incorrectas")
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) {
-      return NextResponse.json(
-        { error: "Credenciales incorrectas" },
-        { status: 401 }
-      )
+      return unauthorized("Credenciales incorrectas")
     }
 
     const token = await signToken({
@@ -58,17 +49,9 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
+    if (error instanceof ZodError) {
+      return validationError(error)
     }
-
-    console.error("Login error:", error)
-    return NextResponse.json(
-      { error: "Error al iniciar sesion" },
-      { status: 500 }
-    )
+    return serverError(error)
   }
 }

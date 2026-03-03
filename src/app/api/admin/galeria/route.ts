@@ -1,53 +1,24 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import { NextRequest } from "next/server"
+import { imagenService, createImagenSchema } from "@/modules/galeria"
+import { withAuth } from "@/modules/auth"
+import { success, created, handleError } from "@/shared/api"
 
-const imagenSchema = z.object({
-  src: z.string().url("URL de imagen invalida"),
-  alt: z.string().min(1, "Texto alternativo requerido"),
-  span: z.enum(["normal", "tall", "wide"]).default("normal"),
-  order: z.number().int().default(0),
-  activo: z.boolean().default(true),
+export const GET = withAuth(async () => {
+  try {
+    const imagenes = await imagenService.getAll()
+    return success(imagenes)
+  } catch (error) {
+    return handleError(error)
+  }
 })
 
-export async function GET() {
-  try {
-    const imagenes = await prisma.imagen.findMany({
-      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-    })
-
-    return NextResponse.json(imagenes)
-  } catch (error) {
-    console.error("Error fetching images:", error)
-    return NextResponse.json(
-      { error: "Error al obtener imagenes" },
-      { status: 500 }
-    )
-  }
-}
-
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest) => {
   try {
     const body = await request.json()
-    const validatedData = imagenSchema.parse(body)
-
-    const imagen = await prisma.imagen.create({
-      data: validatedData,
-    })
-
-    return NextResponse.json(imagen, { status: 201 })
+    const data = createImagenSchema.parse(body)
+    const imagen = await imagenService.create(data)
+    return created(imagen)
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
-    }
-
-    console.error("Error creating image:", error)
-    return NextResponse.json(
-      { error: "Error al crear imagen" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})
