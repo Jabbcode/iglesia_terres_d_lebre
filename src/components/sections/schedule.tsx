@@ -25,19 +25,8 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { FadeInUp } from "@/components/ui/motion"
 import { useIsMobile } from "@/hooks/use-media-query"
-
-interface Horario {
-  id: string
-  titulo: string
-  subtitulo: string | null
-  descripcion: string | null
-  descripcionLarga: string | null
-  dia: string
-  hora: string
-  icono: string | null
-  imagen: string | null
-  mostrarDetalle: boolean
-}
+import { api } from "@/shared/api"
+import type { Horario } from "@/modules/horarios"
 
 const iconMap: Record<string, LucideIcon> = {
   Church,
@@ -59,17 +48,11 @@ export function Schedule() {
   const isMobile = useIsMobile()
 
   useEffect(() => {
-    fetch("/api/public/horarios")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setHorarios(data)
-        }
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
+    api
+      .get<Horario[]>("/api/public/horarios")
+      .then(setHorarios)
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   const getIcon = (iconName: string | null): LucideIcon => {

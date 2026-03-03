@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { api } from "@/shared/api"
 
 interface ConfigSitio {
   nombreIglesia: string
@@ -34,8 +35,7 @@ export const useConfigStore = create<ConfigStore>((set, get) => ({
     set({ loading: true })
 
     try {
-      const res = await fetch("/api/public/config")
-      const data = await res.json()
+      const data = await api.get<ConfigSitio>("/api/public/config")
       set({ config: data, loading: false, fetched: true })
     } catch {
       set({ loading: false, fetched: true })

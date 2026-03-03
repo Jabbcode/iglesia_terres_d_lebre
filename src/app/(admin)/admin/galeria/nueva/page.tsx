@@ -9,6 +9,7 @@ import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
+import { api } from "@/shared/api"
 
 const imagenSchema = z.object({
   src: z.string().min(1, "Imagen requerida"),
@@ -44,17 +45,8 @@ export default function NuevaImagenPage() {
     setError(null)
 
     try {
-      const res = await fetch("/api/admin/galeria", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/galeria")
-      } else {
-        setError("Error al crear la imagen")
-      }
+      await api.post("/api/admin/galeria", data)
+      router.push("/admin/galeria")
     } catch {
       setError("Error de conexion")
     } finally {

@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Imagen } from "@/modules/galeria"
 
 const imagenSchema = z.object({
   src: z.string().min(1, "Imagen requerida"),
@@ -45,21 +47,20 @@ export default function EditarImagenPage({
   })
 
   useEffect(() => {
-    fetch(`/api/admin/galeria`)
-      .then((res) => res.json())
+    api
+      .get<Imagen[]>("/api/admin/galeria")
       .then((data) => {
-        const imagen = data.find(
-          (img: ImagenForm & { id: string }) => img.id === id
-        )
+        const imagen = data.find((img) => img.id === id)
         if (imagen) {
           reset({
             src: imagen.src,
-            alt: imagen.alt,
+            alt: imagen.alt || "",
             span: imagen.span,
             order: imagen.order,
           })
         }
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -68,17 +69,8 @@ export default function EditarImagenPage({
     setError(null)
 
     try {
-      const res = await fetch(`/api/admin/galeria/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/galeria")
-      } else {
-        setError("Error al actualizar la imagen")
-      }
+      await api.patch(`/api/admin/galeria/${id}`, data)
+      router.push("/admin/galeria")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -100,10 +92,8 @@ export default function EditarImagenPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/galeria/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        router.push("/admin/galeria")
-      }
+      await api.delete(`/api/admin/galeria/${id}`)
+      router.push("/admin/galeria")
     } catch {
       setError("Error al eliminar")
     } finally {

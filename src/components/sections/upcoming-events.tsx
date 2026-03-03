@@ -92,19 +92,11 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { useIsMobile } from "@/hooks/use-media-query"
+import { api } from "@/shared/api"
+import type { Evento } from "@/modules/eventos"
 
-interface Evento {
-  id: string
-  nombre: string
-  descripcion: string | null
-  fecha: string
-  horaInicio: string
-  horaFin: string | null
-  ubicacion: string | null
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr)
+function formatDate(dateStr: string | Date): string {
+  const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
   return date.toLocaleDateString("es-ES", {
     weekday: "long",
     day: "numeric",
@@ -118,17 +110,11 @@ export function UpcomingEvents() {
   const isMobile = useIsMobile()
 
   useEffect(() => {
-    fetch("/api/public/eventos")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setEventos(data)
-        }
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
+    api
+      .get<Evento[]>("/api/public/eventos")
+      .then(setEventos)
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) {

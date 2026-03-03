@@ -7,6 +7,7 @@ import { z } from "zod"
 import { Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { VideoUpload } from "@/components/admin/video-uplodad"
+import { api } from "@/shared/api"
 
 const configSchema = z.object({
   nombreIglesia: z.string().min(1, "Nombre requerido"),
@@ -59,8 +60,8 @@ export default function ConfiguracionPage() {
   })
 
   useEffect(() => {
-    fetch("/api/admin/config")
-      .then((res) => res.json())
+    api
+      .get<ConfigForm>("/api/admin/config")
       .then((data) => {
         reset({
           nombreIglesia: data.nombreIglesia || "",
@@ -77,28 +78,19 @@ export default function ConfiguracionPage() {
           googleMapsEmbed: data.googleMapsEmbed || "",
         })
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [reset])
 
   const onSubmit = async (data: ConfigForm) => {
-    console.log(data)
     setSaving(true)
     setMessage(null)
 
     try {
-      const res = await fetch("/api/admin/config", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        setMessage({ type: "success", text: "Configuracion guardada" })
-      } else {
-        setMessage({ type: "error", text: "Error al guardar" })
-      }
+      await api.patch("/api/admin/config", data)
+      setMessage({ type: "success", text: "Configuracion guardada" })
     } catch {
-      setMessage({ type: "error", text: "Error de conexion" })
+      setMessage({ type: "error", text: "Error al guardar" })
     } finally {
       setSaving(false)
     }

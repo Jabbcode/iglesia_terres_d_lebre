@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Image, Calendar, Clock, CalendarCheck } from "lucide-react"
 import { StatCard } from "@/components/admin/StatCard"
+import { api } from "@/shared/api"
 
 interface Stats {
   imagenes: number
@@ -16,9 +17,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/api/admin/stats")
-      .then((res) => res.json())
-      .then((data) => setStats(data))
+    api
+      .get<Stats>("/api/admin/stats")
+      .then(setStats)
       .catch(() => setStats(null))
       .finally(() => setLoading(false))
   }, [])

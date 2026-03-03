@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import {
   Plus,
   Pencil,
@@ -14,8 +13,10 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { useAdminData } from "@/hooks/use-admin-data"
 import { formatearPeriodicidad } from "@/lib/event-utils"
 import Link from "next/link"
+import type { Evento } from "@/modules/eventos"
 
 const PERIODICIDAD = {
   NINGUNA: "ninguna",
@@ -25,41 +26,16 @@ const PERIODICIDAD = {
   ANUAL: "anual",
 } as const
 
-interface Evento {
-  id: string
-  nombre: string
-  descripcion: string | null
-  fecha: string
-  horaInicio: string
-  horaFin: string | null
-  ubicacion: string | null
-  periodicidad: "ninguna" | "semanal" | "quincenal" | "mensual" | "anual"
-  repetirHasta: string | null
-  activo: boolean
-}
-
 export default function EventosPage() {
-  const [eventos, setEventos] = useState<Evento[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [toggling, setToggling] = useState<string | null>(null)
+  const {
+    data: eventos,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Evento>({
+    endpoint: "/api/admin/eventos",
+  })
   const confirm = useConfirm()
-
-  useEffect(() => {
-    fetchEventos()
-  }, [])
-
-  const fetchEventos = async () => {
-    try {
-      const res = await fetch("/api/admin/eventos")
-      const data = await res.json()
-      setEventos(data)
-    } catch {
-      console.error("Error fetching events")
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleDelete = async (id: string) => {
     const confirmed = await confirm({
@@ -73,43 +49,21 @@ export default function EventosPage() {
 
     if (!confirmed) return
 
-    setDeleting(id)
     try {
-      const res = await fetch(`/api/admin/eventos/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setEventos(eventos.filter((e) => e.id !== id))
-      }
+      await deleteItem(id)
     } catch {
       console.error("Error deleting event")
-    } finally {
-      setDeleting(null)
     }
   }
 
-  const handleToggle = async (id: string, currentValue: boolean) => {
-    setToggling(id)
-    try {
-      const res = await fetch(`/api/admin/eventos/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activo: !currentValue }),
-      })
-      if (res.ok) {
-        setEventos(
-          eventos.map((e) =>
-            e.id === id ? { ...e, activo: !currentValue } : e
-          )
-        )
-      }
-    } catch {
+  const handleToggle = (id: string, currentValue: boolean) => {
+    toggleField(id, "activo", currentValue).catch(() => {
       console.error("Error toggling evento")
-    } finally {
-      setToggling(null)
-    }
+    })
   }
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
+  const formatDate = (dateStr: string | Date) => {
+    const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
     return date.toLocaleDateString("es-ES", {
       weekday: "long",
       day: "numeric",
@@ -118,7 +72,7 @@ export default function EventosPage() {
     })
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
         <div className="h-8 w-48 rounded bg-gray-200" />
@@ -204,7 +158,6 @@ export default function EventosPage() {
                 <Switch
                   checked={evento.activo}
                   onCheckedChange={() => handleToggle(evento.id, evento.activo)}
-                  disabled={toggling === evento.id}
                 />
                 <span className="text-muted-foreground w-16 text-xs">
                   {evento.activo ? "Activo" : "Inactivo"}
@@ -221,7 +174,6 @@ export default function EventosPage() {
                   variant="destructive"
                   className="size-8"
                   onClick={() => handleDelete(evento.id)}
-                  disabled={deleting === evento.id}
                 >
                   <Trash2 className="size-4" />
                 </Button>

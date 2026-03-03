@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { api } from "@/shared/api"
 
 const periodicidadOptions = [
   { value: "ninguna", label: "Sin repeticion" },
@@ -76,17 +77,8 @@ export default function NuevoEventoPage() {
         activo: data.activo,
       }
 
-      const res = await fetch("/api/admin/eventos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/eventos")
-      } else {
-        setError("Error al crear el evento")
-      }
+      await api.post("/api/admin/eventos", payload)
+      router.push("/admin/eventos")
     } catch {
       setError("Error de conexion")
     } finally {

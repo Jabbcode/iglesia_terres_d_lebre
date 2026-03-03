@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { IGLESIA_NAME } from "@/lib/constant"
+import { api } from "@/shared/api"
 
 const loginSchema = z.object({
   email: z.string().email("Email invalido"),
@@ -33,21 +34,11 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin")
-        router.refresh()
-      } else {
-        const result = await res.json()
-        setError(result.error || "Error al iniciar sesion")
-      }
+      await api.post("/api/auth/login", data)
+      router.push("/admin")
+      router.refresh()
     } catch {
-      setError("Error de conexion")
+      setError("Credenciales invalidas")
     } finally {
       setLoading(false)
     }
