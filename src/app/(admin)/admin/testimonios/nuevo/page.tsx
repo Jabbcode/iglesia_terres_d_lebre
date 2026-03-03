@@ -5,10 +5,16 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Save, ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {
+  FormHeader,
+  FormSection,
+  FormInput,
+  FormTextarea,
+  FormActions,
+  FormError,
+} from "@/components/admin/form"
 import { ImageUpload } from "@/components/admin/image-upload"
-import Link from "next/link"
+import { FormField } from "@/components/admin/form"
 import { api } from "@/shared/api"
 
 const testimonioSchema = z.object({
@@ -58,146 +64,79 @@ export default function NuevoTestimonioPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <Link
-          href="/admin/testimonios"
-          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
-        >
-          <ArrowLeft className="size-4" />
-          Volver a testimonios
-        </Link>
-        <h1 className="text-foreground text-2xl font-bold">Nuevo Testimonio</h1>
-        <p className="text-muted-foreground mt-1">
-          Crea un nuevo testimonio para la pagina de Nosotros
-        </p>
-      </div>
+      <FormHeader
+        title="Nuevo Testimonio"
+        description="Crea un nuevo testimonio para la pagina de Nosotros"
+        backHref="/admin/testimonios"
+        backLabel="Volver a testimonios"
+      />
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
-        {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-            {error}
-          </div>
-        )}
+        <FormError message={error} />
 
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="space-y-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Nombre
-              </label>
-              <input
-                {...register("nombre")}
-                placeholder="Ej: Maria Garcia"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.nombre.message}
-                </p>
-              )}
-            </div>
+        <FormSection>
+          <FormInput
+            label="Nombre"
+            placeholder="Ej: Maria Garcia"
+            error={errors.nombre?.message}
+            {...register("nombre")}
+          />
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion / Testimonio
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={4}
-                placeholder="El testimonio de la persona..."
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.descripcion && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.descripcion.message}
-                </p>
-              )}
-            </div>
+          <FormTextarea
+            label="Descripcion / Testimonio"
+            placeholder="El testimonio de la persona..."
+            error={errors.descripcion?.message}
+            {...register("descripcion")}
+          />
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                URL del Video (YouTube embed)
-              </label>
-              <input
-                {...register("videoUrl")}
-                placeholder="https://www.youtube.com/embed/..."
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              <p className="text-muted-foreground mt-1 text-xs">
-                Usa el formato embed de YouTube (ej:
-                https://www.youtube.com/embed/VIDEO_ID)
-              </p>
-              {errors.videoUrl && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.videoUrl.message}
-                </p>
-              )}
-            </div>
+          <FormInput
+            label="URL del Video (YouTube)"
+            placeholder="https://www.youtube.com/watch?v=..."
+            hint="Puedes usar cualquier formato de URL de YouTube"
+            error={errors.videoUrl?.message}
+            {...register("videoUrl")}
+          />
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Thumbnail
-              </label>
-              <ImageUpload
-                value={watch("thumbnail")}
-                onChange={(url) => setValue("thumbnail", url)}
-                folder="testimonios"
-                placeholder="Subir imagen de portada del video"
-              />
-              {errors.thumbnail && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.thumbnail.message}
-                </p>
-              )}
-            </div>
+          <FormField label="Thumbnail" error={errors.thumbnail?.message}>
+            <ImageUpload
+              value={watch("thumbnail")}
+              onChange={(url) => setValue("thumbnail", url)}
+              folder="testimonios"
+              placeholder="Subir imagen de portada del video"
+            />
+          </FormField>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormInput
+              label="Orden"
+              type="number"
+              {...register("order", { valueAsNumber: true })}
+            />
+
+            <div className="flex items-end pb-2">
+              <div className="flex items-center gap-2">
                 <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  {...register("activo")}
+                  type="checkbox"
+                  id="activo"
+                  className="border-border size-4 rounded"
                 />
-              </div>
-
-              <div className="flex items-end pb-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    {...register("activo")}
-                    type="checkbox"
-                    id="activo"
-                    className="border-border size-4 rounded"
-                  />
-                  <label
-                    htmlFor="activo"
-                    className="text-foreground text-sm font-medium"
-                  >
-                    Testimonio activo
-                  </label>
-                </div>
+                <label
+                  htmlFor="activo"
+                  className="text-foreground text-sm font-medium"
+                >
+                  Testimonio activo
+                </label>
               </div>
             </div>
           </div>
-        </div>
+        </FormSection>
 
-        <div className="flex justify-end gap-3">
-          <Link href="/admin/testimonios">
-            <Button type="button" variant="outline">
-              Cancelar
-            </Button>
-          </Link>
-          <Button
-            type="submit"
-            disabled={saving}
-            className="bg-amber hover:bg-amber-dark gap-2"
-          >
-            <Save className="size-4" />
-            {saving ? "Guardando..." : "Crear Testimonio"}
-          </Button>
-        </div>
+        <FormActions
+          cancelHref="/admin/testimonios"
+          submitLabel="Crear Testimonio"
+          isSubmitting={saving}
+        />
       </form>
     </div>
   )
