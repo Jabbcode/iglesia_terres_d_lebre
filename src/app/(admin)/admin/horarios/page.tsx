@@ -1,9 +1,6 @@
 "use client"
 
 import {
-  Plus,
-  Pencil,
-  Trash2,
   Clock,
   Church,
   BookOpen,
@@ -18,12 +15,14 @@ import {
   Calendar,
   LucideIcon,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 import { EmptyState } from "@/components/admin/empty-state"
-import { useConfirm } from "@/components/admin/confirm-dialog"
+import {
+  AdminListHeader,
+  AdminListSkeleton,
+  AdminListItem,
+} from "@/components/admin/admin-list"
 import { useAdminData } from "@/hooks/use-admin-data"
-import Link from "next/link"
+import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
 import type { Horario } from "@/modules/horarios"
 
 const iconMap: Record<string, LucideIcon> = {
@@ -42,41 +41,20 @@ const iconMap: Record<string, LucideIcon> = {
 }
 
 export default function HorariosPage() {
-  const {
-    data: horarios,
-    isLoading,
-    toggleField,
-    deleteItem,
-  } = useAdminData<Horario>({
-    endpoint: "/api/admin/horarios",
-  })
-  const confirm = useConfirm()
-
-  const handleDelete = async (id: string) => {
-    const confirmed = await confirm({
-      title: "Eliminar horario",
-      description:
-        "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
-      confirmLabel: "Eliminar",
-      cancelLabel: "Cancelar",
-      variant: "danger",
+  const { data: horarios, isLoading, toggleField, deleteItem } =
+    useAdminData<Horario>({
+      endpoint: "/api/admin/horarios",
     })
 
-    if (!confirmed) return
+  const { handleDelete } = useDeleteConfirm({
+    title: "Eliminar horario",
+    description:
+      "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
+    onDelete: deleteItem,
+  })
 
-    try {
-      await deleteItem(id)
-    } catch {
-      console.error("Error deleting schedule")
-    }
-  }
-
-  const handleToggle = (
-    id: string,
-    field: "activo" | "mostrarDetalle",
-    currentValue: boolean
-  ) => {
-    toggleField(id, field, currentValue).catch(() => {
+  const handleToggle = (id: string, currentValue: boolean) => {
+    toggleField(id, "activo", currentValue).catch(() => {
       console.error("Error toggling horario")
     })
   }
@@ -87,36 +65,17 @@ export default function HorariosPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-8 w-48 rounded bg-gray-200" />
-        <div className="space-y-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 rounded-xl bg-gray-200" />
-          ))}
-        </div>
-      </div>
-    )
+    return <AdminListSkeleton count={4} itemHeight="h-20" />
   }
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-foreground text-2xl font-bold">
-            Horarios de Servicios
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Gestiona los horarios de servicios de la iglesia
-          </p>
-        </div>
-        <Link href="/admin/horarios/nuevo">
-          <Button className="bg-amber hover:bg-amber-dark gap-2">
-            <Plus className="size-4" />
-            Agregar Horario
-          </Button>
-        </Link>
-      </div>
+      <AdminListHeader
+        title="Horarios de Servicios"
+        description="Gestiona los horarios de servicios de la iglesia"
+        createHref="/admin/horarios/nuevo"
+        createLabel="Agregar Horario"
+      />
 
       {horarios.length === 0 ? (
         <EmptyState
@@ -129,9 +88,18 @@ export default function HorariosPage() {
       ) : (
         <div className="space-y-3">
           {horarios.map((horario) => (
-            <div
+            <AdminListItem
               key={horario.id}
-              className="group border-border/50 flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm"
+              id={horario.id}
+              editHref={`/admin/horarios/${horario.id}`}
+              activo={horario.activo}
+              onToggleActivo={() => handleToggle(horario.id, horario.activo)}
+              onDelete={() => handleDelete(horario.id)}
+              extraActions={
+                <span className="text-muted-foreground text-sm">
+                  Orden: {horario.order}
+                </span>
+              }
             >
               <div className="flex items-center gap-4">
                 <div className="bg-amber/10 text-amber flex size-12 items-center justify-center rounded-lg">
@@ -151,38 +119,7 @@ export default function HorariosPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={horario.activo}
-                    onCheckedChange={() =>
-                      handleToggle(horario.id, "activo", horario.activo)
-                    }
-                  />
-                  <span className="text-muted-foreground w-16 text-xs">
-                    {horario.activo ? "Activo" : "Inactivo"}
-                  </span>
-                </div>
-                <span className="text-muted-foreground text-sm">
-                  Orden: {horario.order}
-                </span>
-                <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  <Link href={`/admin/horarios/${horario.id}`}>
-                    <Button size="icon" variant="secondary" className="size-8">
-                      <Pencil className="size-4" />
-                    </Button>
-                  </Link>
-                  <Button
-                    size="icon"
-                    variant="destructive"
-                    className="size-8"
-                    onClick={() => handleDelete(horario.id)}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+            </AdminListItem>
           ))}
         </div>
       )}
