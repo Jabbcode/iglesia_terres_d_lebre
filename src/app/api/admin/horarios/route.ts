@@ -1,59 +1,24 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import { NextRequest } from "next/server"
+import { horarioService, createHorarioSchema } from "@/modules/horarios"
+import { withAuth } from "@/modules/auth"
+import { success, created, handleError } from "@/shared/api"
 
-const horarioSchema = z.object({
-  titulo: z.string().min(1, "Titulo requerido"),
-  subtitulo: z.string().nullable().optional(),
-  descripcion: z.string().nullable().optional(),
-  descripcionLarga: z.string().nullable().optional(),
-  dia: z.string().min(1, "Dia requerido"),
-  hora: z.string().min(1, "Hora requerida"),
-  icono: z.string().default("Church"),
-  imagen: z.string().nullable().optional(),
-  mostrarDetalle: z.boolean().default(false),
-  order: z.number().int().default(0),
-  activo: z.boolean().default(true),
+export const GET = withAuth(async () => {
+  try {
+    const horarios = await horarioService.getAll()
+    return success(horarios)
+  } catch (error) {
+    return handleError(error)
+  }
 })
 
-export async function GET() {
-  try {
-    const horarios = await prisma.horario.findMany({
-      orderBy: { order: "asc" },
-    })
-
-    return NextResponse.json(horarios)
-  } catch (error) {
-    console.error("Error fetching schedules:", error)
-    return NextResponse.json(
-      { error: "Error al obtener horarios" },
-      { status: 500 }
-    )
-  }
-}
-
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest) => {
   try {
     const body = await request.json()
-    const validatedData = horarioSchema.parse(body)
-
-    const horario = await prisma.horario.create({
-      data: validatedData,
-    })
-
-    return NextResponse.json(horario, { status: 201 })
+    const data = createHorarioSchema.parse(body)
+    const horario = await horarioService.create(data)
+    return created(horario)
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
-    }
-
-    console.error("Error creating schedule:", error)
-    return NextResponse.json(
-      { error: "Error al crear horario" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})

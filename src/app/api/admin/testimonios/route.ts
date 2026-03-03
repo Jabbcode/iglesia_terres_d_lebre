@@ -1,45 +1,27 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextRequest } from "next/server"
+import {
+  testimonioService,
+  createTestimonioSchema,
+} from "@/modules/testimonios"
+import { withAuth } from "@/modules/auth"
+import { success, created, handleError } from "@/shared/api"
 
-// GET /api/admin/testimonios - List all testimonios
-export async function GET() {
+export const GET = withAuth(async () => {
   try {
-    const testimonios = await prisma.testimonio.findMany({
-      orderBy: { order: "asc" },
-    })
-    return NextResponse.json(testimonios)
+    const testimonios = await testimonioService.getAll()
+    return success(testimonios)
   } catch (error) {
-    console.error("Error fetching testimonios:", error)
-    return NextResponse.json(
-      { error: "Error al obtener testimonios" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})
 
-// POST /api/admin/testimonios - Create new testimonio
-export async function POST(request: Request) {
+export const POST = withAuth(async (request: NextRequest) => {
   try {
     const body = await request.json()
-    const { nombre, descripcion, videoUrl, thumbnail, order, activo } = body
-
-    const testimonio = await prisma.testimonio.create({
-      data: {
-        nombre,
-        descripcion,
-        videoUrl,
-        thumbnail,
-        order: order ?? 0,
-        activo: activo ?? true,
-      },
-    })
-
-    return NextResponse.json(testimonio, { status: 201 })
+    const data = createTestimonioSchema.parse(body)
+    const testimonio = await testimonioService.create(data)
+    return created(testimonio)
   } catch (error) {
-    console.error("Error creating testimonio:", error)
-    return NextResponse.json(
-      { error: "Error al crear testimonio" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})

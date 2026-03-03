@@ -1,78 +1,50 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextRequest } from "next/server"
+import {
+  testimonioService,
+  updateTestimonioSchema,
+} from "@/modules/testimonios"
+import { withAuth, type RouteContext } from "@/modules/auth"
+import { success, notFound, handleError } from "@/shared/api"
 
-interface RouteParams {
-  params: Promise<{ id: string }>
-}
+export const GET = withAuth(
+  async (_request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const testimonio = await testimonioService.getById(id)
 
-// GET /api/admin/testimonios/[id] - Get single testimonio
-export async function GET(_request: Request, { params }: RouteParams) {
-  try {
-    const { id } = await params
-    const testimonio = await prisma.testimonio.findUnique({
-      where: { id },
-    })
+      if (!testimonio) {
+        return notFound("Testimonio no encontrado")
+      }
 
-    if (!testimonio) {
-      return NextResponse.json(
-        { error: "Testimonio no encontrado" },
-        { status: 404 }
-      )
+      return success(testimonio)
+    } catch (error) {
+      return handleError(error)
     }
-
-    return NextResponse.json(testimonio)
-  } catch (error) {
-    console.error("Error fetching testimonio:", error)
-    return NextResponse.json(
-      { error: "Error al obtener testimonio" },
-      { status: 500 }
-    )
   }
-}
+)
 
-// PUT /api/admin/testimonios/[id] - Update testimonio
-export async function PUT(request: Request, { params }: RouteParams) {
-  try {
-    const { id } = await params
-    const body = await request.json()
-    const { nombre, descripcion, videoUrl, thumbnail, order, activo } = body
-
-    const testimonio = await prisma.testimonio.update({
-      where: { id },
-      data: {
-        nombre,
-        descripcion,
-        videoUrl,
-        thumbnail,
-        order,
-        activo,
-      },
-    })
-
-    return NextResponse.json(testimonio)
-  } catch (error) {
-    console.error("Error updating testimonio:", error)
-    return NextResponse.json(
-      { error: "Error al actualizar testimonio" },
-      { status: 500 }
-    )
+export const PUT = withAuth(
+  async (request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const body = await request.json()
+      const data = updateTestimonioSchema.parse(body)
+      const testimonio = await testimonioService.update(id, data)
+      return success(testimonio)
+    } catch (error) {
+      return handleError(error)
+    }
   }
-}
+)
 
-// DELETE /api/admin/testimonios/[id] - Delete testimonio
-export async function DELETE(_request: Request, { params }: RouteParams) {
-  try {
-    const { id } = await params
-    await prisma.testimonio.delete({
-      where: { id },
-    })
-
-    return NextResponse.json({ message: "Testimonio eliminado" })
-  } catch (error) {
-    console.error("Error deleting testimonio:", error)
-    return NextResponse.json(
-      { error: "Error al eliminar testimonio" },
-      { status: 500 }
-    )
+export const DELETE = withAuth(
+  async (_request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      await testimonioService.delete(id)
+      return success({ deleted: true })
+    } catch (error) {
+      return handleError(error)
+    }
   }
-}
+)

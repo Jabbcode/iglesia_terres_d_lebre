@@ -1,95 +1,24 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import { NextRequest } from "next/server"
+import { configService, updateConfigSchema } from "@/modules/config"
+import { withAuth } from "@/modules/auth"
+import { success, handleError } from "@/shared/api"
 
-// Transform empty strings to null for nullable fields
-const emptyToNull = (val: string | null | undefined) =>
-  val === "" ? null : val
-
-// For nullable URL fields
-const optionalUrl = z
-  .string()
-  .transform(emptyToNull)
-  .pipe(z.string().url().nullable())
-  .optional()
-
-// For nullable email field
-const optionalEmail = z
-  .string()
-  .transform(emptyToNull)
-  .pipe(z.string().email().nullable())
-  .optional()
-
-// For nullable string fields
-const optionalNullableString = z
-  .string()
-  .transform(emptyToNull)
-  .nullable()
-  .optional()
-
-const configSchema = z.object({
-  // Non-nullable fields (have defaults in Prisma)
-  nombreIglesia: z.string().min(1).optional(),
-  descripcion: z.string().optional(),
-  videoHero: z.string().min(1, "Video requerido").optional(),
-  // Nullable fields
-  instagram: optionalUrl,
-  facebook: optionalUrl,
-  youtube: optionalUrl,
-  direccion: optionalNullableString,
-  telefono: optionalNullableString,
-  email: optionalEmail,
-  horarioAtencion: optionalNullableString,
-  googleMapsUrl: optionalUrl,
-  googleMapsEmbed: optionalNullableString,
+export const GET = withAuth(async () => {
+  try {
+    const config = await configService.get()
+    return success(config)
+  } catch (error) {
+    return handleError(error)
+  }
 })
 
-export async function GET() {
-  try {
-    let config = await prisma.configSitio.findUnique({
-      where: { id: "default" },
-    })
-
-    if (!config) {
-      config = await prisma.configSitio.create({
-        data: { id: "default" },
-      })
-    }
-
-    return NextResponse.json(config)
-  } catch (error) {
-    console.error("Error fetching config:", error)
-    return NextResponse.json(
-      { error: "Error al obtener configuracion" },
-      { status: 500 }
-    )
-  }
-}
-
-export async function PATCH(request: NextRequest) {
+export const PATCH = withAuth(async (request: NextRequest) => {
   try {
     const body = await request.json()
-    const validatedData = configSchema.parse(body)
-
-    const config = await prisma.configSitio.upsert({
-      where: { id: "default" },
-      update: validatedData,
-      create: { id: "default", ...validatedData },
-    })
-
-    return NextResponse.json(config)
+    const data = updateConfigSchema.parse(body)
+    const config = await configService.update(data)
+    return success(config)
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Datos invalidos", details: error.issues },
-        { status: 400 }
-      )
-    }
-
-    console.error("Error updating config:", error)
-    return NextResponse.json(
-      { error: "Error al actualizar configuracion" },
-      { status: 500 }
-    )
+    return handleError(error)
   }
-}
+})
