@@ -15,6 +15,7 @@ import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import { useAdminData } from "@/hooks/use-admin-data"
 import { formatearPeriodicidad } from "@/lib/event-utils"
+import { formatFullDate, formatTimeRange } from "@/lib/formatters"
 import Link from "next/link"
 import type { Evento } from "@/modules/eventos"
 import { PERIODICIDAD } from "@/lib/constants"
@@ -52,16 +53,6 @@ export default function EventosPage() {
   const handleToggle = (id: string, currentValue: boolean) => {
     toggleField(id, "activo", currentValue).catch(() => {
       console.error("Error toggling evento")
-    })
-  }
-
-  const formatDate = (dateStr: string | Date) => {
-    const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
-    return date.toLocaleDateString("es-ES", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
     })
   }
 
@@ -130,14 +121,13 @@ export default function EventosPage() {
                 <div className="text-muted-foreground mt-2 flex flex-wrap gap-4 text-sm">
                   <span className="flex items-center gap-1">
                     <Calendar className="size-4" />
-                    {formatDate(evento.fecha)}
+                    {formatFullDate(evento.fecha)}
                     {evento.periodicidad !== PERIODICIDAD.NINGUNA &&
                       " (fecha base)"}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="size-4" />
-                    {evento.horaInicio}
-                    {evento.horaFin && ` - ${evento.horaFin}`}
+                    {formatTimeRange(evento.horaInicio, evento.horaFin)}
                   </span>
                   {evento.ubicacion && (
                     <span className="flex items-center gap-1">
