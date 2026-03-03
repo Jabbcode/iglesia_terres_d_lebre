@@ -8,10 +8,12 @@ interface UseAdminDataOptions {
 export function useAdminData<T extends { id: string }>({
   endpoint,
 }: UseAdminDataOptions) {
-  const { data = [], error, isLoading, mutate } = useSWR<T[]>(
-    endpoint,
-    (url: string) => api.get<T[]>(url)
-  )
+  const {
+    data = [],
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<T[]>(endpoint, (url: string) => api.get<T[]>(url))
 
   /**
    * Optimistic toggle for boolean fields
