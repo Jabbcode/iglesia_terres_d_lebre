@@ -14,6 +14,7 @@ import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Horario } from "@/modules/horarios"
+import { DIAS_SEMANA } from "@/lib/constants"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -30,16 +31,6 @@ const horarioSchema = z.object({
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
-
-const diaOptions = [
-  "Lunes",
-  "Martes",
-  "Miercoles",
-  "Jueves",
-  "Viernes",
-  "Sabado",
-  "Domingo",
-]
 
 export default function EditarHorarioPage({
   params,
@@ -243,7 +234,7 @@ export default function EditarHorarioPage({
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 >
                   <option value="">Seleccionar dia</option>
-                  {diaOptions.map((dia) => (
+                  {DIAS_SEMANA.map((dia) => (
                     <option key={dia} value={dia}>
                       {dia}
                     </option>

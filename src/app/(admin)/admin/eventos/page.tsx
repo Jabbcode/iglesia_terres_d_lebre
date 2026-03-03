@@ -17,14 +17,7 @@ import { useAdminData } from "@/hooks/use-admin-data"
 import { formatearPeriodicidad } from "@/lib/event-utils"
 import Link from "next/link"
 import type { Evento } from "@/modules/eventos"
-
-const PERIODICIDAD = {
-  NINGUNA: "ninguna",
-  SEMANAL: "semanal",
-  QUINCENAL: "quincenal",
-  MENSUAL: "mensual",
-  ANUAL: "anual",
-} as const
+import { PERIODICIDAD } from "@/lib/constants"
 
 export default function EventosPage() {
   const {
