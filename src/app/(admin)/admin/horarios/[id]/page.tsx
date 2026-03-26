@@ -15,6 +15,7 @@ import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Horario } from "@/modules/horarios"
 import { DIAS_SEMANA } from "@/lib/constants"
+import { uploadImage } from "@/lib/supabase"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -24,7 +25,7 @@ const horarioSchema = z.object({
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
-  imagen: z.string(),
+  
   mostrarDetalle: z.boolean(),
   order: z.number().int(),
   activo: z.boolean(),
@@ -43,6 +44,8 @@ export default function EditarHorarioPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
+  const [imagenOriginal, setImagenOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -57,14 +60,13 @@ export default function EditarHorarioPage({
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
-  const imagenValue = watch("imagen")
 
   // Desactivar mostrarDetalle si se elimina la imagen
   useEffect(() => {
-    if (!imagenValue && mostrarDetalle) {
+    if (!imagen && mostrarDetalle) {
       setValue("mostrarDetalle", false)
     }
-  }, [imagenValue, mostrarDetalle, setValue])
+  }, [imagen, mostrarDetalle, setValue])
 
   useEffect(() => {
     api
@@ -72,6 +74,8 @@ export default function EditarHorarioPage({
       .then((data) => {
         const horario = data.find((h) => h.id === id)
         if (horario) {
+          setImagenOriginal(horario.imagen || null)
+          setImagen(horario.imagen || null)
           reset({
             titulo: horario.titulo,
             subtitulo: horario.subtitulo || "",
@@ -80,7 +84,6 @@ export default function EditarHorarioPage({
             dia: horario.dia,
             hora: horario.hora,
             icono: horario.icono,
-            imagen: horario.imagen || "",
             mostrarDetalle: horario.mostrarDetalle,
             order: horario.order,
             activo: horario.activo,
@@ -96,6 +99,28 @@ export default function EditarHorarioPage({
     setError(null)
 
     try {
+      // Upload new image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "horarios")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
+      // Delete old image if it changed
+      if (imagenOriginal && imagenOriginal !== imagenUrl) {
+        try {
+          await api.post("/api/admin/images/delete", { url: imagenOriginal })
+        } catch (error) {
+          console.error("Failed to delete old image from storage:", error)
+        }
+      }
+
       const payload = {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
@@ -104,7 +129,7 @@ export default function EditarHorarioPage({
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
-        imagen: data.imagen || null,
+        imagen: imagenUrl,
         mostrarDetalle: data.mostrarDetalle,
         order: data.order,
         activo: data.activo,
@@ -318,7 +343,7 @@ export default function EditarHorarioPage({
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
-              disabled={!imagenValue}
+              disabled={!imagen}
             />
           </div>
 
@@ -328,12 +353,11 @@ export default function EditarHorarioPage({
                 Imagen
               </label>
               <ImageUpload
-                value={imagenValue || ""}
-                onChange={(url) => setValue("imagen", url)}
-                folder="horarios"
+                value={imagen}
+                onChange={setImagen}
                 placeholder="Subir imagen del horario"
               />
-              {!imagenValue && (
+              {!imagen && (
                 <p className="mt-1 text-xs text-amber-600">
                   Requerida para mostrar la seccion de detalle
                 </p>

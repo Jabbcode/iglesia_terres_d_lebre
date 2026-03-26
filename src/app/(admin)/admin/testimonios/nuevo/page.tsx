@@ -10,12 +10,12 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 import { api } from "@/shared/api"
+import { uploadImage } from "@/lib/supabase"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
   descripcion: z.string().min(1, "Descripcion requerida"),
   videoUrl: z.string().url("URL de video invalida"),
-  thumbnail: z.string().min(1, "Thumbnail requerido"),
   order: z.number().int(),
   activo: z.boolean(),
 })
@@ -26,17 +26,15 @@ export default function NuevoTestimonioPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [thumbnail, setThumbnail] = useState<string | File | null>(null)
 
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<TestimonioForm>({
     resolver: zodResolver(testimonioSchema),
     defaultValues: {
-      thumbnail: "",
       order: 0,
       activo: true,
     },
@@ -47,7 +45,29 @@ export default function NuevoTestimonioPage() {
     setError(null)
 
     try {
-      await api.post("/api/admin/testimonios", data)
+      // Upload thumbnail if it's a File
+      let thumbnailUrl: string | null = null
+      if (thumbnail instanceof File) {
+        thumbnailUrl = await uploadImage(thumbnail, "testimonios")
+        if (!thumbnailUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof thumbnail === "string") {
+        thumbnailUrl = thumbnail
+      }
+
+      if (!thumbnailUrl) {
+        setError("Thumbnail requerido")
+        setSaving(false)
+        return
+      }
+
+      await api.post("/api/admin/testimonios", {
+        ...data,
+        thumbnail: thumbnailUrl,
+      })
       router.push("/admin/testimonios")
     } catch {
       setError("Error de conexion")
@@ -139,16 +159,10 @@ export default function NuevoTestimonioPage() {
                 Thumbnail
               </label>
               <ImageUpload
-                value={watch("thumbnail")}
-                onChange={(url) => setValue("thumbnail", url)}
-                folder="testimonios"
+                value={thumbnail}
+                onChange={setThumbnail}
                 placeholder="Subir imagen de portada del video"
               />
-              {errors.thumbnail && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.thumbnail.message}
-                </p>
-              )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 import { api } from "@/shared/api"
+import { uploadImage } from "@/lib/supabase"
 
 const imagenSchema = z.object({
-  src: z.string().min(1, "Imagen requerida"),
   alt: z.string().min(1, "Texto alternativo requerido"),
   span: z.enum(["normal", "tall", "wide"]),
   order: z.number().int(),
@@ -24,17 +24,15 @@ export default function NuevaImagenPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
 
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<ImagenForm>({
     resolver: zodResolver(imagenSchema),
     defaultValues: {
-      src: "",
       span: "normal",
       order: 0,
     },
@@ -45,7 +43,29 @@ export default function NuevaImagenPage() {
     setError(null)
 
     try {
-      await api.post("/api/admin/galeria", data)
+      // Upload image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "galeria")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
+      if (!imagenUrl) {
+        setError("Imagen requerida")
+        setSaving(false)
+        return
+      }
+
+      await api.post("/api/admin/galeria", {
+        ...data,
+        src: imagenUrl,
+      })
       router.push("/admin/galeria")
     } catch {
       setError("Error de conexion")
@@ -84,16 +104,10 @@ export default function NuevaImagenPage() {
                 Imagen
               </label>
               <ImageUpload
-                value={watch("src")}
-                onChange={(url) => setValue("src", url)}
-                folder="galeria"
+                value={imagen}
+                onChange={setImagen}
                 placeholder="Subir imagen para la galería"
               />
-              {errors.src && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.src.message}
-                </p>
-              )}
             </div>
 
             <div>

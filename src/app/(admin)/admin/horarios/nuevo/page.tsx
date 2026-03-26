@@ -13,6 +13,7 @@ import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { DIAS_SEMANA } from "@/lib/constants"
+import { uploadImage } from "@/lib/supabase"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -22,7 +23,6 @@ const horarioSchema = z.object({
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
-  imagen: z.string(),
   mostrarDetalle: z.boolean(),
   order: z.number().int(),
   activo: z.boolean(),
@@ -34,6 +34,7 @@ export default function NuevoHorarioPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
 
   const {
     register,
@@ -48,7 +49,6 @@ export default function NuevoHorarioPage() {
       descripcion: "",
       descripcionLarga: "",
       icono: "Church",
-      imagen: "",
       mostrarDetalle: false,
       order: 0,
       activo: true,
@@ -56,20 +56,32 @@ export default function NuevoHorarioPage() {
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
-  const imagenValue = watch("imagen")
 
   // Desactivar mostrarDetalle si se elimina la imagen
   useEffect(() => {
-    if (!imagenValue && mostrarDetalle) {
+    if (!imagen && mostrarDetalle) {
       setValue("mostrarDetalle", false)
     }
-  }, [imagenValue, mostrarDetalle, setValue])
+  }, [imagen, mostrarDetalle, setValue])
 
   const onSubmit = async (data: HorarioForm) => {
     setSaving(true)
     setError(null)
 
     try {
+      // Upload image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "horarios")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
       const payload = {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
@@ -78,7 +90,7 @@ export default function NuevoHorarioPage() {
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
-        imagen: data.imagen || null,
+        imagen: imagenUrl,
         mostrarDetalle: data.mostrarDetalle,
         order: data.order,
         activo: data.activo,
@@ -260,7 +272,7 @@ export default function NuevoHorarioPage() {
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
-              disabled={!imagenValue}
+              disabled={!imagen}
             />
           </div>
 
@@ -270,12 +282,11 @@ export default function NuevoHorarioPage() {
                 Imagen
               </label>
               <ImageUpload
-                value={imagenValue}
-                onChange={(url) => setValue("imagen", url)}
-                folder="horarios"
+                value={imagen}
+                onChange={setImagen}
                 placeholder="Subir imagen del horario"
               />
-              {!imagenValue && (
+              {!imagen && (
                 <p className="mt-1 text-xs text-amber-600">
                   Requerida para mostrar la seccion de detalle
                 </p>
