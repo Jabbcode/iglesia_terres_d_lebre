@@ -41,10 +41,14 @@ const iconMap: Record<string, LucideIcon> = {
 }
 
 export default function HorariosPage() {
-  const { data: horarios, isLoading, toggleField, deleteItem } =
-    useAdminData<Horario>({
-      endpoint: "/api/admin/horarios",
-    })
+  const {
+    data: horarios,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Horario>({
+    endpoint: "/api/admin/horarios",
+  })
 
   const { handleDelete } = useDeleteConfirm({
     title: "Eliminar horario",

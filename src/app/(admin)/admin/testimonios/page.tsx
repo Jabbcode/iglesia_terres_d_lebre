@@ -11,10 +11,14 @@ import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
 import type { Testimonio } from "@/modules/testimonios"
 
 export default function TestimoniosPage() {
-  const { data: testimonios, isLoading, toggleField, deleteItem } =
-    useAdminData<Testimonio>({
-      endpoint: "/api/admin/testimonios",
-    })
+  const {
+    data: testimonios,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Testimonio>({
+    endpoint: "/api/admin/testimonios",
+  })
 
   const { handleDelete } = useDeleteConfirm({
     title: "Eliminar testimonio",
@@ -58,7 +62,9 @@ export default function TestimoniosPage() {
               id={testimonio.id}
               editHref={`/admin/testimonios/${testimonio.id}`}
               activo={testimonio.activo}
-              onToggleActivo={() => handleToggle(testimonio.id, testimonio.activo)}
+              onToggleActivo={() =>
+                handleToggle(testimonio.id, testimonio.activo)
+              }
               onDelete={() => handleDelete(testimonio.id)}
               extraActions={
                 <span className="text-muted-foreground text-sm">

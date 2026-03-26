@@ -14,10 +14,14 @@ import type { Evento } from "@/modules/eventos"
 import { PERIODICIDAD } from "@/lib/constants"
 
 export default function EventosPage() {
-  const { data: eventos, isLoading, toggleField, deleteItem } =
-    useAdminData<Evento>({
-      endpoint: "/api/admin/eventos",
-    })
+  const {
+    data: eventos,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Evento>({
+    endpoint: "/api/admin/eventos",
+  })
 
   const { handleDelete } = useDeleteConfirm({
     title: "Eliminar evento",

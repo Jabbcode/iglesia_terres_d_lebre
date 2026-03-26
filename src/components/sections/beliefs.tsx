@@ -179,7 +179,7 @@ const creencias: Creencia[] = [
     longDescription:
       "Creemos que el matrimonio es una institución sagrada creada por Dios desde el principio. Según lo que Él demanda en la Biblia, el matrimonio es la unión exclusiva y fiel entre un hombre y una mujer. Este diseño divino tiene como propósito reflejar el amor de Cristo por Su Iglesia, proporcionar compañía mutua y ser la base para la familia.",
     image:
-      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/matrimonio.png",
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/creencias/matrimonio_3.jpeg",
     imageAlt: "Matrimonio cristiano",
     mostrarDetalle: true,
   },
