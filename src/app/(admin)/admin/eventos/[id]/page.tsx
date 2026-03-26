@@ -8,9 +8,11 @@ import { z } from "zod"
 import { Save, ArrowLeft, Trash2, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Evento } from "@/modules/eventos"
+import { uploadImage } from "@/lib/supabase"
 
 const periodicidadOptions = [
   { value: "ninguna", label: "Sin repeticion" },
@@ -45,6 +47,8 @@ export default function EditarEventoPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
+  const [imagenOriginal, setImagenOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -52,6 +56,7 @@ export default function EditarEventoPage({
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),
@@ -70,6 +75,11 @@ export default function EditarEventoPage({
           const repetirHastaDate = evento.repetirHasta
             ? new Date(evento.repetirHasta)
             : null
+
+          // Set original image
+          setImagenOriginal(evento.imagen || null)
+          setImagen(evento.imagen || null)
+
           reset({
             nombre: evento.nombre,
             descripcion: evento.descripcion || "",
@@ -94,6 +104,31 @@ export default function EditarEventoPage({
     setError(null)
 
     try {
+      // Upload new image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "eventos")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
+      // Delete old image if it changed or was removed
+      if (imagenOriginal && imagenOriginal !== imagenUrl) {
+        console.log("Deleting old image:", imagenOriginal)
+        try {
+          await api.post("/api/admin/images/delete", { url: imagenOriginal })
+          console.log("Successfully deleted old image")
+        } catch (error) {
+          console.error("Failed to delete old image from storage:", error)
+          // Continue anyway - don't block the update
+        }
+      }
+
       const payload = {
         nombre: data.nombre,
         descripcion: data.descripcion || null,
@@ -101,6 +136,7 @@ export default function EditarEventoPage({
         horaInicio: data.horaInicio,
         horaFin: data.horaFin || null,
         ubicacion: data.ubicacion || null,
+        imagen: imagenUrl,
         periodicidad: data.periodicidad,
         repetirHasta:
           esPeriodico && data.repetirHasta
@@ -254,6 +290,17 @@ export default function EditarEventoPage({
                 {...register("ubicacion")}
                 placeholder="Ej: Sala principal, Patio, etc."
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Imagen del Evento
+              </label>
+              <ImageUpload
+                value={imagen}
+                onChange={setImagen}
+                placeholder="Subir imagen del evento"
               />
             </div>
 

@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CalendarDays, MapPin, Clock } from "lucide-react"
+import { CalendarDays, MapPin, Clock, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeInUp } from "@/components/ui/motion"
 import Link from "next/link"
+import type { Evento } from "@/modules/eventos"
 
 function NoEventsIllustration() {
   return (
@@ -93,7 +94,6 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { useIsMobile } from "@/hooks/use-media-query"
 import { api } from "@/shared/api"
-import type { Evento } from "@/modules/eventos"
 
 function formatDate(dateStr: string | Date): string {
   const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
@@ -102,6 +102,78 @@ function formatDate(dateStr: string | Date): string {
     day: "numeric",
     month: "long",
   })
+}
+
+interface EventCardProps {
+  evento: Evento
+}
+
+function EventCard({ evento }: EventCardProps) {
+  const [showDescription, setShowDescription] = useState(false)
+
+  return (
+    <div className="border-border/50 group w-full max-w-sm overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow hover:shadow-md">
+      {/* Image with overlay */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-200">
+        <img
+          src={
+            evento.imagen ||
+            `https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop`
+          }
+          alt={evento.nombre}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        {/* Overlay with description - controlled by button */}
+        <div
+          className={`absolute inset-0 flex items-center justify-center bg-black/80 p-4 transition-opacity duration-300 ${
+            showDescription ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <p className="text-center text-sm leading-relaxed text-white">
+            {evento.descripcion}
+          </p>
+        </div>
+      </div>
+      {/* Content */}
+      <div className="p-5">
+        <div className="text-amber mb-3 flex items-center gap-2">
+          <CalendarDays className="size-4" />
+          <span className="text-xs font-semibold uppercase">
+            {formatDate(evento.fecha)}
+          </span>
+        </div>
+        <h3 className="text-foreground mb-4 text-lg font-bold">
+          {evento.nombre}
+        </h3>
+        <div className="text-muted-foreground space-y-2 text-sm">
+          {/* Hora con botón alineado a la derecha */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Clock className="size-4" />
+              <span>{evento.horaInicio}</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-amber hover:bg-amber/10 hover:text-amber h-auto px-2 py-1 text-xs"
+              onClick={() => setShowDescription(!showDescription)}
+            >
+              <Info className="mr-1 size-3" />
+              {showDescription ? "Ocultar" : "Saber más"}
+            </Button>
+          </div>
+          {/* Ubicación */}
+          {evento.ubicacion && (
+            <div className="flex items-center gap-2">
+              <MapPin className="size-4" />
+              <span className="line-clamp-1">{evento.ubicacion}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export function UpcomingEvents() {
@@ -178,32 +250,7 @@ export function UpcomingEvents() {
           <div className="flex flex-wrap justify-center gap-6">
             {eventos.map((evento, index) => (
               <FadeInUp key={evento.id} delay={index * 0.1}>
-                <div className="border-border/50 bg-cream flex h-full w-full max-w-sm flex-col rounded-2xl border p-6 shadow-sm">
-                  <div className="text-amber mb-4 flex items-center gap-2">
-                    <CalendarDays className="size-5" />
-                    <span className="text-sm font-semibold capitalize">
-                      {formatDate(evento.fecha)}
-                    </span>
-                  </div>
-                  <h3 className="text-foreground mb-2 text-lg font-bold">
-                    {evento.nombre}
-                  </h3>
-                  <p className="text-muted-foreground mb-4 line-clamp-5 flex-1 text-sm leading-relaxed">
-                    {evento.descripcion}
-                  </p>
-                  <div className="text-muted-foreground space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Clock className="size-4" />
-                      <span>{evento.horaInicio}</span>
-                    </div>
-                    {evento.ubicacion && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="size-4" />
-                        <span className="line-clamp-1">{evento.ubicacion}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <EventCard evento={evento} />
               </FadeInUp>
             ))}
           </div>
@@ -229,34 +276,7 @@ export function UpcomingEvents() {
                     key={evento.id}
                     className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
                   >
-                    <div className="border-border/50 bg-cream flex h-full flex-col rounded-2xl border p-6 shadow-sm">
-                      <div className="text-amber mb-4 flex items-center gap-2">
-                        <CalendarDays className="size-5" />
-                        <span className="text-sm font-semibold capitalize">
-                          {formatDate(evento.fecha)}
-                        </span>
-                      </div>
-                      <h3 className="text-foreground mb-2 text-lg font-bold">
-                        {evento.nombre}
-                      </h3>
-                      <p className="text-muted-foreground mb-4 line-clamp-2 flex-1 text-sm leading-relaxed">
-                        {evento.descripcion}
-                      </p>
-                      <div className="text-muted-foreground space-y-2 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Clock className="size-4" />
-                          <span>{evento.horaInicio}</span>
-                        </div>
-                        {evento.ubicacion && (
-                          <div className="flex items-center gap-2">
-                            <MapPin className="size-4" />
-                            <span className="line-clamp-1">
-                              {evento.ubicacion}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <EventCard evento={evento} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

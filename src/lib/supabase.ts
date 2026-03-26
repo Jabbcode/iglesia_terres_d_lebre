@@ -37,27 +37,38 @@ export async function uploadImage(
 }
 
 export async function deleteImage(url: string): Promise<boolean> {
-  const client = supabaseAdmin || supabase
+  try {
+    const client = supabaseAdmin || supabase
+    console.log("Using Supabase client:", supabaseAdmin ? "ADMIN (service role)" : "ANON (limited permissions)")
 
-  const match = url.match(/\/storage\/v1\/object\/public\/images\/(.+)$/)
-  const path = match ? match[1] : null
+    // Extract path from Supabase URL
+    // URL format: https://{project}.supabase.co/storage/v1/object/public/images/{path}
+    const match = url.match(/\/storage\/v1\/object\/public\/images\/(.+)$/)
+    const path = match ? match[1] : null
 
-  if (!path) {
-    console.error("Could not extract path from URL:", url)
+    if (!path) {
+      console.error("Could not extract path from URL:", url)
+      console.error(
+        "URL pattern should be: .../storage/v1/object/public/images/{path}"
+      )
+      return false
+    }
+
+    console.log("Attempting to delete from storage:", path)
+
+    const { error, data } = await client.storage.from("images").remove([path])
+
+    if (error) {
+      console.error("Error deleting image from storage:", error)
+      return false
+    }
+
+    console.log("Successfully deleted from storage:", data)
+    return true
+  } catch (err) {
+    console.error("Exception while deleting image:", err)
     return false
   }
-
-  console.log("Deleting from storage:", path)
-
-  const { error, data } = await client.storage.from("images").remove([path])
-
-  if (error) {
-    console.error("Error deleting image from storage:", error)
-    return false
-  }
-
-  console.log("Delete result:", data)
-  return true
 }
 
 export async function uploadVideo(file: File, folder: string) {

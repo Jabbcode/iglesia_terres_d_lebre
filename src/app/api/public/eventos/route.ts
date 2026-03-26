@@ -14,6 +14,7 @@ export async function GET() {
         horaInicio: true,
         horaFin: true,
         ubicacion: true,
+        imagen: true,
         periodicidad: true,
         repetirHasta: true,
       },
@@ -39,6 +40,7 @@ export async function GET() {
           horaInicio: evento.horaInicio,
           horaFin: evento.horaFin,
           ubicacion: evento.ubicacion,
+          imagen: evento.imagen,
           periodicidad: evento.periodicidad,
         }
       })

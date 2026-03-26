@@ -80,6 +80,7 @@ model Evento {
   horaInicio    String
   horaFin       String?
   ubicacion     String?
+  imagen        String?      // URL de la imagen del evento
   periodicidad  Periodicidad @default(ninguna)
   repetirHasta  DateTime?    // Fecha límite para eventos periódicos
   activo        Boolean      @default(true)

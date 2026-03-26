@@ -37,6 +37,20 @@ export const PUT = withAuth(
   }
 )
 
+export const PATCH = withAuth(
+  async (request: NextRequest, context: RouteContext) => {
+    try {
+      const { id } = await context.params
+      const body = await request.json()
+      const data = updateTestimonioSchema.parse(body)
+      const testimonio = await testimonioService.update(id, data)
+      return success(testimonio)
+    } catch (error) {
+      return handleError(error)
+    }
+  }
+)
+
 export const DELETE = withAuth(
   async (_request: NextRequest, context: RouteContext) => {
     try {

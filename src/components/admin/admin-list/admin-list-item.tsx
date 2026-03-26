@@ -40,7 +40,7 @@ export function AdminListItem({
           </span>
         </div>
 
-        <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="flex gap-1">
           <Link href={editHref}>
             <Button size="icon" variant="secondary" className="size-8">
               <Pencil className="size-4" />
