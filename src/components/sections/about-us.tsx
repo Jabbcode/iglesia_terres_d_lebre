@@ -1,7 +1,7 @@
 "use client"
 
 import { Target, Eye, Heart, Users, BookOpen } from "lucide-react"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { TestimoniosSection } from "@/components/sections/testimonios-section"
@@ -55,13 +55,24 @@ const leadership = [
 
 export function AboutUs() {
   const parallaxRef = useRef<HTMLDivElement>(null)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024)
+    }
+
+    checkDesktop()
+    window.addEventListener("resize", checkDesktop)
+    return () => window.removeEventListener("resize", checkDesktop)
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: parallaxRef,
     offset: ["start end", "end start"],
   })
 
-  const y = useTransform(scrollYProgress, [0, 1], ["-30%", "30%"])
+  const y = useTransform(scrollYProgress, [0, 1], isDesktop ? ["-30%", "30%"] : ["0%", "0%"])
 
   return (
     <>
@@ -150,7 +161,7 @@ export function AboutUs() {
                   alquiló un local sin tener el dinero necesario, pero con la
                   plena confianza en que Dios proveeria.Asi fue como comenzaron
                   las reuniones en Tortosa y. poco a poco, la iglesia fue
-                  consolidándose hasta llegar a ser lo que eshoy.
+                  consolidándose hasta llegar a ser lo que es hoy.
                 </p>
               </div>
             </div>
@@ -161,7 +172,7 @@ export function AboutUs() {
       {/* Historia Section 2 - Image Right with Multiple Photos */}
       <section className="border-border border-t bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col-reverse items-center gap-12 lg:flex-row lg:gap-16">
+          <div className="flex flex-col-reverse items-center gap-6 lg:flex-row lg:gap-16">
             {/* Text Content */}
             <div className="flex-1">
               <h2 className="text-foreground mb-6 text-3xl leading-tight font-bold sm:text-4xl">
@@ -182,13 +193,13 @@ export function AboutUs() {
 
             {/* Images with Rotation and Overlay */}
             <div className="flex-1">
-              <div className="relative h-[500px]">
+              <div className="relative h-auto lg:h-[500px]">
                 {/* Large image below, overlapping */}
-                <div className="absolute right-0 bottom-0 w-[85%] rotate-4 overflow-hidden rounded-lg shadow-xl">
+                <div className="lg:absolute lg:right-0 lg:bottom-0 w-full lg:w-[85%] lg:rotate-4 overflow-hidden rounded-lg shadow-xl">
                   <img
                     src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_presente_inferior.jpg"
-                    alt="Grupo de jóvenes"
-                    className="h-96 w-full object-cover"
+                    alt="Iglesia"
+                    className="h-auto lg:h-96 w-full object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -242,7 +253,10 @@ export function AboutUs() {
       >
         {/* Background Image with Parallax */}
         <div className="absolute inset-0">
-          <motion.div style={{ y }} className="inset-0 -top-[-50%] w-full">
+          <motion.div
+            style={isDesktop ? { y } : {}}
+            className="absolute inset-0 w-full h-full lg:h-[150%] lg:-top-[5%]"
+          >
             <img
               src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/fondo_tortosa_roquetes.jpg"
               alt="Fondo Tortosa"
