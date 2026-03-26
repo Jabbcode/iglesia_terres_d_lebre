@@ -119,10 +119,8 @@ export default function EditarEventoPage({
 
       // Delete old image if it changed or was removed
       if (imagenOriginal && imagenOriginal !== imagenUrl) {
-        console.log("Deleting old image:", imagenOriginal)
         try {
           await api.post("/api/admin/images/delete", { url: imagenOriginal })
-          console.log("Successfully deleted old image")
         } catch (error) {
           console.error("Failed to delete old image from storage:", error)
           // Continue anyway - don't block the update

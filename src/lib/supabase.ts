@@ -39,7 +39,6 @@ export async function uploadImage(
 export async function deleteImage(url: string): Promise<boolean> {
   try {
     const client = supabaseAdmin || supabase
-    console.log("Using Supabase client:", supabaseAdmin ? "ADMIN (service role)" : "ANON (limited permissions)")
 
     // Extract path from Supabase URL
     // URL format: https://{project}.supabase.co/storage/v1/object/public/images/{path}
@@ -48,22 +47,16 @@ export async function deleteImage(url: string): Promise<boolean> {
 
     if (!path) {
       console.error("Could not extract path from URL:", url)
-      console.error(
-        "URL pattern should be: .../storage/v1/object/public/images/{path}"
-      )
       return false
     }
 
-    console.log("Attempting to delete from storage:", path)
-
-    const { error, data } = await client.storage.from("images").remove([path])
+    const { error } = await client.storage.from("images").remove([path])
 
     if (error) {
       console.error("Error deleting image from storage:", error)
       return false
     }
 
-    console.log("Successfully deleted from storage:", data)
     return true
   } catch (err) {
     console.error("Exception while deleting image:", err)
