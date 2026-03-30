@@ -45,7 +45,11 @@ export async function GET() {
         }
       })
       .filter((e): e is NonNullable<typeof e> => e !== null)
-      .sort((a, b) => a.fecha.getTime() - b.fecha.getTime())
+      .sort((a, b) => {
+        const fechaDiff = a.fecha.getTime() - b.fecha.getTime()
+        if (fechaDiff !== 0) return fechaDiff
+        return a.horaInicio.localeCompare(b.horaInicio)
+      })
 
     return success(eventosConProximaFecha)
   } catch (error) {

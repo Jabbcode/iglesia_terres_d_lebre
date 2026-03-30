@@ -5,19 +5,20 @@ import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { TestimoniosSection } from "@/components/sections/testimonios-section"
+import { LeaderCard } from "@/components/sections/leader-card"
 
 const missionVision = [
   {
     icon: Target,
     title: "Misión",
     description:
-      "Guiamos a cada alma a Dios, para ayudar y mostrar Reflexión construida a imagen de Jesús lo cual conducirá hacia el cielo",
+      "Guiar a cada persona a una relación profunda con Dios, fundamentada en Su Palabra y apoyada por una comunidad que camina en amor.",
   },
   {
     icon: Eye,
     title: "Visión",
     description:
-      "Una iglesia que se describe por su servicio y sensibilidad, ofrece saltos, prédicas efectivas y actividades o programas eficaz y eficientemente estructurados.",
+      "Consolidarnos como una familia de fe donde cada miembro crezca espiritualmente y sirva al prójimo con integridad.",
   },
 ]
 
@@ -44,10 +45,10 @@ const values = [
 
 const leadership = [
   {
-    name: "Andres Moliná",
+    name: "Andrés Molina",
     role: "Pastor",
     description:
-      "Dedicados en ministerio bíblico y en guía para todos los miembros a través de las palabras",
+      "Graduado en Teología Pastoral tras cuatro años en el seminario SEFOVAN, cuenta con la certificación oficial internacional del Southwestern Baptist Theological Seminary (Dallas, Texas). Tras servir en varias iglesias de Barcelona, se trasladó a Xerta, donde durante la pandemia inició reuniones de oración en su hogar ante la falta de una comunidad de base bíblica. Lo que comenzó con familiares y vecinos creció hasta establecerse en un local en Tortosa. Hoy, en este 2026, continúa guiando a la congregación con amor, compromiso y dedicación.",
     image:
       "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
   },
@@ -72,7 +73,11 @@ export function AboutUs() {
     offset: ["start end", "end start"],
   })
 
-  const y = useTransform(scrollYProgress, [0, 1], isDesktop ? ["-30%", "30%"] : ["0%", "0%"])
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isDesktop ? ["-30%", "30%"] : ["0%", "0%"]
+  )
 
   return (
     <>
@@ -319,29 +324,8 @@ export function AboutUs() {
             <div className="bg-amber mx-auto h-1 w-20" />
           </div>
           <div className="flex flex-wrap justify-center gap-8">
-            {leadership.map((leader, index) => (
-              <FadeInUp key={leader.name} delay={index * 0.1}>
-                <div className="group w-full max-w-sm overflow-hidden rounded-lg bg-white text-center">
-                  {/* Image */}
-                  <div className="relative mb-6 overflow-hidden">
-                    <img
-                      src={leader.image}
-                      alt={leader.name}
-                      className="w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                  {/* Content */}
-                  <div className="px-4 pb-6">
-                    <h3 className="text-foreground mb-2 text-xl font-bold">
-                      {leader.name}
-                    </h3>
-                    <p className="text-amber mb-3 text-lg font-bold">
-                      {leader.role}
-                    </p>
-                  </div>
-                </div>
-              </FadeInUp>
+            {leadership.map((leader) => (
+              <LeaderCard key={leader.name} leader={leader} />
             ))}
           </div>
         </div>
