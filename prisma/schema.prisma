@@ -92,7 +92,6 @@ model Horario {
   id               String   @id @default(cuid())
   titulo           String
   subtitulo        String?  // Para formato "Estudio Bíblico *semanal*"
-  descripcion      String?
   descripcionLarga String?  // Descripción extendida para sección de detalle
   dia              String   // "Domingos", "Miercoles", "Sabados"
   hora             String   // "11:00h"

@@ -18,13 +18,11 @@ import { uploadImage } from "@/lib/supabase"
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
   subtitulo: z.string(),
-  descripcion: z.string(),
   descripcionLarga: z.string(),
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
   mostrarDetalle: z.boolean(),
-  order: z.number().int(),
   activo: z.boolean(),
 })
 
@@ -46,11 +44,9 @@ export default function NuevoHorarioPage() {
     resolver: zodResolver(horarioSchema),
     defaultValues: {
       subtitulo: "",
-      descripcion: "",
       descripcionLarga: "",
       icono: "Church",
       mostrarDetalle: false,
-      order: 0,
       activo: true,
     },
   })
@@ -82,17 +78,28 @@ export default function NuevoHorarioPage() {
         imagenUrl = imagen
       }
 
+      // Obtener el máximo order actual para asignar el nuevo
+      let newOrder = 0
+      try {
+        const response = await api.get<{ maxOrder: number }>(
+          "/api/admin/horarios/max-order"
+        )
+        newOrder = response.maxOrder + 1
+      } catch {
+        // Si falla, usar 0
+        newOrder = 0
+      }
+
       const payload = {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
-        descripcion: data.descripcion || null,
         descripcionLarga: data.descripcionLarga || null,
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
         imagen: imagenUrl,
         mostrarDetalle: data.mostrarDetalle,
-        order: data.order,
+        order: newOrder,
         activo: data.activo,
       }
 
@@ -166,18 +173,6 @@ export default function NuevoHorarioPage() {
               </div>
             </div>
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion corta (opcional)
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={2}
-                placeholder="Descripcion breve del servicio"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-            </div>
-
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-foreground mb-1 block text-sm font-medium">
@@ -228,17 +223,6 @@ export default function NuevoHorarioPage() {
                   onValueChange={(value) => setValue("icono", value)}
                 />
               </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
-                <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -281,11 +265,13 @@ export default function NuevoHorarioPage() {
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Imagen
               </label>
-              <ImageUpload
-                value={imagen}
-                onChange={setImagen}
-                placeholder="Subir imagen del horario"
-              />
+              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
+                <ImageUpload
+                  value={imagen}
+                  onChange={setImagen}
+                  placeholder="Subir imagen del horario"
+                />
+              </div>
               {!imagen && (
                 <p className="mt-1 text-xs text-amber-600">
                   Requerida para mostrar la seccion de detalle
@@ -302,6 +288,7 @@ export default function NuevoHorarioPage() {
                 rows={4}
                 placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                disabled={!mostrarDetalle}
               />
             </div>
           </div>

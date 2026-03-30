@@ -226,7 +226,7 @@ export function Schedule() {
                       )}
                     </h2>
                     <p className="text-muted-foreground mb-6 text-base leading-relaxed">
-                      {horario.descripcionLarga || horario.descripcion}
+                      {horario.descripcionLarga}
                     </p>
                     <div className="flex items-center gap-3">
                       <Icon className="text-amber size-5" strokeWidth={1.5} />

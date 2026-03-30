@@ -15,14 +15,13 @@ import {
   Calendar,
   LucideIcon,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { EmptyState } from "@/components/admin/empty-state"
-import {
-  AdminListHeader,
-  AdminListSkeleton,
-  AdminListItem,
-} from "@/components/admin/admin-list"
+import { AdminListHeader } from "@/components/admin/admin-list"
 import { useAdminData } from "@/hooks/use-admin-data"
 import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
+import { DraggableHorarios } from "@/components/admin/draggable-horarios"
+import { api } from "@/shared/api"
 import type { Horario } from "@/modules/horarios"
 
 const iconMap: Record<string, LucideIcon> = {
@@ -41,6 +40,7 @@ const iconMap: Record<string, LucideIcon> = {
 }
 
 export default function HorariosPage() {
+  const router = useRouter()
   const {
     data: horarios,
     isLoading,
@@ -53,11 +53,12 @@ export default function HorariosPage() {
   const { handleDelete } = useDeleteConfirm({
     title: "Eliminar horario",
     description:
-      "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
+      "¿Estás seguro de eliminar este horario? Esta acción no se puede deshacer.",
     onDelete: deleteItem,
   })
 
   const handleToggle = (id: string, currentValue: boolean) => {
+    console.log({ id, currentValue })
     toggleField(id, "activo", currentValue).catch(() => {
       console.error("Error toggling horario")
     })
@@ -68,15 +69,28 @@ export default function HorariosPage() {
     return <IconComponent className="size-5" />
   }
 
-  if (isLoading) {
-    return <AdminListSkeleton count={4} itemHeight="h-20" />
+  const handleReorder = async (newHorarios: Horario[]) => {
+    try {
+      await api.patch("/api/admin/horarios/reorder", {
+        horarios: newHorarios.map((h) => ({
+          id: h.id,
+          order: h.order,
+        })),
+      })
+    } catch (error) {
+      console.error("Error al reordenar horarios:", error)
+      throw error
+    }
   }
+
+  // Ordenar horarios por campo order
+  const horariosOrdenados = [...horarios].sort((a, b) => a.order - b.order)
 
   return (
     <div>
       <AdminListHeader
         title="Horarios de Servicios"
-        description="Gestiona los horarios de servicios de la iglesia"
+        description="Arrastra para reordenar. El orden se mostrará en la página pública."
         createHref="/admin/horarios/nuevo"
         createLabel="Agregar Horario"
       />
@@ -90,42 +104,15 @@ export default function HorariosPage() {
           ctaHref="/admin/horarios/nuevo"
         />
       ) : (
-        <div className="space-y-3">
-          {horarios.map((horario) => (
-            <AdminListItem
-              key={horario.id}
-              id={horario.id}
-              editHref={`/admin/horarios/${horario.id}`}
-              activo={horario.activo}
-              onToggleActivo={() => handleToggle(horario.id, horario.activo)}
-              onDelete={() => handleDelete(horario.id)}
-              extraActions={
-                <span className="text-muted-foreground text-sm">
-                  Orden: {horario.order}
-                </span>
-              }
-            >
-              <div className="flex items-center gap-4">
-                <div className="bg-amber/10 text-amber flex size-12 items-center justify-center rounded-lg">
-                  {getIcon(horario.icono)}
-                </div>
-                <div>
-                  <h3 className="text-foreground font-semibold">
-                    {horario.titulo}
-                  </h3>
-                  {horario.descripcion && (
-                    <p className="text-muted-foreground text-sm">
-                      {horario.descripcion}
-                    </p>
-                  )}
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    {horario.dia} - {horario.hora}
-                  </p>
-                </div>
-              </div>
-            </AdminListItem>
-          ))}
-        </div>
+        <DraggableHorarios
+          horarios={horariosOrdenados}
+          isLoading={isLoading}
+          getIcon={getIcon}
+          onEdit={(id) => router.push(`/admin/horarios/${id}`)}
+          onDelete={handleDelete}
+          onToggle={handleToggle}
+          onReorder={handleReorder}
+        />
       )}
     </div>
   )

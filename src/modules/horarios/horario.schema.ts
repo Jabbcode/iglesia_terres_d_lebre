@@ -3,7 +3,6 @@ import { z } from "zod"
 export const createHorarioSchema = z.object({
   titulo: z.string().min(1, "Título requerido"),
   subtitulo: z.string().nullable().optional(),
-  descripcion: z.string().nullable().optional(),
   descripcionLarga: z.string().nullable().optional(),
   dia: z.string().min(1, "Día requerido"),
   hora: z.string().min(1, "Hora requerida"),
