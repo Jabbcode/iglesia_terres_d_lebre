@@ -8,6 +8,16 @@ import { IGLESIA_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constant"
 
 export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
+  keywords: [
+    "iglesia cristiana Tortosa",
+    "iglesia evangélica Tortosa",
+    "església evangèlica Tortosa",
+    "bienvenida iglesia",
+    "próximo culto Tortosa",
+    "eventos cristianos Terres de l'Ebre",
+    "familia cristiana Tortosa",
+    "comunidad cristiana Tortosa",
+  ],
   alternates: {
     canonical: SITE_URL,
   },
