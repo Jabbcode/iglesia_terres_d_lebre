@@ -51,6 +51,7 @@ export default function NuevoEventoPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),
