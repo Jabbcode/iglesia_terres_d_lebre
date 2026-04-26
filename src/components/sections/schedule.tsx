@@ -114,13 +114,19 @@ export function Schedule({ lang, dict }: ScheduleProps) {
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
               {dict.home.schedule.title}{" "}
-              <span className="text-amber font-serif italic">{dict.home.schedule.titleEmphasis}</span>
+              <span className="text-amber font-serif italic">
+                {dict.home.schedule.titleEmphasis}
+              </span>
             </h1>
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
               {dict.home.schedule.descriptionPart1}{" "}
-              <em className="text-amber not-italic">{dict.home.schedule.growInFaith}</em>,{" "}
-              {dict.home.schedule.descriptionPart2}{" "}
-              <em className="text-amber not-italic">{dict.home.schedule.communion}</em>{" "}
+              <em className="text-amber not-italic">
+                {dict.home.schedule.growInFaith}
+              </em>
+              , {dict.home.schedule.descriptionPart2}{" "}
+              <em className="text-amber not-italic">
+                {dict.home.schedule.communion}
+              </em>{" "}
               {dict.home.schedule.descriptionPart3}
             </p>
           </div>

@@ -2,6 +2,7 @@
 
 import { Target, Eye, Heart, Users, BookOpen } from "lucide-react"
 import { useRef, useState, useEffect } from "react"
+
 import { motion, useScroll, useTransform } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { TestimoniosSection } from "@/components/sections/testimonios-section"
@@ -13,53 +14,6 @@ interface AboutUsProps {
   lang: Locale
   dict: Dictionary
 }
-
-const missionVision = [
-  {
-    icon: Target,
-    title: "Misión",
-    description:
-      "Guiar a cada persona a una relación profunda con Dios, fundamentada en Su Palabra y apoyada por una comunidad que camina en amor.",
-  },
-  {
-    icon: Eye,
-    title: "Visión",
-    description:
-      "Consolidarnos como una familia de fe donde cada miembro crezca espiritualmente y sirva al prójimo con integridad.",
-  },
-]
-
-const values = [
-  {
-    icon: Heart,
-    title: "Amor",
-    description:
-      "Amamos a Dios sobre todas las cosas y a nuestro prójimo como a nosotros mismos.",
-  },
-  {
-    icon: Users,
-    title: "Comunidad",
-    description:
-      "Creemos en el poder de la comunidad y el compañerismo entre creyentes.",
-  },
-  {
-    icon: BookOpen,
-    title: "Palabra",
-    description:
-      "La Biblia es nuestra guía y autoridad en todo lo que hacemos y enseñamos.",
-  },
-]
-
-const leadership = [
-  {
-    name: "Andrés Molina",
-    role: "Pastor",
-    description:
-      "Graduado en Teología Pastoral tras cuatro años en el seminario SEFOVAN, cuenta con la certificación oficial internacional del Southwestern Baptist Theological Seminary (Dallas, Texas). Tras servir en varias iglesias de Barcelona, se trasladó a Xerta, donde durante la pandemia inició reuniones de oración en su hogar ante la falta de una comunidad de base bíblica. Lo que comenzó con familiares y vecinos creció hasta establecerse en un local en Tortosa. Hoy, en este 2026, continúa guiando a la congregación con amor, compromiso y dedicación.",
-    image:
-      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
-  },
-]
 
 export function AboutUs({ lang, dict }: AboutUsProps) {
   const parallaxRef = useRef<HTMLDivElement>(null)
@@ -91,7 +45,8 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
     name: item.name,
     role: item.role,
     description: item.description,
-    image: "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
+    image:
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
   }))
 
   useEffect(() => {
@@ -163,21 +118,15 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.past.content1}
-                </p>
+                <p>{dict.about.history.past.content1}</p>
                 <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
                   {dict.about.history.past.badge1}
                 </p>
-                <p>
-                  {dict.about.history.past.content2}
-                </p>
+                <p>{dict.about.history.past.content2}</p>
                 <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
                   {dict.about.history.past.badge2}
                 </p>
-                <p>
-                  {dict.about.history.past.content3}
-                </p>
+                <p>{dict.about.history.past.content3}</p>
               </div>
             </div>
           </div>
@@ -197,9 +146,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.present.content}
-                </p>
+                <p>{dict.about.history.present.content}</p>
               </div>
             </div>
 
@@ -246,9 +193,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.future.content}
-                </p>
+                <p>{dict.about.history.future.content}</p>
               </div>
             </div>
           </div>

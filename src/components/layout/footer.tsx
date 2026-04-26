@@ -14,17 +14,42 @@ export function Footer({ lang }: FooterProps) {
   const { config, fetchConfig } = useConfigStore()
 
   const navLinks = [
-    { href: `/${lang}/creencias`, label: lang === "es" ? "Creencias" : lang === "ca" ? "Creences" : "Beliefs" },
-    { href: `/${lang}/nosotros`, label: lang === "es" ? "Nosotros" : lang === "ca" ? "Nosaltres" : "About Us" },
-    { href: `/${lang}/horarios`, label: lang === "es" ? "Horarios" : lang === "ca" ? "Horaris" : "Schedule" },
-    { href: `/${lang}/galeria`, label: lang === "es" ? "Galería" : lang === "ca" ? "Galeria" : "Gallery" },
-    { href: `/${lang}/contacto`, label: lang === "es" ? "Contacto" : lang === "ca" ? "Contacte" : "Contact" },
+    {
+      href: `/${lang}/creencias`,
+      label:
+        lang === "es" ? "Creencias" : lang === "ca" ? "Creences" : "Beliefs",
+    },
+    {
+      href: `/${lang}/nosotros`,
+      label:
+        lang === "es" ? "Nosotros" : lang === "ca" ? "Nosaltres" : "About Us",
+    },
+    {
+      href: `/${lang}/horarios`,
+      label:
+        lang === "es" ? "Horarios" : lang === "ca" ? "Horaris" : "Schedule",
+    },
+    {
+      href: `/${lang}/galeria`,
+      label: lang === "es" ? "Galería" : lang === "ca" ? "Galeria" : "Gallery",
+    },
+    {
+      href: `/${lang}/contacto`,
+      label:
+        lang === "es" ? "Contacto" : lang === "ca" ? "Contacte" : "Contact",
+    },
   ]
 
   const footerTexts = {
     links: lang === "es" ? "ENLACES" : lang === "ca" ? "ENLLAÇOS" : "LINKS",
-    contact: lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT",
-    copyright: lang === "es" ? "Todos los derechos reservados" : lang === "ca" ? "Tots els drets reservats" : "All rights reserved",
+    contact:
+      lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT",
+    copyright:
+      lang === "es"
+        ? "Todos los derechos reservados"
+        : lang === "ca"
+          ? "Tots els drets reservats"
+          : "All rights reserved",
   }
 
   useEffect(() => {

@@ -206,7 +206,7 @@ interface BeliefsProps {
   dict: Dictionary
 }
 
-export function Beliefs({ lang, dict }: BeliefsProps) {
+export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const isMobile = useIsMobile()
 
@@ -214,21 +214,21 @@ export function Beliefs({ lang, dict }: BeliefsProps) {
   const creencias: Creencia[] = creenciasBase.map((c) => {
     // Convertir IDs con guiones a camelCase para mapeo
     const idMap: Record<string, string> = {
-      'biblia': 'biblia',
-      'trinidad': 'trinidad',
-      'jesucristo': 'jesucristo',
-      'espiritu-santo': 'espirituSanto',
-      'salvacion': 'salvacion',
-      'humanidad': 'humanidad',
-      'regreso-cristo': 'regresoCristo',
-      'resurreccion': 'resurreccion',
-      'iglesia': 'iglesia',
-      'bautismo-santa-cena': 'bautismoSantaCena',
-      'matrimonio': 'matrimonio',
-      'estilo-vida-cristiana': 'estiloVidaCristiana',
+      biblia: "biblia",
+      trinidad: "trinidad",
+      jesucristo: "jesucristo",
+      "espiritu-santo": "espirituSanto",
+      salvacion: "salvacion",
+      humanidad: "humanidad",
+      "regreso-cristo": "regresoCristo",
+      resurreccion: "resurreccion",
+      iglesia: "iglesia",
+      "bautismo-santa-cena": "bautismoSantaCena",
+      matrimonio: "matrimonio",
+      "estilo-vida-cristiana": "estiloVidaCristiana",
     }
     const beliefKey = idMap[c.id] as keyof typeof dict.beliefs.items
-    const belief = (dict.beliefs.items as any)[beliefKey] || {}
+    const belief = dict.beliefs.items[beliefKey] || {}
     return {
       ...c,
       title: belief.title || c.title,
@@ -261,7 +261,9 @@ export function Beliefs({ lang, dict }: BeliefsProps) {
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
               {dict.beliefs.pageTitle}{" "}
-              <span className="text-amber font-serif italic">{dict.beliefs.pageTitleEmphasis}</span>
+              <span className="text-amber font-serif italic">
+                {dict.beliefs.pageTitleEmphasis}
+              </span>
             </h1>
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
               {dict.beliefs.pageDescription}

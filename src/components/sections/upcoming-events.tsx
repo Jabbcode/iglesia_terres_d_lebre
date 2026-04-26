@@ -170,7 +170,9 @@ function EventCard({ evento, lang, dict }: EventCardProps) {
               onClick={() => setShowDescription(!showDescription)}
             >
               <Info className="mr-1 size-3" />
-              {showDescription ? dict.home.upcomingEvents.hide : dict.home.upcomingEvents.learnMore}
+              {showDescription
+                ? dict.home.upcomingEvents.hide
+                : dict.home.upcomingEvents.learnMore}
             </Button>
           </div>
           {/* Ubicación */}

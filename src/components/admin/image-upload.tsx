@@ -22,7 +22,8 @@ export function ImageUpload({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Create preview URL for File objects
+  // Blob URL lifecycle — setState in effect is intentional here (needs revokeObjectURL cleanup)
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (value instanceof File) {
       const objectUrl = URL.createObjectURL(value)
@@ -32,6 +33,7 @@ export function ImageUpload({
       setPreviewUrl(null)
     }
   }, [value])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const processFile = (file: File) => {
     // Validate file type

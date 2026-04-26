@@ -28,16 +28,39 @@ export function Navbar({ lang }: NavbarProps) {
   const pathname = usePathname()
 
   const navLinks = [
-    { href: `/${lang}`, label: lang === "es" ? "INICIO" : lang === "ca" ? "INICI" : "HOME" },
-    { href: `/${lang}/creencias`, label: lang === "es" ? "CREENCIAS" : lang === "ca" ? "CREENCES" : "BELIEFS" },
-    { href: `/${lang}/nosotros`, label: lang === "es" ? "NOSOTROS" : lang === "ca" ? "NOSALTRES" : "ABOUT US" },
-    { href: `/${lang}/horarios`, label: lang === "es" ? "HORARIOS" : lang === "ca" ? "HORARIS" : "SCHEDULE" },
-    { href: `/${lang}/galeria`, label: lang === "es" ? "GALERÍA" : lang === "ca" ? "GALERIA" : "GALLERY" },
-    { href: `/${lang}/contacto`, label: lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT" },
+    {
+      href: `/${lang}`,
+      label: lang === "es" ? "INICIO" : lang === "ca" ? "INICI" : "HOME",
+    },
+    {
+      href: `/${lang}/creencias`,
+      label:
+        lang === "es" ? "CREENCIAS" : lang === "ca" ? "CREENCES" : "BELIEFS",
+    },
+    {
+      href: `/${lang}/nosotros`,
+      label:
+        lang === "es" ? "NOSOTROS" : lang === "ca" ? "NOSALTRES" : "ABOUT US",
+    },
+    {
+      href: `/${lang}/horarios`,
+      label:
+        lang === "es" ? "HORARIOS" : lang === "ca" ? "HORARIS" : "SCHEDULE",
+    },
+    {
+      href: `/${lang}/galeria`,
+      label: lang === "es" ? "GALERÍA" : lang === "ca" ? "GALERIA" : "GALLERY",
+    },
+    {
+      href: `/${lang}/contacto`,
+      label:
+        lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT",
+    },
   ]
 
   const isActive = (href: string) => {
-    if (href === `/${lang}`) return pathname === `/${lang}` || pathname === `/${lang}/`
+    if (href === `/${lang}`)
+      return pathname === `/${lang}` || pathname === `/${lang}/`
     return pathname.startsWith(href)
   }
 

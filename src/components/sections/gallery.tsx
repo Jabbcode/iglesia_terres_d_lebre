@@ -16,7 +16,7 @@ interface GalleryProps {
   dict: Dictionary
 }
 
-export function Gallery({ lang, dict }: GalleryProps) {
+export function Gallery({ lang: _lang, dict }: GalleryProps) {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
   const [loading, setLoading] = useState(true)
   const [lightbox, setLightbox] = useState<number | null>(null)
@@ -83,7 +83,9 @@ export function Gallery({ lang, dict }: GalleryProps) {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
               {dict.gallery.pageTitle}{" "}
-              <span className="text-amber font-serif italic">{dict.gallery.pageTitleEmphasis}</span>
+              <span className="text-amber font-serif italic">
+                {dict.gallery.pageTitleEmphasis}
+              </span>
             </h1>
             <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
               {dict.gallery.descriptionPart1}{" "}

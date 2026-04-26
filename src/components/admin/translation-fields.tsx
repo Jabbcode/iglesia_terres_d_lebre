@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import type { UseFormRegisterReturn } from "react-hook-form"
 import { ChevronDown, ChevronRight, Globe } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -13,12 +14,12 @@ interface TranslationFieldsProps {
     type?: "text" | "textarea"
     rows?: number
     placeholder?: string
-    register: any
+    register: UseFormRegisterReturn
   }[]
 }
 
 export function TranslationFields({
-  lang,
+  lang: _lang,
   langName,
   fields,
 }: TranslationFieldsProps) {
