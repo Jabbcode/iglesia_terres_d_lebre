@@ -21,12 +21,10 @@ function getPreferredLocale(request: NextRequest): string {
   if (!acceptLanguage) return defaultLocale
 
   // Parse accept-language header: "es-ES,es;q=0.9,en;q=0.8"
-  const languages = acceptLanguage
-    .split(",")
-    .map((lang) => {
-      const [code] = lang.trim().split(";")
-      return code.split("-")[0] // Get just "es" from "es-ES"
-    })
+  const languages = acceptLanguage.split(",").map((lang) => {
+    const [code] = lang.trim().split(";")
+    return code.split("-")[0] // Get just "es" from "es-ES"
+  })
 
   // Find first matching locale
   for (const lang of languages) {

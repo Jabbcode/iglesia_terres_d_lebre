@@ -91,7 +91,8 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
     name: item.name,
     role: item.role,
     description: item.description,
-    image: "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
+    image:
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
   }))
 
   useEffect(() => {
@@ -163,21 +164,15 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.past.content1}
-                </p>
+                <p>{dict.about.history.past.content1}</p>
                 <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
                   {dict.about.history.past.badge1}
                 </p>
-                <p>
-                  {dict.about.history.past.content2}
-                </p>
+                <p>{dict.about.history.past.content2}</p>
                 <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
                   {dict.about.history.past.badge2}
                 </p>
-                <p>
-                  {dict.about.history.past.content3}
-                </p>
+                <p>{dict.about.history.past.content3}</p>
               </div>
             </div>
           </div>
@@ -197,9 +192,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.present.content}
-                </p>
+                <p>{dict.about.history.present.content}</p>
               </div>
             </div>
 
@@ -246,9 +239,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
-                <p>
-                  {dict.about.history.future.content}
-                </p>
+                <p>{dict.about.history.future.content}</p>
               </div>
             </div>
           </div>

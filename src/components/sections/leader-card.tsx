@@ -56,7 +56,9 @@ export function LeaderCard({ leader, dict }: LeaderCardProps) {
             onClick={() => setShowHistory(!showHistory)}
           >
             <Info className="mr-1 size-3" />
-            {showHistory ? dict.about.leadership.hideHistory : dict.about.leadership.showHistory}
+            {showHistory
+              ? dict.about.leadership.hideHistory
+              : dict.about.leadership.showHistory}
           </Button>
         </div>
       </div>

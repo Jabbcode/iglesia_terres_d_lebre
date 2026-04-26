@@ -36,7 +36,9 @@ export default function EditarTestimonioPage({
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [thumbnail, setThumbnail] = useState<string | File | null>(null)
-  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(null)
+  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(
+    null
+  )
   const confirm = useConfirm()
 
   const {

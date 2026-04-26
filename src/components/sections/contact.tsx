@@ -50,7 +50,9 @@ export function Contact({ lang, dict }: ContactProps) {
           <div className="mx-auto mb-14 max-w-2xl text-center">
             <h2 className="text-foreground mb-4 text-4xl font-bold sm:text-5xl lg:text-6xl">
               {dict.contact.pageTitle}{" "}
-              <span className="text-amber font-serif italic">{dict.contact.pageTitleEmphasis}</span>
+              <span className="text-amber font-serif italic">
+                {dict.contact.pageTitleEmphasis}
+              </span>
             </h2>
             <p className="text-muted-foreground text-base leading-relaxed">
               {dict.contact.pageDescription}
@@ -66,7 +68,9 @@ export function Contact({ lang, dict }: ContactProps) {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <MapPin className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">{dict.contact.visitUs}</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.visitUs}
+              </h3>
               <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                 {direccion}
               </p>
@@ -79,7 +83,9 @@ export function Contact({ lang, dict }: ContactProps) {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <Phone className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">{dict.contact.callUs}</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.callUs}
+              </h3>
               <p className="text-muted-foreground text-sm">{telefono}</p>
             </div>
           </FadeInUp>
@@ -90,7 +96,9 @@ export function Contact({ lang, dict }: ContactProps) {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <Clock className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">{dict.contact.hours}</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.hours}
+              </h3>
               <p className="text-muted-foreground text-sm">{horarioAtencion}</p>
             </div>
           </FadeInUp>

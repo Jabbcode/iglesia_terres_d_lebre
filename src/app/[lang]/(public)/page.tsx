@@ -37,7 +37,11 @@ export async function generateMetadata({
   }
 }
 
-export default async function Home({ params }: { params: Promise<{ lang: Locale }> }) {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: Locale }>
+}) {
   const { lang } = await params
   const dict = await getDictionary(lang)
 
