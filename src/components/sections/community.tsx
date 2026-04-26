@@ -8,7 +8,7 @@ interface CommunityProps {
   dict: Dictionary
 }
 
-export function Community({ lang, dict }: CommunityProps) {
+export function Community({ lang: _lang, dict }: CommunityProps) {
   return (
     <section
       id="comunidad"

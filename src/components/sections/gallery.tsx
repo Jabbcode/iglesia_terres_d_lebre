@@ -16,7 +16,7 @@ interface GalleryProps {
   dict: Dictionary
 }
 
-export function Gallery({ lang, dict }: GalleryProps) {
+export function Gallery({ lang: _lang, dict }: GalleryProps) {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
   const [loading, setLoading] = useState(true)
   const [lightbox, setLightbox] = useState<number | null>(null)

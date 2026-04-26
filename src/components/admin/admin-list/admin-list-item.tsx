@@ -18,7 +18,7 @@ interface AdminListItemProps {
 }
 
 export function AdminListItem({
-  id,
+  id: _id,
   editHref,
   activo,
   onToggleActivo,

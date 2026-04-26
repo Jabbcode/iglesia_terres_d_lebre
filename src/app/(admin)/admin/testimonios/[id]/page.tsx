@@ -45,8 +45,6 @@ export default function EditarTestimonioPage({
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<TestimonioForm>({
     resolver: zodResolver(testimonioSchema),

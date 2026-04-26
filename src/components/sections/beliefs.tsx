@@ -206,7 +206,7 @@ interface BeliefsProps {
   dict: Dictionary
 }
 
-export function Beliefs({ lang, dict }: BeliefsProps) {
+export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const isMobile = useIsMobile()
 

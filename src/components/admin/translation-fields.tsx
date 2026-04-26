@@ -19,7 +19,7 @@ interface TranslationFieldsProps {
 }
 
 export function TranslationFields({
-  lang,
+  lang: _lang,
   langName,
   fields,
 }: TranslationFieldsProps) {

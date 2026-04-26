@@ -4,7 +4,7 @@ import { NextService } from "@/components/sections/next-service"
 import { Community } from "@/components/sections/community"
 import { CtaNew } from "@/components/sections/cta-new"
 import { UpcomingEvents } from "@/components/sections/upcoming-events"
-import { IGLESIA_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constant"
+import { SITE_URL } from "@/lib/constant"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 

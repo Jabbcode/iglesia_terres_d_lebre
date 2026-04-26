@@ -25,7 +25,7 @@ function decodeHtmlEntities(str: string): string {
   return textarea.value
 }
 
-export function Contact({ lang, dict }: ContactProps) {
+export function Contact({ lang: _lang, dict }: ContactProps) {
   const { config, fetchConfig } = useConfigStore()
 
   useEffect(() => {
