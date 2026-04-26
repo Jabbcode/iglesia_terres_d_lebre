@@ -23,7 +23,9 @@
       "title": "Benvinguts",
       "titleEmphasis": "a Casa",
       "subtitle": "Som una comunitat de fe on cada persona troba el seu lloc. Un espai per créixer, servir i viure en l'amor de Déu.",
-      "cta": "Veure serveis"
+      "cta": "Veure serveis",
+      "ariaVideo": "Vídeo de fons de la comunitat",
+      "ariaImage": "Comunitat reunida en adoració"
     },
     "community": {
       "badge": "VIDA D'ESGLÉSIA",
@@ -32,7 +34,12 @@
     },
     "nextService": {
       "badge": "PROPER SERVEI",
-      "cta": "Com arribar"
+      "cta": "Com arribar",
+      "ariaLabel": "Informació del proper servei",
+      "sunday": "Diumenge"
+    },
+    "ctaNew": {
+      "button": "Coneix-nos una mica més"
     },
     "upcomingEvents": {
       "badge": "PROPERS ESDEVENIMENTS",
@@ -49,8 +56,12 @@
       "title": "Els Nostres",
       "titleEmphasis": "Horaris",
       "description": "Uneix-te a la nostra comunitat. Un espai per créixer en la fe, compartir en comunió i adorar junts.",
+      "descriptionPart1": "Uneix-te a la nostra comunitat. Un espai per",
+      "descriptionPart2": "compartir en",
+      "descriptionPart3": "i adorar junts.",
       "growInFaith": "créixer en la fe",
-      "communion": "comunió"
+      "communion": "comunió",
+      "at": "a les"
     },
     "testimonials": {
       "badge": "Testimonis",
@@ -69,73 +80,85 @@
         "title": "La Bíblia",
         "subtitle": "La nostra base",
         "shortDescription": "La nostra base",
-        "longDescription": "Creiem que la Bíblia és el missatge de Déu per a la humanitat. Tant l'Antic com el Nou Testament van ser inspirats per Ell i no contenen errors en els seus escrits originals. És la revelació completa de la Seva voluntat per salvar-nos i l'autoritat final que guia la nostra vida, la nostra fe i la nostra conducta. Per això, creiem que el seu missatge està tancat: no se li pot treure ni afegir res."
+        "longDescription": "Creiem que la Bíblia és el missatge de Déu per a la humanitat. Tant l'Antic com el Nou Testament van ser inspirats per Ell i no contenen errors en els seus escrits originals. És la revelació completa de la Seva voluntat per salvar-nos i l'autoritat final que guia la nostra vida, la nostra fe i la nostra conducta. Per això, creiem que el seu missatge està tancat: no se li pot treure ni afegir res.",
+        "imageAlt": "Bíblia oberta"
       },
       "trinidad": {
         "title": "Déu",
         "subtitle": "Un en tres persones",
         "shortDescription": "Pare, Fill i Esperit Sant",
-        "longDescription": "Creiem en un sol Déu etern que existeix en tres persones: el Pare, el Fill i l'Esperit Sant. Tot i que són tres, són un sol Déu amb la mateixa naturalesa, els mateixos atributs i la mateixa perfecció. Per tant, els tres mereixen el mateix respecte, confiança i obediència de la nostra part."
+        "longDescription": "Creiem en un sol Déu etern que existeix en tres persones: el Pare, el Fill i l'Esperit Sant. Tot i que són tres, són un sol Déu amb la mateixa naturalesa, els mateixos atributs i la mateixa perfecció. Per tant, els tres mereixen el mateix respecte, confiança i obediència de la nostra part.",
+        "imageAlt": "Llum divina"
       },
       "jesucristo": {
         "title": "Jesucrist",
         "subtitle": "Déu fet home",
         "shortDescription": "Plenament Déu i home",
-        "longDescription": "Creiem que Jesucrist és plenament Déu i plenament home alhora. Ell ja existia des de sempre com a Déu, però es va fer home en ser concebut per l'Esperit Sant i néixer d'una verge, sense deixar de ser diví. Va morir a la creu com el sacrifici perfecte en el nostre lloc, va ressuscitar al tercer dia i va ascendir al cel. Avui, des d'allà, actua com el nostre defensor i representant davant Déu mentre esperem el Seu retorn."
+        "longDescription": "Creiem que Jesucrist és plenament Déu i plenament home alhora. Ell ja existia des de sempre com a Déu, però es va fer home en ser concebut per l'Esperit Sant i néixer d'una verge, sense deixar de ser diví. Va morir a la creu com el sacrifici perfecte en el nostre lloc, va ressuscitar al tercer dia i va ascendir al cel. Avui, des d'allà, actua com el nostre defensor i representant davant Déu mentre esperem el Seu retorn.",
+        "imageAlt": "Creu al capvespre"
       },
       "espirituSanto": {
         "title": "L'Esperit Sant",
         "subtitle": "La nostra guia",
         "shortDescription": "Habita en els creients",
-        "longDescription": "Creiem que l'Esperit Sant és la tercera persona de la Trinitat. La seva tasca és donar la glòria a Jesús i ajudar les persones a reconèixer el seu pecat i la seva necessitat de Déu. Quan algú confia en Jesús, l'Esperit el transforma i l'uneix a l'Església en aquest mateix instant. A més, viu en el creient per guiar-lo, ensenyar-li i donar-li les forces per viure una vida que agradi a Déu."
+        "longDescription": "Creiem que l'Esperit Sant és la tercera persona de la Trinitat. La seva tasca és donar la glòria a Jesús i ajudar les persones a reconèixer el seu pecat i la seva necessitat de Déu. Quan algú confia en Jesús, l'Esperit el transforma i l'uneix a l'Església en aquest mateix instant. A més, viu en el creient per guiar-lo, ensenyar-li i donar-li les forces per viure una vida que agradi a Déu.",
+        "imageAlt": "Llum i espiritualitat"
       },
       "salvacion": {
         "title": "La Salvació",
         "subtitle": "Un regal etern",
         "shortDescription": "Per gràcia mitjançant la fe",
-        "longDescription": "Creiem que quan algú confia en el Senyor Jesucrist i en la Seva obra, passa immediatament de la mort espiritual a la vida. En aquest moment, Déu l'accepta i el declara <em><strong>just</strong></em>, tal com accepta Jesús mateix. Aquesta unió amb Crist és per sempre. Som salvats únicament pel Seu sacrifici a la creu. En creure, som <em><strong>nascuts de nou</strong></em> i segellats per l'Esperit Sant, confiant que Déu sempre compleix les Seves promeses."
+        "longDescription": "Creiem que quan algú confia en el Senyor Jesucrist i en la Seva obra, passa immediatament de la mort espiritual a la vida. En aquest moment, Déu l'accepta i el declara <em><strong>just</strong></em>, tal com accepta Jesús mateix. Aquesta unió amb Crist és per sempre. Som salvats únicament pel Seu sacrifici a la creu. En creure, som <em><strong>nascuts de nou</strong></em> i segellats per l'Esperit Sant, confiant que Déu sempre compleix les Seves promeses.",
+        "imageAlt": "Llum d'esperança"
       },
       "humanidad": {
         "title": "L'Ésser Humà",
         "subtitle": "La nostra condició",
         "shortDescription": "Creat a imatge de Déu",
-        "longDescription": "Creiem que vam ser creats a imatge de Déu, però el pecat ens va separar d'Ell. Com a resultat, la humanitat va perdre la seva connexió espiritual amb Déu i va quedar sota una <em><strong>depravació total</strong></em>, el que significa que estem espiritualment incapacitats per salvar-nos per nosaltres mateixos. Aquesta condició es transmet a tota la raça humana, sent Jesucrist l'única excepció."
+        "longDescription": "Creiem que vam ser creats a imatge de Déu, però el pecat ens va separar d'Ell. Com a resultat, la humanitat va perdre la seva connexió espiritual amb Déu i va quedar sota una <em><strong>depravació total</strong></em>, el que significa que estem espiritualment incapacitats per salvar-nos per nosaltres mateixos. Aquesta condició es transmet a tota la raça humana, sent Jesucrist l'única excepció.",
+        "imageAlt": "Comunitat de persones"
       },
       "regresoCristo": {
         "title": "El Retorn de Crist",
         "subtitle": "La nostra esperança",
         "shortDescription": "Segona vinguda de Crist",
-        "longDescription": "Creiem que després d'un temps de gran dificultat al món (la gran tribulació), el Senyor Jesucrist tornarà de forma física i personal. Vindrà amb tot el Seu poder i glòria per establir el Seu regne de mil anys (el Mil·lenni), derrotar el mal, restaurar la Creació del seu actual patiment, complir les Seves promeses amb Israel i ser reconegut per tot el món com a Déu."
+        "longDescription": "Creiem que després d'un temps de gran dificultat al món (la gran tribulació), el Senyor Jesucrist tornarà de forma física i personal. Vindrà amb tot el Seu poder i glòria per establir el Seu regne de mil anys (el Mil·lenni), derrotar el mal, restaurar la Creació del seu actual patiment, complir les Seves promeses amb Israel i ser reconegut per tot el món com a Déu.",
+        "imageAlt": "Retorn de Crist"
       },
       "resurreccion": {
         "title": "La Resurrecció",
         "subtitle": "El futur etern",
         "shortDescription": "El futur etern",
-        "longDescription": "Creiem que totes les persones que han mort tornaran a viure físicament. Els qui van confiar en Déu ressuscitaran per viure en una alegria eterna al seu costat. D'altra banda, els qui van rebutjar el Seu amor ressuscitaran per enfrontar-se a un judici i una separació conscient i eterna de Déu."
+        "longDescription": "Creiem que totes les persones que han mort tornaran a viure físicament. Els qui van confiar en Déu ressuscitaran per viure en una alegria eterna al seu costat. D'altra banda, els qui van rebutjar el Seu amor ressuscitaran per enfrontar-se a un judici i una separació conscient i eterna de Déu.",
+        "imageAlt": "Resurrecció dels morts"
       },
       "iglesia": {
         "title": "L'Església",
         "subtitle": "Una família unida",
         "shortDescription": "El cos de Crist",
-        "longDescription": "Creiem que l'Església no és un lloc, sinó la unió de totes les persones que han estat transformades per l'Esperit Sant mitjançant la fe. En el moment en què algú rep Crist al seu cor, passa a formar part d'aquesta gran família espiritual que anomenem l''església universal'."
+        "longDescription": "Creiem que l'Església no és un lloc, sinó la unió de totes les persones que han estat transformades per l'Esperit Sant mitjançant la fe. En el moment en què algú rep Crist al seu cor, passa a formar part d'aquesta gran família espiritual que anomenem l''església universal'.",
+        "imageAlt": "Església reunida"
       },
       "bautismoSantaCena": {
         "title": "El Baptisme",
         "subtitle": "i la Santa Cena",
         "shortDescription": "Baptisme i Santa Cena",
-        "longDescription": "Creiem que Jesús ens va deixar dues cerimònies especials: el Baptisme en aigua i la Santa Cena. Volem ser clars: participar-hi no ens salva, però són mitjans molt importants per donar testimoni públic de la nostra fe i recordar el sacrifici de Jesús per nosaltres."
+        "longDescription": "Creiem que Jesús ens va deixar dues cerimònies especials: el Baptisme en aigua i la Santa Cena. Volem ser clars: participar-hi no ens salva, però són mitjans molt importants per donar testimoni públic de la nostra fe i recordar el sacrifici de Jesús per nosaltres.",
+        "imageAlt": "Baptisme i Santa Cena"
       },
       "matrimonio": {
         "title": "El Matrimoni",
         "subtitle": "El disseny de Déu",
         "shortDescription": "El disseny de Déu",
-        "longDescription": "Creiem que el matrimoni és una institució sagrada creada per Déu des del principi. Segons el que Ell demana a la Bíblia, el matrimoni és la unió exclusiva i fidel entre un home i una dona. Aquest disseny diví té com a propòsit reflectir l'amor de Crist per la Seva Església, proporcionar companyia mútua i ser la base per a la família."
+        "longDescription": "Creiem que el matrimoni és una institució sagrada creada per Déu des del principi. Segons el que Ell demana a la Bíblia, el matrimoni és la unió exclusiva i fidel entre un home i una dona. Aquest disseny diví té com a propòsit reflectir l'amor de Crist per la Seva Església, proporcionar companyia mútua i ser la base per a la família.",
+        "imageAlt": "Matrimoni cristià"
       },
       "estiloVidaCristiana": {
         "title": "Una vida santa",
         "subtitle": "L'estil de vida cristià",
         "shortDescription": "L'Estil de Vida Cristià",
-        "longDescription": "Creiem que hem estat cridats a viure d'una manera santa, guiats per l'Esperit de Déu i no pels nostres impulsos egoistes. Tot i que mentre estiguem en aquest món continuarem lluitant amb la nostra naturalesa humana (la carn), la nostra meta és sotmetre cada àrea de la nostra vida al control de Crist amb l'ajuda de l'Esperit Sant."
+        "longDescription": "Creiem que hem estat cridats a viure d'una manera santa, guiats per l'Esperit de Déu i no pels nostres impulsos egoistes. Tot i que mentre estiguem en aquest món continuarem lluitant amb la nostra naturalesa humana (la carn), la nostra meta és sotmetre cada àrea de la nostra vida al control de Crist amb l'ajuda de l'Esperit Sant.",
+        "imageAlt": "Vida cristiana"
       }
     }
   },
@@ -166,7 +189,11 @@
         "content": "La congregació no confia en les seves pròpies forces, sinó en la promesa bíblica que la sosté: existeix la convicció que Déu continuarà afegint cada dia a l'església els que han de ser salvats"
       },
       "cta": "Al cor de la nostra comunitat",
-      "parallaxQuote": "Al cor de la nostra comunitat"
+      "parallaxQuote": "Al cor de la nostra comunitat",
+      "imageAltPast": "Edifici històric de l'església",
+      "imageAltPresent": "Comunitat de l'església reunida",
+      "imageAltFuture": "Alba esperançadora",
+      "imageAltParallax": "Vista de Tortosa"
     },
     "purpose": {
       "badge": "Propòsit",
@@ -182,6 +209,8 @@
     },
     "leadership": {
       "title": "El Nostre Lideratge",
+      "showHistory": "Trajectòria",
+      "hideHistory": "Amagar",
       "items": [
         {
           "name": "Andrés Molina",
@@ -219,6 +248,7 @@
     "pageTitle": "La nostra vida en",
     "pageTitleEmphasis": "Comunitat",
     "pageDescription": "Explora els moments que hem compartit. Cada imatge i vídeo és un testimoni de la nostra fe, alegria i comunió.",
+    "descriptionPart1": "Explora els moments que hem compartit. Cada imatge i vídeo és un testimoni de",
     "faithJoyCommunion": "la nostra fe, alegria i comunió",
     "viewMoreInstagram": "Veure més a Instagram",
     "close": "Tancar"
@@ -233,6 +263,9 @@
     "callUs": "Truca'ns",
     "hours": "Horari",
     "mapTitle": "Ubicació de l'església",
+    "ariaInstagram": "Visitar el nostre Instagram",
+    "ariaFacebook": "Visitar el nostre Facebook",
+    "ariaYoutube": "Visitar el nostre canal de YouTube",
     "form": {
       "name": "Nom",
       "email": "Correu electrònic",

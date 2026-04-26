@@ -146,7 +146,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 <div className="relative overflow-hidden rounded-lg bg-white p-4 shadow-xl">
                   <img
                     src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_principal.png"
-                    alt="Edificio histórico de la iglesia"
+                    alt={dict.about.history.imageAltPast}
                     className="h-auto w-full rounded object-cover"
                     loading="lazy"
                   />
@@ -210,7 +210,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                 <div className="lg:absolute lg:right-0 lg:bottom-0 w-full lg:w-[85%] lg:rotate-4 overflow-hidden rounded-lg shadow-xl">
                   <img
                     src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_presente_inferior.jpg"
-                    alt="Iglesia"
+                    alt={dict.about.history.imageAltPresent}
                     className="h-auto lg:h-96 w-full object-cover"
                     loading="lazy"
                   />
@@ -230,7 +230,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
               <div className="overflow-hidden rounded-2xl">
                 <img
                   src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_futuro.jpg"
-                  alt="Amanecer esperanzador"
+                  alt={dict.about.history.imageAltFuture}
                   className="h-auto w-full object-cover"
                   loading="lazy"
                 />
@@ -268,7 +268,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
           >
             <img
               src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/fondo_tortosa_roquetes.jpg"
-              alt="Fondo Tortosa"
+              alt={dict.about.history.imageAltParallax}
               className="h-full w-full object-cover"
               loading="lazy"
             />
@@ -329,7 +329,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
           </div>
           <div className="flex flex-wrap justify-center gap-8">
             {leadershipFromDict.map((leader) => (
-              <LeaderCard key={leader.name} leader={leader} />
+              <LeaderCard key={leader.name} leader={leader} dict={dict} />
             ))}
           </div>
         </div>

@@ -235,6 +235,7 @@ export function Beliefs({ lang, dict }: BeliefsProps) {
       subtitle: belief.subtitle || c.subtitle,
       shortDescription: belief.shortDescription || c.shortDescription,
       longDescription: belief.longDescription || c.longDescription,
+      imageAlt: belief.imageAlt || c.imageAlt,
     }
   })
 

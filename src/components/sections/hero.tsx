@@ -69,7 +69,7 @@ export function Hero({ lang, dict }: HeroProps) {
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
             videoLoaded ? "opacity-100" : "opacity-0"
           }`}
-          aria-label="Video de fondo de la comunidad"
+          aria-label={dict.home.hero.ariaVideo}
           preload="auto"
           crossOrigin="anonymous"
         >
@@ -85,7 +85,7 @@ export function Hero({ lang, dict }: HeroProps) {
       >
         <img
           src="/hero/hero_bg.png"
-          alt="Comunidad reunida en adoración"
+          alt={dict.home.hero.ariaImage}
           className="h-full w-full object-cover"
         />
       </div>

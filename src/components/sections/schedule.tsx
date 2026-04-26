@@ -117,10 +117,11 @@ export function Schedule({ lang, dict }: ScheduleProps) {
               <span className="text-amber font-serif italic">{dict.home.schedule.titleEmphasis}</span>
             </h1>
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-              Únete a nuestra comunidad. Un espacio para{" "}
-              <em className="text-amber not-italic">{dict.home.schedule.growInFaith}</em>,
-              compartir en <em className="text-amber not-italic">{dict.home.schedule.communion}</em> y
-              adorar juntos.
+              {dict.home.schedule.descriptionPart1}{" "}
+              <em className="text-amber not-italic">{dict.home.schedule.growInFaith}</em>,{" "}
+              {dict.home.schedule.descriptionPart2}{" "}
+              <em className="text-amber not-italic">{dict.home.schedule.communion}</em>{" "}
+              {dict.home.schedule.descriptionPart3}
             </p>
           </div>
         </FadeInUp>
@@ -238,7 +239,7 @@ export function Schedule({ lang, dict }: ScheduleProps) {
                     <div className="flex items-center gap-3">
                       <Icon className="text-amber size-5" strokeWidth={1.5} />
                       <span className="text-foreground text-sm font-semibold">
-                        {horario.dia} a las {horario.hora}
+                        {horario.dia} {dict.home.schedule.at} {horario.hora}
                       </span>
                     </div>
                   </div>

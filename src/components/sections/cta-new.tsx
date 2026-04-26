@@ -23,7 +23,7 @@ export function CtaNew({ lang, dict }: CtaNewProps) {
           size={"lg"}
         >
           <Link href={`/${lang}/creencias`} className="gap-3">
-            Conócenos un poco más
+            {dict.home.ctaNew.button}
             <ChevronRight className="size-4" aria-hidden="true" />
           </Link>
         </Button>

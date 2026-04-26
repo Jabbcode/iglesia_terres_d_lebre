@@ -86,8 +86,8 @@ export function Gallery({ lang, dict }: GalleryProps) {
               <span className="text-amber font-serif italic">{dict.gallery.pageTitleEmphasis}</span>
             </h1>
             <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
-              Explora los momentos que hemos compartido. Cada imagen y video es
-              un testimonio de <em>{dict.gallery.faithJoyCommunion}</em>.
+              {dict.gallery.descriptionPart1}{" "}
+              <em>{dict.gallery.faithJoyCommunion}</em>.
             </p>
           </div>
         </FadeInUp>

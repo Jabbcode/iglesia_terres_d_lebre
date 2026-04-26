@@ -23,7 +23,9 @@
       "title": "Welcome",
       "titleEmphasis": "Home",
       "subtitle": "We are a faith community where everyone finds their place. A space to grow, serve, and live in God's love.",
-      "cta": "View services"
+      "cta": "View services",
+      "ariaVideo": "Community background video",
+      "ariaImage": "Community gathered in worship"
     },
     "community": {
       "badge": "CHURCH LIFE",
@@ -32,7 +34,12 @@
     },
     "nextService": {
       "badge": "NEXT SERVICE",
-      "cta": "Get directions"
+      "cta": "Get directions",
+      "ariaLabel": "Next service information",
+      "sunday": "Sunday"
+    },
+    "ctaNew": {
+      "button": "Get to know us a little more"
     },
     "upcomingEvents": {
       "badge": "UPCOMING EVENTS",
@@ -49,8 +56,12 @@
       "title": "Our",
       "titleEmphasis": "Schedule",
       "description": "Join our community. A space to grow in faith, share in communion, and worship together.",
+      "descriptionPart1": "Join our community. A space to",
+      "descriptionPart2": "share in",
+      "descriptionPart3": "and worship together.",
       "growInFaith": "grow in faith",
-      "communion": "communion"
+      "communion": "communion",
+      "at": "at"
     },
     "testimonials": {
       "badge": "Testimonials",
@@ -69,73 +80,85 @@
         "title": "The Bible",
         "subtitle": "Our foundation",
         "shortDescription": "Our foundation",
-        "longDescription": "We believe that the Bible is God's message to humanity. Both the Old and New Testaments were inspired by Him and contain no errors in their original writings. It is the complete revelation of His will to save us and the final authority that guides our life, our faith, and our conduct. Therefore, we believe that its message is closed: nothing can be taken away or added to it."
+        "longDescription": "We believe that the Bible is God's message to humanity. Both the Old and New Testaments were inspired by Him and contain no errors in their original writings. It is the complete revelation of His will to save us and the final authority that guides our life, our faith, and our conduct. Therefore, we believe that its message is closed: nothing can be taken away or added to it.",
+        "imageAlt": "Open Bible"
       },
       "trinidad": {
         "title": "God",
         "subtitle": "One in three persons",
         "shortDescription": "Father, Son, and Holy Spirit",
-        "longDescription": "We believe in one eternal God who exists in three persons: the Father, the Son, and the Holy Spirit. Although they are three, they are one God with the same nature, the same attributes, and the same perfection. Therefore, all three deserve the same respect, trust, and obedience from us."
+        "longDescription": "We believe in one eternal God who exists in three persons: the Father, the Son, and the Holy Spirit. Although they are three, they are one God with the same nature, the same attributes, and the same perfection. Therefore, all three deserve the same respect, trust, and obedience from us.",
+        "imageAlt": "Divine light"
       },
       "jesucristo": {
         "title": "Jesus Christ",
         "subtitle": "God made man",
         "shortDescription": "Fully God and man",
-        "longDescription": "We believe that Jesus Christ is fully God and fully man at the same time. He already existed from eternity as God, but became man when conceived by the Holy Spirit and born of a virgin, without ceasing to be divine. He died on the cross as the perfect sacrifice in our place, rose on the third day, and ascended to heaven. Today, from there, He acts as our defender and representative before God while we await His return."
+        "longDescription": "We believe that Jesus Christ is fully God and fully man at the same time. He already existed from eternity as God, but became man when conceived by the Holy Spirit and born of a virgin, without ceasing to be divine. He died on the cross as the perfect sacrifice in our place, rose on the third day, and ascended to heaven. Today, from there, He acts as our defender and representative before God while we await His return.",
+        "imageAlt": "Cross at sunset"
       },
       "espirituSanto": {
         "title": "The Holy Spirit",
         "subtitle": "Our guide",
         "shortDescription": "Dwells in believers",
-        "longDescription": "We believe that the Holy Spirit is the third person of the Trinity. His work is to give glory to Jesus and help people recognize their sin and their need for God. When someone trusts in Jesus, the Spirit transforms them and unites them to the Church at that very moment. In addition, He lives in the believer to guide them, teach them, and give them the strength to live a life that pleases God."
+        "longDescription": "We believe that the Holy Spirit is the third person of the Trinity. His work is to give glory to Jesus and help people recognize their sin and their need for God. When someone trusts in Jesus, the Spirit transforms them and unites them to the Church at that very moment. In addition, He lives in the believer to guide them, teach them, and give them the strength to live a life that pleases God.",
+        "imageAlt": "Light and spirituality"
       },
       "salvacion": {
         "title": "Salvation",
         "subtitle": "An eternal gift",
         "shortDescription": "By grace through faith",
-        "longDescription": "We believe that when someone trusts in the Lord Jesus Christ and His work, they immediately pass from spiritual death to life. At that moment, God accepts them and declares them <em><strong>righteous</strong></em>, just as He accepts Jesus Himself. This union with Christ is forever. We are saved solely by His sacrifice on the cross. By believing, we are <em><strong>born again</strong></em> and sealed by the Holy Spirit, trusting that God always keeps His promises."
+        "longDescription": "We believe that when someone trusts in the Lord Jesus Christ and His work, they immediately pass from spiritual death to life. At that moment, God accepts them and declares them <em><strong>righteous</strong></em>, just as He accepts Jesus Himself. This union with Christ is forever. We are saved solely by His sacrifice on the cross. By believing, we are <em><strong>born again</strong></em> and sealed by the Holy Spirit, trusting that God always keeps His promises.",
+        "imageAlt": "Light of hope"
       },
       "humanidad": {
         "title": "Human Beings",
         "subtitle": "Our condition",
         "shortDescription": "Created in God's image",
-        "longDescription": "We believe that we were created in God's image, but sin separated us from Him. As a result, humanity lost its spiritual connection with God and fell under <em><strong>total depravity</strong></em>, which means we are spiritually unable to save ourselves. This condition is transmitted to the entire human race, with Jesus Christ being the only exception."
+        "longDescription": "We believe that we were created in God's image, but sin separated us from Him. As a result, humanity lost its spiritual connection with God and fell under <em><strong>total depravity</strong></em>, which means we are spiritually unable to save ourselves. This condition is transmitted to the entire human race, with Jesus Christ being the only exception.",
+        "imageAlt": "Community of people"
       },
       "regresoCristo": {
         "title": "The Return of Christ",
         "subtitle": "Our hope",
         "shortDescription": "Second coming of Christ",
-        "longDescription": "We believe that after a time of great difficulty in the world (the great tribulation), the Lord Jesus Christ will return physically and personally. He will come with all His power and glory to establish His thousand-year kingdom (the Millennium), defeat evil, restore Creation from its current suffering, fulfill His promises to Israel, and be recognized by the whole world as God."
+        "longDescription": "We believe that after a time of great difficulty in the world (the great tribulation), the Lord Jesus Christ will return physically and personally. He will come with all His power and glory to establish His thousand-year kingdom (the Millennium), defeat evil, restore Creation from its current suffering, fulfill His promises to Israel, and be recognized by the whole world as God.",
+        "imageAlt": "Return of Christ"
       },
       "resurreccion": {
         "title": "The Resurrection",
         "subtitle": "The eternal future",
         "shortDescription": "The eternal future",
-        "longDescription": "We believe that all people who have died will return to physical life. Those who trusted in God will be resurrected to live in eternal joy with Him. On the other hand, those who rejected His love will be resurrected to face judgment and conscious, eternal separation from God."
+        "longDescription": "We believe that all people who have died will return to physical life. Those who trusted in God will be resurrected to live in eternal joy with Him. On the other hand, those who rejected His love will be resurrected to face judgment and conscious, eternal separation from God.",
+        "imageAlt": "Resurrection of the dead"
       },
       "iglesia": {
         "title": "The Church",
         "subtitle": "A united family",
         "shortDescription": "The body of Christ",
-        "longDescription": "We believe that the Church is not a place, but the union of all people who have been transformed by the Holy Spirit through faith. The moment someone receives Christ in their heart, they become part of this great spiritual family that we call the 'universal church.'"
+        "longDescription": "We believe that the Church is not a place, but the union of all people who have been transformed by the Holy Spirit through faith. The moment someone receives Christ in their heart, they become part of this great spiritual family that we call the 'universal church.'",
+        "imageAlt": "Church gathered together"
       },
       "bautismoSantaCena": {
         "title": "Baptism",
         "subtitle": "and the Lord's Supper",
         "shortDescription": "Baptism and Lord's Supper",
-        "longDescription": "We believe that Jesus left us two special ceremonies: water Baptism and the Lord's Supper. We want to be clear: participating in them does not save us, but they are very important means to publicly witness our faith and remember Jesus' sacrifice for us."
+        "longDescription": "We believe that Jesus left us two special ceremonies: water Baptism and the Lord's Supper. We want to be clear: participating in them does not save us, but they are very important means to publicly witness our faith and remember Jesus' sacrifice for us.",
+        "imageAlt": "Baptism and Lord's Supper"
       },
       "matrimonio": {
         "title": "Marriage",
         "subtitle": "God's design",
         "shortDescription": "God's design",
-        "longDescription": "We believe that marriage is a sacred institution created by God from the beginning. According to what He commands in the Bible, marriage is the exclusive and faithful union between one man and one woman. This divine design is intended to reflect Christ's love for His Church, provide mutual companionship, and be the foundation for the family."
+        "longDescription": "We believe that marriage is a sacred institution created by God from the beginning. According to what He commands in the Bible, marriage is the exclusive and faithful union between one man and one woman. This divine design is intended to reflect Christ's love for His Church, provide mutual companionship, and be the foundation for the family.",
+        "imageAlt": "Christian marriage"
       },
       "estiloVidaCristiana": {
         "title": "A holy life",
         "subtitle": "The Christian lifestyle",
         "shortDescription": "The Christian Lifestyle",
-        "longDescription": "We believe that we have been called to live in a holy way, guided by the Spirit of God and not by our selfish impulses. Although while we are in this world we will continue to struggle with our human nature (the flesh), our goal is to submit every area of our life to Christ's control with the help of the Holy Spirit."
+        "longDescription": "We believe that we have been called to live in a holy way, guided by the Spirit of God and not by our selfish impulses. Although while we are in this world we will continue to struggle with our human nature (the flesh), our goal is to submit every area of our life to Christ's control with the help of the Holy Spirit.",
+        "imageAlt": "Christian life"
       }
     }
   },
@@ -166,7 +189,11 @@
         "content": "The congregation does not trust in its own strength, but in the biblical promise that sustains it: there is the conviction that God will continue to add daily to the church those who are being saved"
       },
       "cta": "In the heart of our community",
-      "parallaxQuote": "In the heart of our community"
+      "parallaxQuote": "In the heart of our community",
+      "imageAltPast": "Historic church building",
+      "imageAltPresent": "Church community gathered together",
+      "imageAltFuture": "Hopeful sunrise",
+      "imageAltParallax": "View of Tortosa"
     },
     "purpose": {
       "badge": "Purpose",
@@ -182,6 +209,8 @@
     },
     "leadership": {
       "title": "Our Leadership",
+      "showHistory": "Background",
+      "hideHistory": "Hide",
       "items": [
         {
           "name": "Andrés Molina",
@@ -219,6 +248,7 @@
     "pageTitle": "Our life in",
     "pageTitleEmphasis": "Community",
     "pageDescription": "Explore the moments we've shared. Each image and video is a testimony of our faith, joy, and communion.",
+    "descriptionPart1": "Explore the moments we've shared. Each image and video is a testimony of",
     "faithJoyCommunion": "our faith, joy, and communion",
     "viewMoreInstagram": "View more on Instagram",
     "close": "Close"
@@ -233,6 +263,9 @@
     "callUs": "Call Us",
     "hours": "Hours",
     "mapTitle": "Church location",
+    "ariaInstagram": "Visit our Instagram",
+    "ariaFacebook": "Visit our Facebook",
+    "ariaYoutube": "Visit our YouTube channel",
     "form": {
       "name": "Name",
       "email": "Email",

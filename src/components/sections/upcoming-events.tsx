@@ -97,9 +97,15 @@ function NoEventsIllustration() {
   )
 }
 
-function formatDate(dateStr: string | Date): string {
+const localeMap: Record<string, string> = {
+  es: "es-ES",
+  ca: "ca-ES",
+  en: "en-US",
+}
+
+function formatDate(dateStr: string | Date, lang: string): string {
   const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
-  return date.toLocaleDateString("es-ES", {
+  return date.toLocaleDateString(localeMap[lang] ?? "es-ES", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -108,9 +114,11 @@ function formatDate(dateStr: string | Date): string {
 
 interface EventCardProps {
   evento: Evento
+  lang: string
+  dict: Dictionary
 }
 
-function EventCard({ evento }: EventCardProps) {
+function EventCard({ evento, lang, dict }: EventCardProps) {
   const [showDescription, setShowDescription] = useState(false)
 
   return (
@@ -142,7 +150,7 @@ function EventCard({ evento }: EventCardProps) {
         <div className="text-amber mb-3 flex items-center gap-2">
           <CalendarDays className="size-4" />
           <span className="text-xs font-semibold uppercase">
-            {formatDate(evento.fecha)}
+            {formatDate(evento.fecha, lang)}
           </span>
         </div>
         <h3 className="text-foreground mb-4 text-lg font-bold">
@@ -162,7 +170,7 @@ function EventCard({ evento }: EventCardProps) {
               onClick={() => setShowDescription(!showDescription)}
             >
               <Info className="mr-1 size-3" />
-              {showDescription ? "Ocultar" : "Saber más"}
+              {showDescription ? dict.home.upcomingEvents.hide : dict.home.upcomingEvents.learnMore}
             </Button>
           </div>
           {/* Ubicación */}
@@ -257,7 +265,7 @@ export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
           <div className="flex flex-wrap justify-center gap-6">
             {eventos.map((evento, index) => (
               <FadeInUp key={evento.id} delay={index * 0.1}>
-                <EventCard evento={evento} />
+                <EventCard evento={evento} lang={lang} dict={dict} />
               </FadeInUp>
             ))}
           </div>
@@ -283,7 +291,7 @@ export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
                     key={evento.id}
                     className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
                   >
-                    <EventCard evento={evento} />
+                    <EventCard evento={evento} lang={lang} dict={dict} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

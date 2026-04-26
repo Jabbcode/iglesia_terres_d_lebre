@@ -34,13 +34,13 @@ export function NextService({ lang, dict }: NextServiceProps) {
     fetchConfig()
   }, [fetchConfig])
 
-  const serviceTime = "Domingo, 11:30"
+  const serviceTime = `${dict.home.nextService.sunday}, 11:30`
   const address = config?.direccion?.replace("\n", ", ") || ""
   const nextServiceDate = getNextSundayServiceDate().toISOString()
 
   return (
     <aside
-      aria-label="Información del próximo servicio"
+      aria-label={dict.home.nextService.ariaLabel}
       className="relative z-10 mx-auto -mt-12 max-w-5xl px-4"
     >
       <div className="border-border/50 rounded-2xl border bg-white p-6 shadow-lg sm:p-8">

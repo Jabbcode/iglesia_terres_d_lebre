@@ -104,9 +104,10 @@ export function Contact({ lang, dict }: ContactProps) {
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaInstagram}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Instagram className="size-5" />
+                <Instagram className="size-5" aria-hidden="true" />
               </a>
             )}
             {facebookUrl && (
@@ -114,9 +115,10 @@ export function Contact({ lang, dict }: ContactProps) {
                 href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaFacebook}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Facebook className="size-5" />
+                <Facebook className="size-5" aria-hidden="true" />
               </a>
             )}
             {youtubeUrl && (
@@ -124,9 +126,10 @@ export function Contact({ lang, dict }: ContactProps) {
                 href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaYoutube}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Youtube className="size-5" />
+                <Youtube className="size-5" aria-hidden="true" />
               </a>
             )}
           </div>
