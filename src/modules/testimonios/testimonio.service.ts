@@ -25,7 +25,21 @@ export const testimonioService = {
   },
 
   async create(data: CreateTestimonioInput) {
-    return prisma.testimonio.create({ data })
+    const { translations, ...testimonioData } = data
+    return prisma.testimonio.create({
+      data: {
+        ...testimonioData,
+        translations: translations
+          ? {
+              create: translations.map((t) => ({
+                lang: t.lang,
+                nombre: t.nombre,
+                descripcion: t.descripcion,
+              })),
+            }
+          : undefined,
+      },
+    })
   },
 
   async update(id: string, data: UpdateTestimonioInput) {

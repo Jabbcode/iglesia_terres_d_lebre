@@ -6,6 +6,18 @@ import { Button } from "@/components/ui/button"
 import { FadeInUp } from "@/components/ui/motion"
 import Link from "next/link"
 import type { Evento } from "@/modules/eventos"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
+import { useIsMobile } from "@/hooks/use-media-query"
+import { api } from "@/shared/api"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
 function NoEventsIllustration() {
   return (
@@ -84,16 +96,6 @@ function NoEventsIllustration() {
     </svg>
   )
 }
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { useIsMobile } from "@/hooks/use-media-query"
-import { api } from "@/shared/api"
 
 function formatDate(dateStr: string | Date): string {
   const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
@@ -176,18 +178,23 @@ function EventCard({ evento }: EventCardProps) {
   )
 }
 
-export function UpcomingEvents() {
+interface UpcomingEventsProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
   const isMobile = useIsMobile()
 
   useEffect(() => {
     api
-      .get<Evento[]>("/api/public/eventos")
+      .get<Evento[]>(`/api/public/eventos?lang=${lang}`)
       .then(setEventos)
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [lang])
 
   if (loading) {
     return (
@@ -209,17 +216,18 @@ export function UpcomingEvents() {
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <NoEventsIllustration />
               <h2 className="text-foreground mt-6 text-2xl font-bold sm:text-3xl">
-                No hay eventos proximos
+                {dict.home.upcomingEvents.noEvents}
               </h2>
               <p className="text-muted-foreground mt-3 max-w-md text-base leading-relaxed">
-                Por el momento no tenemos eventos programados, pero te invitamos
-                a conocer nuestros horarios de servicios regulares.
+                {dict.home.upcomingEvents.noEventsDescription}
               </p>
               <Button
                 asChild
                 className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
               >
-                <Link href="/horarios">Ver horarios de servicios</Link>
+                <Link href={`/${lang}/horarios`}>
+                  {dict.home.upcomingEvents.viewSchedules}
+                </Link>
               </Button>
             </div>
           </FadeInUp>
@@ -234,14 +242,13 @@ export function UpcomingEvents() {
         {/* Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-            PRÓXIMOS EVENTOS
+            {dict.home.upcomingEvents.badge}
           </p>
           <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
-            Únete a nuestras actividades
+            {dict.home.upcomingEvents.title}
           </h2>
           <p className="text-muted-foreground text-base leading-relaxed">
-            Estas son algunas de las próximas actividades que hemos preparado
-            para nuestra comunidad.
+            {dict.home.upcomingEvents.description}
           </p>
         </div>
 
@@ -298,7 +305,9 @@ export function UpcomingEvents() {
             asChild
             className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
           >
-            <Link href="/horarios">Ver todos los horarios</Link>
+            <Link href={`/${lang}/horarios`}>
+              {dict.home.upcomingEvents.viewAllSchedules}
+            </Link>
           </Button>
         </div>
       </div>

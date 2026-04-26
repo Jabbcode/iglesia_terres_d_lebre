@@ -39,7 +39,7 @@ interface Creencia {
   mostrarDetalle: boolean
 }
 
-const creencias: Creencia[] = [
+const creenciasBase = [
   {
     id: "biblia",
     icon: BookOpen,
@@ -198,9 +198,45 @@ const creencias: Creencia[] = [
   },
 ]
 
-export function Beliefs() {
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
+
+interface BeliefsProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function Beliefs({ lang, dict }: BeliefsProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const isMobile = useIsMobile()
+
+  // Mapear creencias desde el diccionario
+  const creencias: Creencia[] = creenciasBase.map((c) => {
+    // Convertir IDs con guiones a camelCase para mapeo
+    const idMap: Record<string, string> = {
+      'biblia': 'biblia',
+      'trinidad': 'trinidad',
+      'jesucristo': 'jesucristo',
+      'espiritu-santo': 'espirituSanto',
+      'salvacion': 'salvacion',
+      'humanidad': 'humanidad',
+      'regreso-cristo': 'regresoCristo',
+      'resurreccion': 'resurreccion',
+      'iglesia': 'iglesia',
+      'bautismo-santa-cena': 'bautismoSantaCena',
+      'matrimonio': 'matrimonio',
+      'estilo-vida-cristiana': 'estiloVidaCristiana',
+    }
+    const beliefKey = idMap[c.id] as keyof typeof dict.beliefs.items
+    const belief = (dict.beliefs.items as any)[beliefKey] || {}
+    return {
+      ...c,
+      title: belief.title || c.title,
+      subtitle: belief.subtitle || c.subtitle,
+      shortDescription: belief.shortDescription || c.shortDescription,
+      longDescription: belief.longDescription || c.longDescription,
+    }
+  })
 
   const creenciasConDetalle = creencias.filter((c) => c.mostrarDetalle)
 
@@ -223,13 +259,11 @@ export function Beliefs() {
         <FadeInUp>
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
-              En qué{" "}
-              <span className="text-amber font-serif italic">Creemos</span>
+              {dict.beliefs.pageTitle}{" "}
+              <span className="text-amber font-serif italic">{dict.beliefs.pageTitleEmphasis}</span>
             </h1>
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-              Fundamentamos nuestra fe en la <em>Palabra de Dios</em>. Creemos
-              en un único Dios, creador del universo, manifestado en tres
-              personas: <em>Padre, Hijo y Espíritu Santo</em>.
+              {dict.beliefs.pageDescription}
             </p>
           </div>
         </FadeInUp>

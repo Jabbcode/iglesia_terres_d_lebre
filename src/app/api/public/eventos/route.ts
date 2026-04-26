@@ -1,9 +1,19 @@
+import { NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { calcularProximaOcurrencia } from "@/lib/event-utils"
 import { success, handleError } from "@/shared/api"
+import { isValidLocale } from "@/lib/i18n/config"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const searchParams = request.nextUrl.searchParams
+    const lang = searchParams.get("lang") || "es"
+
+    // Validate locale
+    if (!isValidLocale(lang)) {
+      return success([])
+    }
+
     const eventos = await prisma.evento.findMany({
       where: { activo: true },
       select: {
@@ -17,6 +27,9 @@ export async function GET() {
         imagen: true,
         periodicidad: true,
         repetirHasta: true,
+        translations: {
+          where: { lang },
+        },
       },
     })
 
@@ -31,15 +44,18 @@ export async function GET() {
 
         if (!proximaOcurrencia) return null
 
+        // Use translated fields if available, fallback to original
+        const translation = evento.translations[0]
+
         return {
           id: evento.id,
-          nombre: evento.nombre,
-          descripcion: evento.descripcion,
+          nombre: translation?.nombre || evento.nombre,
+          descripcion: translation?.descripcion || evento.descripcion,
           fecha: proximaOcurrencia,
           fechaBase: evento.fecha,
           horaInicio: evento.horaInicio,
           horaFin: evento.horaFin,
-          ubicacion: evento.ubicacion,
+          ubicacion: translation?.ubicacion || evento.ubicacion,
           imagen: evento.imagen,
           periodicidad: evento.periodicidad,
         }

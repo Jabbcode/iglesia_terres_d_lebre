@@ -5,8 +5,15 @@ import { Button } from "@/components/ui/button"
 import { motion, useReducedMotion, Variants } from "framer-motion"
 import { useConfigStore } from "@/stores/config-store"
 import { useEffect, useState, useRef } from "react"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
-export function Hero() {
+interface HeroProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function Hero({ lang, dict }: HeroProps) {
   const shouldReduceMotion = useReducedMotion()
   const { config, fetchConfig } = useConfigStore()
   const [videoLoaded, setVideoLoaded] = useState(false)
@@ -97,29 +104,30 @@ export function Hero() {
           variants={itemVariants}
           className="text-amber mb-4 text-xs font-bold tracking-[0.3em]"
         >
-          TE ESTÁBAMOS ESPERANDO
+          {dict.home.hero.welcome}
         </motion.p>
         <motion.h1
           variants={itemVariants}
           id="hero-heading"
           className="mb-6 text-5xl font-bold text-white sm:text-6xl lg:text-7xl"
         >
-          Bienvenidos{" "}
-          <span className="text-amber font-serif italic">a Casa</span>
+          {dict.home.hero.title}{" "}
+          <span className="text-amber font-serif italic">
+            {dict.home.hero.titleEmphasis}
+          </span>
         </motion.h1>
         <motion.p
           variants={itemVariants}
           className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-white/80"
         >
-          Somos una comunidad de fe donde cada persona encuentra su lugar. Un
-          espacio para crecer, servir y vivir en el amor de Dios.
+          {dict.home.hero.subtitle}
         </motion.p>
         <motion.div variants={itemVariants}>
           <Button
             asChild
             className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-12 rounded-full px-8 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
           >
-            <Link href="/horarios">Ver servicios</Link>
+            <Link href={`/${lang}/horarios`}>{dict.home.hero.cta}</Link>
           </Button>
         </motion.div>
       </motion.header>
