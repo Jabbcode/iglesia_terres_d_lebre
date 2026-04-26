@@ -15,6 +15,10 @@ export const createEventoSchema = z.object({
   horaInicio: z.string().min(1, "Hora de inicio requerida"),
   horaFin: z.string().nullable().optional(),
   ubicacion: z.string().nullable().optional(),
+  imagen: z.preprocess(
+    (val) => (val === "" ? null : val),
+    z.string().url("URL inválida").nullable().optional()
+  ),
   periodicidad: periodicidadEnum.default("ninguna"),
   repetirHasta: z.string().datetime().nullable().optional(),
   activo: z.boolean().default(true),

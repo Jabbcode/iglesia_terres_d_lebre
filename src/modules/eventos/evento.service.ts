@@ -34,6 +34,7 @@ export const eventoService = {
         horaInicio: data.horaInicio,
         horaFin: data.horaFin ?? null,
         ubicacion: data.ubicacion ?? null,
+        imagen: data.imagen ?? null,
         periodicidad: data.periodicidad as Periodicidad,
         repetirHasta: data.repetirHasta ? new Date(data.repetirHasta) : null,
         activo: data.activo,
@@ -54,6 +55,7 @@ export const eventoService = {
     if (data.horaInicio !== undefined) updateData.horaInicio = data.horaInicio
     if (data.horaFin !== undefined) updateData.horaFin = data.horaFin
     if (data.ubicacion !== undefined) updateData.ubicacion = data.ubicacion
+    if (data.imagen !== undefined) updateData.imagen = data.imagen
     if (data.periodicidad !== undefined)
       updateData.periodicidad = data.periodicidad as Periodicidad
     if (data.repetirHasta !== undefined) {

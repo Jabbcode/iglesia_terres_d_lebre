@@ -1,39 +1,24 @@
 "use client"
 
-import { Target, Eye, Heart, Users, BookOpen, Play } from "lucide-react"
-import { useState, useEffect } from "react"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { motion, AnimatePresence } from "framer-motion"
+import { Target, Eye, Heart, Users, BookOpen } from "lucide-react"
+import { useRef, useState, useEffect } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
-import { useIsMobile } from "@/hooks/use-media-query"
-
-interface Testimonio {
-  id: string
-  nombre: string
-  descripcion: string
-  videoUrl: string
-  thumbnail: string
-}
+import { TestimoniosSection } from "@/components/sections/testimonios-section"
+import { LeaderCard } from "@/components/sections/leader-card"
 
 const missionVision = [
   {
     icon: Target,
-    title: "Nuestra Misión",
+    title: "Misión",
     description:
-      "Compartir el amor de Cristo con nuestra comunidad, formando discípulos que vivan y proclamen el evangelio, sirviendo a los demás con compasión y dedicación.",
+      "Guiar a cada persona a una relación profunda con Dios, fundamentada en Su Palabra y apoyada por una comunidad que camina en amor.",
   },
   {
     icon: Eye,
-    title: "Nuestra Visión",
+    title: "Visión",
     description:
-      "Ser una iglesia que transforma vidas y comunidades a través del poder del evangelio, donde cada persona encuentre su propósito en Cristo y crezca en fe, amor y servicio.",
+      "Consolidarnos como una familia de fe donde cada miembro crezca espiritualmente y sirva al prójimo con integridad.",
   },
 ]
 
@@ -58,45 +43,41 @@ const values = [
   },
 ]
 
-// Convierte cualquier URL de YouTube al formato embed
-function getYouTubeEmbedUrl(url: string): string {
-  // Si ya es embed, retornar
-  if (url.includes("/embed/")) return url
-
-  // Extraer video ID de diferentes formatos de URL
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=)([^&]+)/,
-    /(?:youtu\.be\/)([^?]+)/,
-    /(?:youtube\.com\/shorts\/)([^?]+)/,
-  ]
-
-  for (const pattern of patterns) {
-    const match = url.match(pattern)
-    if (match) {
-      return `https://www.youtube.com/embed/${match[1]}`
-    }
-  }
-
-  return url
-}
+const leadership = [
+  {
+    name: "Andrés Molina",
+    role: "Pastor",
+    description:
+      "Graduado en Teología Pastoral tras cuatro años en el seminario SEFOVAN, cuenta con la certificación oficial internacional del Southwestern Baptist Theological Seminary (Dallas, Texas). Tras servir en varias iglesias de Barcelona, se trasladó a Xerta, donde durante la pandemia inició reuniones de oración en su hogar ante la falta de una comunidad de base bíblica. Lo que comenzó con familiares y vecinos creció hasta establecerse en un local en Tortosa. Hoy, en este 2026, continúa guiando a la congregación con amor, compromiso y dedicación.",
+    image:
+      "https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/pastor.jpg",
+  },
+]
 
 export function AboutUs() {
-  const [activeVideo, setActiveVideo] = useState<string | null>(null)
-  const [testimonios, setTestimonios] = useState<Testimonio[]>([])
-  const [loadingTestimonios, setLoadingTestimonios] = useState(true)
-  const isMobile = useIsMobile()
+  const parallaxRef = useRef<HTMLDivElement>(null)
+  const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
-    fetch("/api/public/testimonios")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setTestimonios(data)
-        }
-      })
-      .catch(() => setTestimonios([]))
-      .finally(() => setLoadingTestimonios(false))
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024)
+    }
+
+    checkDesktop()
+    window.addEventListener("resize", checkDesktop)
+    return () => window.removeEventListener("resize", checkDesktop)
   }, [])
+
+  const { scrollYProgress } = useScroll({
+    target: parallaxRef,
+    offset: ["start end", "end start"],
+  })
+
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isDesktop ? ["-30%", "30%"] : ["0%", "0%"]
+  )
 
   return (
     <>
@@ -104,9 +85,9 @@ export function AboutUs() {
       <section className="bg-cream pt-20 pb-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
-            Conoce{" "}
+            Historia de la Iglesia:{" "}
             <span className="text-amber font-serif italic">
-              Nuestra Iglesia
+              Un camino de fe
             </span>
           </h1>
           <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
@@ -117,51 +98,75 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* Historia */}
-      <section className="border-border border-t bg-white py-16">
+      {/* Historia Section 1 - Image Left */}
+      <section className="border-border border-t bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
-            {/* Image */}
+          <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
+            {/* Image with Frame Effect */}
             <div className="flex-1">
-              <div className="flex items-center justify-center overflow-hidden rounded-2xl">
-                <img
-                  src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_principal.png"
-                  alt="Interior de la iglesia"
-                  className="max-h-[500px] w-auto max-w-full rounded-2xl object-contain"
-                  loading="lazy"
-                />
+              <div className="relative">
+                {/* Decorative circle */}
+                <div className="bg-amber/20 absolute -top-8 -left-8 size-24 rounded-full" />
+
+                {/* Frame with image */}
+                <div className="relative overflow-hidden rounded-lg bg-white p-4 shadow-xl">
+                  <img
+                    src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_principal.png"
+                    alt="Edificio histórico de la iglesia"
+                    className="h-auto w-full rounded object-cover"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Text */}
+            {/* Text Content */}
             <div className="flex-1">
-              <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-                NUESTRA HISTORIA
-              </p>
-              <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
-                Una comunidad de fe en{" "}
+              <h2 className="text-foreground mb-6 text-3xl leading-tight font-bold sm:text-4xl">
+                El Pasado:{" "}
                 <span className="text-amber font-serif italic">
-                  Terres de l&apos;Ebre
+                  Semillas en un hogar
                 </span>
               </h2>
               <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
                 <p>
-                  Nuestra iglesia nació del deseo de crear un espacio donde las
-                  personas pudieran encontrarse con Dios y crecer en comunidad.
-                  Desde nuestros inicios, hemos estado comprometidos con
-                  compartir el mensaje del evangelio y servir a nuestra
-                  comunidad.
+                  La historia de la Iglesia Terres de l&apos;Ebre no comienza en
+                  un gran edificio, sino en la calidez de un hogar. La iglesia
+                  nació en el pueblo de Xerta, cerca de Tortosa. En aquellos
+                  primeros dias, las reuniones se realizaban de forma sencilla
+                  en la casa del pastor y su familia. Poco después, otros
+                  miembros que compartian la misma visión se unieron, abriendo
+                  tambien sus casas para estudiar la Biblia. Les movia un
+                  proposito claro: crecer juntos en la Palabra de Dios y formar
+                  una comunidad en una zona donde no habia iglesias con una base
+                  doctirnal sana y sólida.
+                </p>
+                <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
+                  Un nombre con propósito: Luz en el territorio
                 </p>
                 <p>
-                  A lo largo de los años, hemos visto cómo Dios ha transformado
-                  vidas, restaurado familias y fortalecido nuestra fe. Cada
-                  testimonio es una prueba del amor y la gracia de Dios
-                  trabajando en medio nuestro.
+                  Fue precisamente esa visión la que dio identidad a la
+                  congregación. Se decidió el nombre de Iglesia Biblica Terres
+                  de L'EBre porque el objetivo es ser una luz espiritual en todo
+                  el territorio. El deseo de la iglesia es que el mensaje del
+                  Evangelio brille en cada rincón de la región, llevando
+                  esperanza a cada comunidad vecina"
+                </p>
+                <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
+                  Un paso de fe: Hacia Tortosa
                 </p>
                 <p>
-                  Hoy, continuamos con la misma pasión y compromiso, abriendo
-                  nuestras puertas a todos los que buscan conocer a Cristo y
-                  formar parte de una familia de fe.
+                  Con el paso de los años, se vio cómo Dios hacia crecer ese
+                  pequeño grupo. Llegó un momento en que las casasresultaron
+                  pequeñasy se entendió la necesidad de dar un paso hacia
+                  adelante. Con la intención de estar en un sitio más centrico y
+                  que fuera de fácil acceso para aquellas personas que lo
+                  necesitaran, se tomó la decisión de mudarse a Tortosa. Ese
+                  paso se dio de una manera que solo se explica por la fe: se
+                  alquiló un local sin tener el dinero necesario, pero con la
+                  plena confianza en que Dios proveeria.Asi fue como comenzaron
+                  las reuniones en Tortosa y. poco a poco, la iglesia fue
+                  consolidándose hasta llegar a ser lo que es hoy.
                 </p>
               </div>
             </div>
@@ -169,26 +174,134 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="bg-cream py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-              PROPÓSITO
+      {/* Historia Section 2 - Image Right with Multiple Photos */}
+      <section className="border-border border-t bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col-reverse items-center gap-6 lg:flex-row lg:gap-16">
+            {/* Text Content */}
+            <div className="flex-1">
+              <h2 className="text-foreground mb-6 text-3xl leading-tight font-bold sm:text-4xl">
+                El Presente:{" "}
+                <span className="text-amber font-serif italic">
+                  Una familia que crece
+                </span>
+              </h2>
+              <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
+                <p>
+                  Actualmente, la iglesia atrae a personas de diferentes pueblos
+                  que desean congregarse y conectar como una verdadera familia
+                  en Cristo. Aunque sigue siendo una comunidad pequeña, la
+                  iglesia camina con alegria y expectativa.
+                </p>
+              </div>
+            </div>
+
+            {/* Images with Rotation and Overlay */}
+            <div className="flex-1">
+              <div className="relative h-auto lg:h-[500px]">
+                {/* Large image below, overlapping */}
+                <div className="lg:absolute lg:right-0 lg:bottom-0 w-full lg:w-[85%] lg:rotate-4 overflow-hidden rounded-lg shadow-xl">
+                  <img
+                    src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_presente_inferior.jpg"
+                    alt="Iglesia"
+                    className="h-auto lg:h-96 w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Historia Section 3 - Full Width Image with Text Overlay */}
+      <section className="relative py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
+            {/* Large Image */}
+            <div className="flex-1">
+              <div className="overflow-hidden rounded-2xl">
+                <img
+                  src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_futuro.jpg"
+                  alt="Amanecer esperanzador"
+                  className="h-auto w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            {/* Text Content */}
+            <div className="flex-1">
+              <h2 className="text-foreground mb-6 text-3xl leading-tight font-bold sm:text-4xl">
+                El Futuro: {""}
+                <span className="text-amber font-serif italic">
+                  Nuestra esperanza
+                </span>
+              </h2>
+              <div className="text-muted-foreground space-y-4 text-base leading-relaxed">
+                <p>
+                  La congregación no confia en sus propias fuerzas, sino enla
+                  promesa biblica que la sostiene: existe la conviccion de que
+                  Dios seguirá añadiendo cada dia a la iglesia los que han de
+                  ser salvos
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section
+        ref={parallaxRef}
+        className="relative overflow-hidden py-64 md:py-80"
+      >
+        {/* Background Image with Parallax */}
+        <div className="absolute inset-0">
+          <motion.div
+            style={isDesktop ? { y } : {}}
+            className="absolute inset-0 w-full h-full lg:h-[150%] lg:-top-[5%]"
+          >
+            <img
+              src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/fondo_tortosa_roquetes.jpg"
+              alt="Fondo Tortosa"
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </motion.div>
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        {/* Content */}
+        <div className="max-w-8xl relative z-10 mx-auto px-4 text-center sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="font-serif text-3xl text-white italic sm:text-4xl lg:text-5xl">
+              En el corazón de nuestra comunidad
             </p>
-            <h2 className="text-foreground text-2xl font-bold sm:text-3xl">
-              Lo que nos{" "}
-              <span className="text-amber font-serif italic">mueve</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
+              Propósito
+            </p>
+            <h2 className="text-foreground text-3xl font-bold sm:text-4xl">
+              Lo que nos mueve
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {missionVision.map((item, index) => (
               <FadeInUp key={item.title} delay={index * 0.1}>
-                <div className="border-border/50 flex h-full flex-col items-center rounded-2xl border bg-white p-8 text-center shadow-sm md:items-start md:text-left">
-                  <div className="bg-amber/10 mb-4 flex size-14 items-center justify-center rounded-full">
-                    <item.icon className="text-amber size-7" />
+                <div className="flex h-full flex-col items-center rounded-2xl bg-white p-10 text-center shadow-sm">
+                  <div className="bg-amber/10 mb-6 flex size-16 items-center justify-center rounded-full">
+                    <item.icon className="text-amber size-8" />
                   </div>
-                  <h3 className="text-foreground mb-3 text-xl font-bold">
+                  <h3 className="text-foreground mb-4 text-2xl font-bold">
                     {item.title}
                   </h3>
                   <p className="text-muted-foreground text-base leading-relaxed">
@@ -201,29 +314,47 @@ export function AboutUs() {
         </div>
       </section>
 
+      {/* Leadership Section */}
+      <section className="border-border border-t bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
+              Nuestro Liderazgo
+            </h2>
+            <div className="bg-amber mx-auto h-1 w-20" />
+          </div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {leadership.map((leader) => (
+              <LeaderCard key={leader.name} leader={leader} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <TestimoniosSection />
+
       {/* Values */}
-      <section className="border-border border-t bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-              NUESTROS VALORES
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
+              Nuestros Valores
             </p>
-            <h2 className="text-foreground text-2xl font-bold sm:text-3xl">
-              Los pilares de nuestra{" "}
-              <span className="text-amber font-serif italic">fe</span>
+            <h2 className="text-foreground text-3xl font-bold sm:text-4xl">
+              Los pilares de nuestra fe
             </h2>
           </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
             {values.map((value, index) => (
               <FadeInUp key={value.title} delay={index * 0.1}>
                 <div className="flex flex-col items-center text-center">
-                  <div className="bg-amber/10 mb-4 flex size-16 items-center justify-center rounded-full">
-                    <value.icon className="text-amber size-7" />
+                  <div className="bg-amber/10 mb-6 flex size-20 items-center justify-center rounded-full">
+                    <value.icon className="text-amber size-9" />
                   </div>
-                  <h3 className="text-foreground mb-2 font-serif text-lg font-bold italic">
+                  <h3 className="text-foreground mb-3 text-xl font-bold">
                     {value.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed">
                     {value.description}
                   </p>
                 </div>
@@ -232,192 +363,6 @@ export function AboutUs() {
           </div>
         </div>
       </section>
-
-      {/* Testimonios */}
-      {(loadingTestimonios || testimonios.length > 0) && (
-        <section className="bg-cream py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 text-center">
-              <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-                TESTIMONIOS
-              </p>
-              <h2 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
-                Vidas{" "}
-                <span className="text-amber font-serif italic">
-                  transformadas
-                </span>
-              </h2>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
-                Escucha las historias de personas cuyas vidas han sido
-                transformadas por el amor de Cristo en nuestra comunidad.
-              </p>
-            </div>
-
-            {loadingTestimonios ? (
-              <div className="flex justify-center gap-6">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-full max-w-sm animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm"
-                  >
-                    <div className="aspect-video bg-gray-200" />
-                    <div className="space-y-2 p-5">
-                      <div className="h-5 w-32 rounded bg-gray-200" />
-                      <div className="h-4 w-full rounded bg-gray-200" />
-                      <div className="h-4 w-3/4 rounded bg-gray-200" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-                isMobile ? testimonios.length <= 1 : testimonios.length <= 3
-              ) ? (
-              <div className="flex flex-wrap justify-center gap-6">
-                {testimonios.map((testimonio) => (
-                  <div
-                    key={testimonio.id}
-                    className="border-border/50 group w-full max-w-sm overflow-hidden rounded-2xl border bg-white shadow-sm"
-                  >
-                    <div className="relative aspect-video">
-                      <img
-                        src={testimonio.thumbnail}
-                        alt={`Testimonio de ${testimonio.nombre}`}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
-                        <button
-                          onClick={() =>
-                            setActiveVideo(
-                              getYouTubeEmbedUrl(testimonio.videoUrl)
-                            )
-                          }
-                          className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                        >
-                          <Play className="ml-1 size-7" fill="currentColor" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-foreground mb-2 font-bold">
-                        {testimonio.nombre}
-                      </h3>
-                      <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                        {testimonio.descripcion}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <Carousel
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                plugins={[
-                  Autoplay({
-                    delay: 4000,
-                    stopOnInteraction: true,
-                  }),
-                ]}
-                className="w-full"
-              >
-                {/* Contenedor con espacio para flechas en desktop */}
-                <div className="relative md:px-12">
-                  <CarouselContent className="-ml-4">
-                    {testimonios.map((testimonio) => (
-                      <CarouselItem
-                        key={testimonio.id}
-                        className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
-                      >
-                        <div className="border-border/50 group overflow-hidden rounded-2xl border bg-white shadow-sm">
-                          <div className="relative aspect-video">
-                            <img
-                              src={testimonio.thumbnail}
-                              alt={`Testimonio de ${testimonio.nombre}`}
-                              className="h-full w-full object-cover"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
-                              <button
-                                onClick={() =>
-                                  setActiveVideo(
-                                    getYouTubeEmbedUrl(testimonio.videoUrl)
-                                  )
-                                }
-                                className="bg-amber hover:bg-amber-dark flex size-16 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                              >
-                                <Play
-                                  className="ml-1 size-7"
-                                  fill="currentColor"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                          <div className="p-5">
-                            <h3 className="text-foreground mb-2 font-bold">
-                              {testimonio.nombre}
-                            </h3>
-                            <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                              {testimonio.descripcion}
-                            </p>
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  {/* Flechas a los lados en desktop */}
-                  <CarouselPrevious className="absolute top-1/2 -left-1 hidden -translate-y-1/2 md:flex" />
-                  <CarouselNext className="absolute top-1/2 -right-1 hidden -translate-y-1/2 md:flex" />
-                </div>
-                {/* Flechas centradas en móvil */}
-                <div className="mt-6 flex justify-center gap-4 md:hidden">
-                  <CarouselPrevious className="static translate-y-0" />
-                  <CarouselNext className="static translate-y-0" />
-                </div>
-              </Carousel>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* Video Modal */}
-      <AnimatePresence>
-        {activeVideo && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-            onClick={() => setActiveVideo(null)}
-          >
-            <button
-              onClick={() => setActiveVideo(null)}
-              className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            >
-              <span className="text-2xl">&times;</span>
-              <span className="sr-only">Cerrar</span>
-            </button>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="aspect-video w-full max-w-4xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <iframe
-                src={activeVideo}
-                title="Video testimonio"
-                className="h-full w-full rounded-lg"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   )
 }

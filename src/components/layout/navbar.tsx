@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { useConfigStore } from "@/stores/config-store"
 import { cn } from "@/lib/utils"
+import { api } from "@/shared/api"
 
 const navLinks = [
   { href: "/", label: "INICIO" },
@@ -35,11 +36,9 @@ export function Navbar() {
   }
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        setIsAdmin(!!data.user)
-      })
+    api
+      .get<{ user: unknown }>("/api/auth/me")
+      .then((data) => setIsAdmin(!!data.user))
       .catch(() => setIsAdmin(false))
   }, [])
 
@@ -55,10 +54,10 @@ export function Navbar() {
           />
           <span className="relative right-7">
             <div className="flex flex-col">
-              <span className="text-muted-foreground relative top-1 left-0.5 text-sm">
+              <span className="text-muted-foreground relative top-1 left-0.5 text-xs md:text-sm">
                 Iglesia Biblica
               </span>
-              <span className="relative top-0.5 text-lg">
+              <span className="relative top-0.5 text-sm md:text-lg">
                 {config?.nombreIglesia}
               </span>
             </div>
@@ -66,7 +65,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -95,7 +94,7 @@ export function Navbar() {
         {/* Mobile hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button variant="ghost" size="icon" className="lg:hidden">
               <Menu className="size-6" />
               <span className="sr-only">Abrir menú</span>
             </Button>
@@ -111,10 +110,10 @@ export function Navbar() {
                 />
                 <span className="relative right-7">
                   <div className="flex flex-col">
-                    <span className="text-muted-foreground relative top-1 left-0.5 text-sm">
+                    <span className="text-muted-foreground relative top-1 left-0.5 text-xs">
                       Iglesia Biblica
                     </span>
-                    <span className="text-md text-md relative">
+                    <span className="text-sm relative">
                       {config?.nombreIglesia}
                     </span>
                   </div>

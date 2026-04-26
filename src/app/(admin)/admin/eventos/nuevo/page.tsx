@@ -7,7 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Save, ArrowLeft, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import { uploadImage } from "@/lib/supabase"
 
 const periodicidadOptions = [
   { value: "ninguna", label: "Sin repeticion" },
@@ -35,11 +38,13 @@ export default function NuevoEventoPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),
@@ -61,6 +66,19 @@ export default function NuevoEventoPage() {
     setError(null)
 
     try {
+      // Upload image to Supabase if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "eventos")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
       const payload = {
         nombre: data.nombre,
         descripcion: data.descripcion || null,
@@ -68,6 +86,7 @@ export default function NuevoEventoPage() {
         horaInicio: data.horaInicio,
         horaFin: data.horaFin || null,
         ubicacion: data.ubicacion || null,
+        imagen: imagenUrl,
         periodicidad: data.periodicidad,
         repetirHasta:
           esPeriodico && data.repetirHasta
@@ -76,17 +95,8 @@ export default function NuevoEventoPage() {
         activo: data.activo,
       }
 
-      const res = await fetch("/api/admin/eventos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/eventos")
-      } else {
-        setError("Error al crear el evento")
-      }
+      await api.post("/api/admin/eventos", payload)
+      router.push("/admin/eventos")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -198,6 +208,17 @@ export default function NuevoEventoPage() {
                 {...register("ubicacion")}
                 placeholder="Ej: Sala principal, Patio, etc."
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Imagen del Evento
+              </label>
+              <ImageUpload
+                value={imagen}
+                onChange={setImagen}
+                placeholder="Subir imagen del evento"
               />
             </div>
 

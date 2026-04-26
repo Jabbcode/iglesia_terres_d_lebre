@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Imagen } from "@/modules/galeria"
+import { uploadImage } from "@/lib/supabase"
 
 const imagenSchema = z.object({
-  src: z.string().min(1, "Imagen requerida"),
   alt: z.string().optional(),
   span: z.enum(["normal", "tall", "wide"]),
   order: z.number().int(),
@@ -31,6 +33,8 @@ export default function EditarImagenPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
+  const [imagenOriginal, setImagenOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -45,21 +49,21 @@ export default function EditarImagenPage({
   })
 
   useEffect(() => {
-    fetch(`/api/admin/galeria`)
-      .then((res) => res.json())
+    api
+      .get<Imagen[]>("/api/admin/galeria")
       .then((data) => {
-        const imagen = data.find(
-          (img: ImagenForm & { id: string }) => img.id === id
-        )
-        if (imagen) {
+        const imagenData = data.find((img) => img.id === id)
+        if (imagenData) {
+          setImagenOriginal(imagenData.src)
+          setImagen(imagenData.src)
           reset({
-            src: imagen.src,
-            alt: imagen.alt,
-            span: imagen.span,
-            order: imagen.order,
+            alt: imagenData.alt || "",
+            span: imagenData.span,
+            order: imagenData.order,
           })
         }
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -68,17 +72,34 @@ export default function EditarImagenPage({
     setError(null)
 
     try {
-      const res = await fetch(`/api/admin/galeria/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/galeria")
-      } else {
-        setError("Error al actualizar la imagen")
+      // Upload new image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "galeria")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
       }
+
+      // Delete old image if it changed
+      if (imagenOriginal && imagenOriginal !== imagenUrl) {
+        try {
+          await api.post("/api/admin/images/delete", { url: imagenOriginal })
+        } catch (error) {
+          console.error("Failed to delete old image from storage:", error)
+          // Continue anyway - don't block the update
+        }
+      }
+
+      await api.patch(`/api/admin/galeria/${id}`, {
+        ...data,
+        src: imagenUrl,
+      })
+      router.push("/admin/galeria")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -100,10 +121,8 @@ export default function EditarImagenPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/galeria/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        router.push("/admin/galeria")
-      }
+      await api.delete(`/api/admin/galeria/${id}`)
+      router.push("/admin/galeria")
     } catch {
       setError("Error al eliminar")
     } finally {
@@ -150,16 +169,10 @@ export default function EditarImagenPage({
                 Imagen
               </label>
               <ImageUpload
-                value={watch("src") || ""}
-                onChange={(url) => setValue("src", url)}
-                folder="galeria"
+                value={imagen}
+                onChange={setImagen}
                 placeholder="Subir imagen para la galería"
               />
-              {errors.src && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.src.message}
-                </p>
-              )}
             </div>
 
             <div>

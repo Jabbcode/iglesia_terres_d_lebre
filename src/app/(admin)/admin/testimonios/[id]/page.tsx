@@ -10,27 +10,19 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Testimonio } from "@/modules/testimonios"
+import { uploadImage } from "@/lib/supabase"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
   descripcion: z.string().min(1, "Descripcion requerida"),
   videoUrl: z.string().url("URL de video invalida"),
-  thumbnail: z.string().min(1, "Thumbnail requerido"),
   order: z.number().int(),
   activo: z.boolean(),
 })
 
 type TestimonioForm = z.infer<typeof testimonioSchema>
-
-interface Testimonio {
-  id: string
-  nombre: string
-  descripcion: string
-  videoUrl: string
-  thumbnail: string
-  order: number
-  activo: boolean
-}
 
 export default function EditarTestimonioPage({
   params,
@@ -43,6 +35,8 @@ export default function EditarTestimonioPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [thumbnail, setThumbnail] = useState<string | File | null>(null)
+  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -57,18 +51,20 @@ export default function EditarTestimonioPage({
   })
 
   useEffect(() => {
-    fetch(`/api/admin/testimonios/${id}`)
-      .then((res) => res.json())
-      .then((data: Testimonio) => {
+    api
+      .get<Testimonio>(`/api/admin/testimonios/${id}`)
+      .then((data) => {
+        setThumbnailOriginal(data.thumbnail)
+        setThumbnail(data.thumbnail)
         reset({
           nombre: data.nombre,
           descripcion: data.descripcion,
           videoUrl: data.videoUrl,
-          thumbnail: data.thumbnail,
           order: data.order,
           activo: data.activo,
         })
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -77,17 +73,39 @@ export default function EditarTestimonioPage({
     setError(null)
 
     try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-
-      if (res.ok) {
-        router.push("/admin/testimonios")
-      } else {
-        setError("Error al actualizar el testimonio")
+      // Upload new thumbnail if it's a File
+      let thumbnailUrl: string | null = null
+      if (thumbnail instanceof File) {
+        thumbnailUrl = await uploadImage(thumbnail, "testimonios")
+        if (!thumbnailUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof thumbnail === "string") {
+        thumbnailUrl = thumbnail
       }
+
+      if (!thumbnailUrl) {
+        setError("Thumbnail requerido")
+        setSaving(false)
+        return
+      }
+
+      // Delete old thumbnail if it changed
+      if (thumbnailOriginal && thumbnailOriginal !== thumbnailUrl) {
+        try {
+          await api.post("/api/admin/images/delete", { url: thumbnailOriginal })
+        } catch (error) {
+          console.error("Failed to delete old thumbnail from storage:", error)
+        }
+      }
+
+      await api.put(`/api/admin/testimonios/${id}`, {
+        ...data,
+        thumbnail: thumbnailUrl,
+      })
+      router.push("/admin/testimonios")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -109,12 +127,8 @@ export default function EditarTestimonioPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/testimonios/${id}`, {
-        method: "DELETE",
-      })
-      if (res.ok) {
-        router.push("/admin/testimonios")
-      }
+      await api.delete(`/api/admin/testimonios/${id}`)
+      router.push("/admin/testimonios")
     } catch {
       setError("Error al eliminar")
     } finally {
@@ -216,16 +230,10 @@ export default function EditarTestimonioPage({
                 Thumbnail
               </label>
               <ImageUpload
-                value={watch("thumbnail") || ""}
-                onChange={(url) => setValue("thumbnail", url)}
-                folder="testimonios"
+                value={thumbnail}
+                onChange={setThumbnail}
                 placeholder="Subir imagen de portada del video"
               />
-              {errors.thumbnail && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.thumbnail.message}
-                </p>
-              )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

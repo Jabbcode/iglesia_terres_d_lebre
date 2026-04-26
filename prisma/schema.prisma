@@ -80,6 +80,7 @@ model Evento {
   horaInicio    String
   horaFin       String?
   ubicacion     String?
+  imagen        String?      // URL de la imagen del evento
   periodicidad  Periodicidad @default(ninguna)
   repetirHasta  DateTime?    // Fecha límite para eventos periódicos
   activo        Boolean      @default(true)
@@ -91,7 +92,6 @@ model Horario {
   id               String   @id @default(cuid())
   titulo           String
   subtitulo        String?  // Para formato "Estudio Bíblico *semanal*"
-  descripcion      String?
   descripcionLarga String?  // Descripción extendida para sección de detalle
   dia              String   // "Domingos", "Miercoles", "Sabados"
   hora             String   // "11:00h"

@@ -12,47 +12,23 @@ import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import type { Horario } from "@/modules/horarios"
+import { DIAS_SEMANA } from "@/lib/constants"
+import { uploadImage } from "@/lib/supabase"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
   subtitulo: z.string(),
-  descripcion: z.string(),
   descripcionLarga: z.string(),
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
-  imagen: z.string(),
   mostrarDetalle: z.boolean(),
-  order: z.number().int(),
   activo: z.boolean(),
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
-
-interface Horario {
-  id: string
-  titulo: string
-  subtitulo: string | null
-  descripcion: string | null
-  descripcionLarga: string | null
-  dia: string
-  hora: string
-  icono: string
-  imagen: string | null
-  mostrarDetalle: boolean
-  order: number
-  activo: boolean
-}
-
-const diaOptions = [
-  "Lunes",
-  "Martes",
-  "Miercoles",
-  "Jueves",
-  "Viernes",
-  "Sabado",
-  "Domingo",
-]
 
 export default function EditarHorarioPage({
   params,
@@ -65,6 +41,8 @@ export default function EditarHorarioPage({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
+  const [imagenOriginal, setImagenOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -79,36 +57,35 @@ export default function EditarHorarioPage({
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
-  const imagenValue = watch("imagen")
 
   // Desactivar mostrarDetalle si se elimina la imagen
   useEffect(() => {
-    if (!imagenValue && mostrarDetalle) {
+    if (!imagen && mostrarDetalle) {
       setValue("mostrarDetalle", false)
     }
-  }, [imagenValue, mostrarDetalle, setValue])
+  }, [imagen, mostrarDetalle, setValue])
 
   useEffect(() => {
-    fetch("/api/admin/horarios")
-      .then((res) => res.json())
-      .then((data: Horario[]) => {
+    api
+      .get<Horario[]>("/api/admin/horarios")
+      .then((data) => {
         const horario = data.find((h) => h.id === id)
         if (horario) {
+          setImagenOriginal(horario.imagen || null)
+          setImagen(horario.imagen || null)
           reset({
             titulo: horario.titulo,
             subtitulo: horario.subtitulo || "",
-            descripcion: horario.descripcion || "",
             descripcionLarga: horario.descripcionLarga || "",
             dia: horario.dia,
             hora: horario.hora,
             icono: horario.icono,
-            imagen: horario.imagen || "",
             mostrarDetalle: horario.mostrarDetalle,
-            order: horario.order,
             activo: horario.activo,
           })
         }
       })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id, reset])
 
@@ -117,31 +94,42 @@ export default function EditarHorarioPage({
     setError(null)
 
     try {
+      // Upload new image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "horarios")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
+      // Delete old image if it changed
+      if (imagenOriginal && imagenOriginal !== imagenUrl) {
+        try {
+          await api.post("/api/admin/images/delete", { url: imagenOriginal })
+        } catch (error) {
+          console.error("Failed to delete old image from storage:", error)
+        }
+      }
+
       const payload = {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
-        descripcion: data.descripcion || null,
         descripcionLarga: data.descripcionLarga || null,
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
-        imagen: data.imagen || null,
+        imagen: imagenUrl,
         mostrarDetalle: data.mostrarDetalle,
-        order: data.order,
         activo: data.activo,
       }
 
-      const res = await fetch(`/api/admin/horarios/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/horarios")
-      } else {
-        setError("Error al actualizar el horario")
-      }
+      await api.patch(`/api/admin/horarios/${id}`, payload)
+      router.push("/admin/horarios")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -163,10 +151,8 @@ export default function EditarHorarioPage({
 
     setDeleting(true)
     try {
-      const res = await fetch(`/api/admin/horarios/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        router.push("/admin/horarios")
-      }
+      await api.delete(`/api/admin/horarios/${id}`)
+      router.push("/admin/horarios")
     } catch {
       setError("Error al eliminar")
     } finally {
@@ -244,18 +230,6 @@ export default function EditarHorarioPage({
               </div>
             </div>
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion corta (opcional)
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={2}
-                placeholder="Descripcion breve del servicio"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-            </div>
-
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-foreground mb-1 block text-sm font-medium">
@@ -266,7 +240,7 @@ export default function EditarHorarioPage({
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 >
                   <option value="">Seleccionar dia</option>
-                  {diaOptions.map((dia) => (
+                  {DIAS_SEMANA.map((dia) => (
                     <option key={dia} value={dia}>
                       {dia}
                     </option>
@@ -306,17 +280,6 @@ export default function EditarHorarioPage({
                   onValueChange={(value) => setValue("icono", value)}
                 />
               </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
-                <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -350,7 +313,7 @@ export default function EditarHorarioPage({
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
-              disabled={!imagenValue}
+              disabled={!imagen}
             />
           </div>
 
@@ -359,13 +322,14 @@ export default function EditarHorarioPage({
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Imagen
               </label>
-              <ImageUpload
-                value={imagenValue || ""}
-                onChange={(url) => setValue("imagen", url)}
-                folder="horarios"
-                placeholder="Subir imagen del horario"
-              />
-              {!imagenValue && (
+              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
+                <ImageUpload
+                  value={imagen}
+                  onChange={setImagen}
+                  placeholder="Subir imagen del horario"
+                />
+              </div>
+              {!imagen && (
                 <p className="mt-1 text-xs text-amber-600">
                   Requerida para mostrar la seccion de detalle
                 </p>
@@ -381,6 +345,7 @@ export default function EditarHorarioPage({
                 rows={4}
                 placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                disabled={!mostrarDetalle}
               />
             </div>
           </div>

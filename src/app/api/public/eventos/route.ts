@@ -14,6 +14,7 @@ export async function GET() {
         horaInicio: true,
         horaFin: true,
         ubicacion: true,
+        imagen: true,
         periodicidad: true,
         repetirHasta: true,
       },
@@ -39,11 +40,16 @@ export async function GET() {
           horaInicio: evento.horaInicio,
           horaFin: evento.horaFin,
           ubicacion: evento.ubicacion,
+          imagen: evento.imagen,
           periodicidad: evento.periodicidad,
         }
       })
       .filter((e): e is NonNullable<typeof e> => e !== null)
-      .sort((a, b) => a.fecha.getTime() - b.fecha.getTime())
+      .sort((a, b) => {
+        const fechaDiff = a.fecha.getTime() - b.fecha.getTime()
+        if (fechaDiff !== 0) return fechaDiff
+        return a.horaInicio.localeCompare(b.horaInicio)
+      })
 
     return success(eventosConProximaFecha)
   } catch (error) {

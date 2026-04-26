@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MultiImageUpload } from "@/components/admin/multi-image-upload"
+import { api } from "@/shared/api"
 
 export default function SubidaMasivaPage() {
   const router = useRouter()
@@ -40,20 +41,12 @@ export default function SubidaMasivaPage() {
     setError(null)
 
     try {
-      const res = await fetch("/api/admin/galeria/bulk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await api.post<{ count: number }>(
+        "/api/admin/galeria/bulk",
+        {
           images: uploadedUrls.map((url) => ({ src: url })),
-        }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || "Error al crear registros")
-      }
-
-      const data = await res.json()
+        }
+      )
       setSuccess(`${data.count} imagen(es) agregadas a la galeria`)
       setUploadedUrls([])
 

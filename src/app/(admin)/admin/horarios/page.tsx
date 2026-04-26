@@ -1,10 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import {
-  Plus,
-  Pencil,
-  Trash2,
   Clock,
   Church,
   BookOpen,
@@ -19,11 +15,14 @@ import {
   Calendar,
   LucideIcon,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
+import { useRouter } from "next/navigation"
 import { EmptyState } from "@/components/admin/empty-state"
-import { useConfirm } from "@/components/admin/confirm-dialog"
-import Link from "next/link"
+import { AdminListHeader } from "@/components/admin/admin-list"
+import { useAdminData } from "@/hooks/use-admin-data"
+import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
+import { DraggableHorarios } from "@/components/admin/draggable-horarios"
+import { api } from "@/shared/api"
+import type { Horario } from "@/modules/horarios"
 
 const iconMap: Record<string, LucideIcon> = {
   Church,
@@ -40,90 +39,29 @@ const iconMap: Record<string, LucideIcon> = {
   Clock,
 }
 
-interface Horario {
-  id: string
-  titulo: string
-  descripcion: string | null
-  dia: string
-  hora: string
-  icono: string
-  order: number
-  activo: boolean
-  mostrarDetalle: boolean
-}
-
 export default function HorariosPage() {
-  const [horarios, setHorarios] = useState<Horario[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [toggling, setToggling] = useState<string | null>(null)
-  const confirm = useConfirm()
+  const router = useRouter()
+  const {
+    data: horarios,
+    isLoading,
+    toggleField,
+    deleteItem,
+  } = useAdminData<Horario>({
+    endpoint: "/api/admin/horarios",
+  })
 
-  useEffect(() => {
-    fetchHorarios()
-  }, [])
+  const { handleDelete } = useDeleteConfirm({
+    title: "Eliminar horario",
+    description:
+      "¿Estás seguro de eliminar este horario? Esta acción no se puede deshacer.",
+    onDelete: deleteItem,
+  })
 
-  const fetchHorarios = async () => {
-    try {
-      const res = await fetch("/api/admin/horarios")
-      const data = await res.json()
-      setHorarios(data)
-    } catch {
-      console.error("Error fetching schedules")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    const confirmed = await confirm({
-      title: "Eliminar horario",
-      description:
-        "¿Estas seguro de eliminar este horario? Esta accion no se puede deshacer.",
-      confirmLabel: "Eliminar",
-      cancelLabel: "Cancelar",
-      variant: "danger",
-    })
-
-    if (!confirmed) return
-
-    setDeleting(id)
-    try {
-      const res = await fetch(`/api/admin/horarios/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setHorarios(horarios.filter((h) => h.id !== id))
-      }
-    } catch {
-      console.error("Error deleting schedule")
-    } finally {
-      setDeleting(null)
-    }
-  }
-
-  const handleToggle = async (
-    id: string,
-    field: "activo" | "mostrarDetalle",
-    currentValue: boolean
-  ) => {
-    setToggling(`${id}-${field}`)
-    try {
-      const res = await fetch(`/api/admin/horarios/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: !currentValue }),
-      })
-      if (res.ok) {
-        setHorarios(
-          horarios.map((h) =>
-            h.id === id ? { ...h, [field]: !currentValue } : h
-          )
-        )
-      }
-    } catch {
+  const handleToggle = (id: string, currentValue: boolean) => {
+    console.log({ id, currentValue })
+    toggleField(id, "activo", currentValue).catch(() => {
       console.error("Error toggling horario")
-    } finally {
-      setToggling(null)
-    }
+    })
   }
 
   const getIcon = (iconName: string) => {
@@ -131,37 +69,31 @@ export default function HorariosPage() {
     return <IconComponent className="size-5" />
   }
 
-  if (loading) {
-    return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-8 w-48 rounded bg-gray-200" />
-        <div className="space-y-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 rounded-xl bg-gray-200" />
-          ))}
-        </div>
-      </div>
-    )
+  const handleReorder = async (newHorarios: Horario[]) => {
+    try {
+      await api.patch("/api/admin/horarios/reorder", {
+        horarios: newHorarios.map((h) => ({
+          id: h.id,
+          order: h.order,
+        })),
+      })
+    } catch (error) {
+      console.error("Error al reordenar horarios:", error)
+      throw error
+    }
   }
+
+  // Ordenar horarios por campo order
+  const horariosOrdenados = [...horarios].sort((a, b) => a.order - b.order)
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-foreground text-2xl font-bold">
-            Horarios de Servicios
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Gestiona los horarios de servicios de la iglesia
-          </p>
-        </div>
-        <Link href="/admin/horarios/nuevo">
-          <Button className="bg-amber hover:bg-amber-dark gap-2">
-            <Plus className="size-4" />
-            Agregar Horario
-          </Button>
-        </Link>
-      </div>
+      <AdminListHeader
+        title="Horarios de Servicios"
+        description="Arrastra para reordenar. El orden se mostrará en la página pública."
+        createHref="/admin/horarios/nuevo"
+        createLabel="Agregar Horario"
+      />
 
       {horarios.length === 0 ? (
         <EmptyState
@@ -172,66 +104,15 @@ export default function HorariosPage() {
           ctaHref="/admin/horarios/nuevo"
         />
       ) : (
-        <div className="space-y-3">
-          {horarios.map((horario) => (
-            <div
-              key={horario.id}
-              className="group border-border/50 flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm"
-            >
-              <div className="flex items-center gap-4">
-                <div className="bg-amber/10 text-amber flex size-12 items-center justify-center rounded-lg">
-                  {getIcon(horario.icono)}
-                </div>
-                <div>
-                  <h3 className="text-foreground font-semibold">
-                    {horario.titulo}
-                  </h3>
-                  {horario.descripcion && (
-                    <p className="text-muted-foreground text-sm">
-                      {horario.descripcion}
-                    </p>
-                  )}
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    {horario.dia} - {horario.hora}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={horario.activo}
-                    onCheckedChange={() =>
-                      handleToggle(horario.id, "activo", horario.activo)
-                    }
-                    disabled={toggling === `${horario.id}-activo`}
-                  />
-                  <span className="text-muted-foreground w-16 text-xs">
-                    {horario.activo ? "Activo" : "Inactivo"}
-                  </span>
-                </div>
-                <span className="text-muted-foreground text-sm">
-                  Orden: {horario.order}
-                </span>
-                <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  <Link href={`/admin/horarios/${horario.id}`}>
-                    <Button size="icon" variant="secondary" className="size-8">
-                      <Pencil className="size-4" />
-                    </Button>
-                  </Link>
-                  <Button
-                    size="icon"
-                    variant="destructive"
-                    className="size-8"
-                    onClick={() => handleDelete(horario.id)}
-                    disabled={deleting === horario.id}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <DraggableHorarios
+          horarios={horariosOrdenados}
+          isLoading={isLoading}
+          getIcon={getIcon}
+          onEdit={(id) => router.push(`/admin/horarios/${id}`)}
+          onDelete={handleDelete}
+          onToggle={handleToggle}
+          onReorder={handleReorder}
+        />
       )}
     </div>
   )

@@ -11,37 +11,28 @@ import { Switch } from "@/components/ui/switch"
 import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
+import { api } from "@/shared/api"
+import { DIAS_SEMANA } from "@/lib/constants"
+import { uploadImage } from "@/lib/supabase"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
   subtitulo: z.string(),
-  descripcion: z.string(),
   descripcionLarga: z.string(),
   dia: z.string().min(1, "Dia requerido"),
   hora: z.string().min(1, "Hora requerida"),
   icono: z.string(),
-  imagen: z.string(),
   mostrarDetalle: z.boolean(),
-  order: z.number().int(),
   activo: z.boolean(),
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
 
-const diaOptions = [
-  "Lunes",
-  "Martes",
-  "Miercoles",
-  "Jueves",
-  "Viernes",
-  "Sabado",
-  "Domingo",
-]
-
 export default function NuevoHorarioPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagen, setImagen] = useState<string | File | null>(null)
 
   const {
     register,
@@ -53,56 +44,67 @@ export default function NuevoHorarioPage() {
     resolver: zodResolver(horarioSchema),
     defaultValues: {
       subtitulo: "",
-      descripcion: "",
       descripcionLarga: "",
       icono: "Church",
-      imagen: "",
       mostrarDetalle: false,
-      order: 0,
       activo: true,
     },
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
-  const imagenValue = watch("imagen")
 
   // Desactivar mostrarDetalle si se elimina la imagen
   useEffect(() => {
-    if (!imagenValue && mostrarDetalle) {
+    if (!imagen && mostrarDetalle) {
       setValue("mostrarDetalle", false)
     }
-  }, [imagenValue, mostrarDetalle, setValue])
+  }, [imagen, mostrarDetalle, setValue])
 
   const onSubmit = async (data: HorarioForm) => {
     setSaving(true)
     setError(null)
 
     try {
+      // Upload image if it's a File
+      let imagenUrl: string | null = null
+      if (imagen instanceof File) {
+        imagenUrl = await uploadImage(imagen, "horarios")
+        if (!imagenUrl) {
+          setError("Error al subir la imagen")
+          setSaving(false)
+          return
+        }
+      } else if (typeof imagen === "string") {
+        imagenUrl = imagen
+      }
+
+      // Obtener el máximo order actual para asignar el nuevo
+      let newOrder = 0
+      try {
+        const response = await api.get<{ maxOrder: number }>(
+          "/api/admin/horarios/max-order"
+        )
+        newOrder = response.maxOrder + 1
+      } catch {
+        // Si falla, usar 0
+        newOrder = 0
+      }
+
       const payload = {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
-        descripcion: data.descripcion || null,
         descripcionLarga: data.descripcionLarga || null,
         dia: data.dia,
         hora: data.hora,
         icono: data.icono,
-        imagen: data.imagen || null,
+        imagen: imagenUrl,
         mostrarDetalle: data.mostrarDetalle,
-        order: data.order,
+        order: newOrder,
         activo: data.activo,
       }
 
-      const res = await fetch("/api/admin/horarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (res.ok) {
-        router.push("/admin/horarios")
-      } else {
-        setError("Error al crear el horario")
-      }
+      await api.post("/api/admin/horarios", payload)
+      router.push("/admin/horarios")
     } catch {
       setError("Error de conexion")
     } finally {
@@ -171,18 +173,6 @@ export default function NuevoHorarioPage() {
               </div>
             </div>
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion corta (opcional)
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={2}
-                placeholder="Descripcion breve del servicio"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-            </div>
-
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-foreground mb-1 block text-sm font-medium">
@@ -193,7 +183,7 @@ export default function NuevoHorarioPage() {
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 >
                   <option value="">Seleccionar dia</option>
-                  {diaOptions.map((dia) => (
+                  {DIAS_SEMANA.map((dia) => (
                     <option key={dia} value={dia}>
                       {dia}
                     </option>
@@ -233,17 +223,6 @@ export default function NuevoHorarioPage() {
                   onValueChange={(value) => setValue("icono", value)}
                 />
               </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
-                <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -277,7 +256,7 @@ export default function NuevoHorarioPage() {
             <Switch
               checked={mostrarDetalle}
               onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
-              disabled={!imagenValue}
+              disabled={!imagen}
             />
           </div>
 
@@ -286,13 +265,14 @@ export default function NuevoHorarioPage() {
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Imagen
               </label>
-              <ImageUpload
-                value={imagenValue}
-                onChange={(url) => setValue("imagen", url)}
-                folder="horarios"
-                placeholder="Subir imagen del horario"
-              />
-              {!imagenValue && (
+              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
+                <ImageUpload
+                  value={imagen}
+                  onChange={setImagen}
+                  placeholder="Subir imagen del horario"
+                />
+              </div>
+              {!imagen && (
                 <p className="mt-1 text-xs text-amber-600">
                   Requerida para mostrar la seccion de detalle
                 </p>
@@ -308,6 +288,7 @@ export default function NuevoHorarioPage() {
                 rows={4}
                 placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                disabled={!mostrarDetalle}
               />
             </div>
           </div>
