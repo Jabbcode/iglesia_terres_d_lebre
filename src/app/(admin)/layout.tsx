@@ -22,6 +22,7 @@ export default function AdminShellLayout({
     <html lang="es">
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         {children}
         <Analytics />

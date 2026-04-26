@@ -33,6 +33,7 @@ export default async function LangLayout({
     <html lang={lang}>
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <JsonLd />
         {children}
