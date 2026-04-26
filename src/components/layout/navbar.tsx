@@ -14,24 +14,53 @@ import {
 import { useConfigStore } from "@/stores/config-store"
 import { cn } from "@/lib/utils"
 import { api } from "@/shared/api"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
+import type { Locale } from "@/lib/i18n/config"
 
-const navLinks = [
-  { href: "/", label: "INICIO" },
-  { href: "/creencias", label: "CREENCIAS" },
-  { href: "/nosotros", label: "NOSOTROS" },
-  { href: "/horarios", label: "HORARIOS" },
-  { href: "/galeria", label: "GALERÍA" },
-  { href: "/contacto", label: "CONTACTO" },
-]
+interface NavbarProps {
+  lang: Locale
+}
 
-export function Navbar() {
+export function Navbar({ lang }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const { config } = useConfigStore()
   const pathname = usePathname()
 
+  const navLinks = [
+    {
+      href: `/${lang}`,
+      label: lang === "es" ? "INICIO" : lang === "ca" ? "INICI" : "HOME",
+    },
+    {
+      href: `/${lang}/creencias`,
+      label:
+        lang === "es" ? "CREENCIAS" : lang === "ca" ? "CREENCES" : "BELIEFS",
+    },
+    {
+      href: `/${lang}/nosotros`,
+      label:
+        lang === "es" ? "NOSOTROS" : lang === "ca" ? "NOSALTRES" : "ABOUT US",
+    },
+    {
+      href: `/${lang}/horarios`,
+      label:
+        lang === "es" ? "HORARIOS" : lang === "ca" ? "HORARIS" : "SCHEDULE",
+    },
+    {
+      href: `/${lang}/galeria`,
+      label: lang === "es" ? "GALERÍA" : lang === "ca" ? "GALERIA" : "GALLERY",
+    },
+    {
+      href: `/${lang}/contacto`,
+      label:
+        lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT",
+    },
+  ]
+
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/"
+    if (href === `/${lang}`)
+      return pathname === `/${lang}` || pathname === `/${lang}/`
     return pathname.startsWith(href)
   }
 
@@ -46,7 +75,7 @@ export function Navbar() {
     <header className="border-border/40 sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={`/${lang}`} className="flex items-center gap-2">
           <img
             src="/logo_black.png"
             alt="Logo Iglesia Bíblica Terres de l'Ebre"
@@ -65,7 +94,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -80,6 +109,7 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <LanguageSwitcher currentLang={lang} />
           {isAdmin && (
             <Link
               href="/admin"
@@ -102,7 +132,7 @@ export function Navbar() {
           <SheetContent side="right" className="w-72">
             <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
             <div className="flex flex-col gap-6 pt-8">
-              <Link href="/" className="flex items-center gap-2 px-4">
+              <Link href={`/${lang}`} className="flex items-center gap-2 px-4">
                 <img
                   src="/logo_black.png"
                   alt="Logo Iglesia Bíblica Terres de l'Ebre"
@@ -119,6 +149,9 @@ export function Navbar() {
                   </div>
                 </span>
               </Link>
+              <div className="px-4">
+                <LanguageSwitcher currentLang={lang} />
+              </div>
               <nav className="flex flex-col gap-4 px-4">
                 {navLinks.map((link) => (
                   <Link

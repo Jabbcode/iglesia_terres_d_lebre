@@ -22,7 +22,23 @@ export const horarioService = {
   },
 
   async create(data: CreateHorarioInput) {
-    return prisma.horario.create({ data })
+    const { translations, ...horarioData } = data
+    return prisma.horario.create({
+      data: {
+        ...horarioData,
+        translations: translations
+          ? {
+              create: translations.map((t) => ({
+                lang: t.lang,
+                titulo: t.titulo,
+                subtitulo: t.subtitulo ?? null,
+                descripcionLarga: t.descripcionLarga ?? null,
+                dia: t.dia,
+              })),
+            }
+          : undefined,
+      },
+    })
   },
 
   async update(id: string, data: UpdateHorarioInput) {

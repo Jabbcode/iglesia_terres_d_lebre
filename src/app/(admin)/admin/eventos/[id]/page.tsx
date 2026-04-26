@@ -56,7 +56,6 @@ export default function EditarEventoPage({
     handleSubmit,
     reset,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),

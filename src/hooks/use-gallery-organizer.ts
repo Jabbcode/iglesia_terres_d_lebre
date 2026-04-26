@@ -102,7 +102,7 @@ export function useGalleryOrganizer({
       // When filtered, we need to merge back with unfiltered images
       if (filter !== "all") {
         const filteredIds = new Set(newImages.map((img) => img.id))
-        const unfilteredImages = images.filter(
+        const _unfilteredImages = images.filter(
           (img) => !filteredIds.has(img.id)
         )
 

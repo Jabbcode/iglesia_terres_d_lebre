@@ -1,0 +1,285 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "beliefs": "Creencias",
+    "about": "Nosotros",
+    "schedule": "Horarios",
+    "gallery": "Galería",
+    "contact": "Contacto"
+  },
+  "footer": {
+    "links": "Enlaces",
+    "contact": "Contacto",
+    "copyright": "Todos los derechos reservados",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "email": "Correo electrónico"
+  },
+  "home": {
+    "title": "Bienvenidos - Iglesia Terres de l'Ebre",
+    "description": "Somos una comunidad de fe ubicada en Terres de l'Ebre",
+    "hero": {
+      "welcome": "TE ESTÁBAMOS ESPERANDO",
+      "title": "Bienvenidos",
+      "titleEmphasis": "a Casa",
+      "subtitle": "Somos una comunidad de fe donde cada persona encuentra su lugar. Un espacio para crecer, servir y vivir en el amor de Dios.",
+      "cta": "Ver servicios",
+      "ariaVideo": "Video de fondo de la comunidad",
+      "ariaImage": "Comunidad reunida en adoración"
+    },
+    "community": {
+      "badge": "VIDA DE IGLESIA",
+      "title": "Nuestra Comunidad",
+      "description": "En nuestra iglesia encontrarás un lugar donde ser parte de algo más grande. Descubre las diferentes formas en que puedes conectar, crecer y servir junto a nosotros."
+    },
+    "nextService": {
+      "badge": "PRÓXIMO SERVICIO",
+      "cta": "Cómo llegar",
+      "ariaLabel": "Información del próximo servicio",
+      "sunday": "Domingo"
+    },
+    "ctaNew": {
+      "button": "Conócenos un poco más"
+    },
+    "upcomingEvents": {
+      "badge": "PRÓXIMOS EVENTOS",
+      "title": "Únete a nuestras actividades",
+      "description": "Estas son algunas de las próximas actividades que hemos preparado para nuestra comunidad.",
+      "noEvents": "No hay eventos próximos",
+      "noEventsDescription": "Por el momento no tenemos eventos programados, pero te invitamos a conocer nuestros horarios de servicios regulares.",
+      "viewSchedules": "Ver horarios de servicios",
+      "hide": "Ocultar",
+      "learnMore": "Saber más",
+      "viewAllSchedules": "Ver todos los horarios"
+    },
+    "schedule": {
+      "title": "Nuestros",
+      "titleEmphasis": "Horarios",
+      "description": "Únete a nuestra comunidad. Un espacio para crecer en la fe, compartir en comunión y adorar juntos.",
+      "descriptionPart1": "Únete a nuestra comunidad. Un espacio para",
+      "descriptionPart2": "compartir en",
+      "descriptionPart3": "y adorar juntos.",
+      "growInFaith": "crecer en la fe",
+      "communion": "comunión",
+      "at": "a las"
+    },
+    "testimonials": {
+      "badge": "Testimonios",
+      "title": "Vidas transformadas",
+      "description": "Escucha las historias de personas cuyas vidas han sido transformadas por el amor de Cristo en nuestra comunidad."
+    }
+  },
+  "beliefs": {
+    "title": "Nuestras Creencias",
+    "description": "Conoce los principios fundamentales de nuestra fe",
+    "pageTitle": "En qué",
+    "pageTitleEmphasis": "Creemos",
+    "pageDescription": "Fundamentamos nuestra fe en la Palabra de Dios. Creemos en un único Dios, creador del universo, manifestado en tres personas: Padre, Hijo y Espíritu Santo.",
+    "items": {
+      "biblia": {
+        "title": "La Biblia",
+        "subtitle": "Nuestra base",
+        "shortDescription": "Nuestra base",
+        "longDescription": "Creemos que la Biblia es el mensaje de Dios para la humanidad. Tanto el Antiguo como el Nuevo Testamento fueron inspirados por Él y no contienen errores en sus escritos originales. Es la revelación completa de Su voluntad para salvarnos y la autoridad final que guía nuestra vida, nuestra fe y nuestra conducta. Por eso, creemos que su mensaje está cerrado: no se le puede quitar ni añadir nada.",
+        "imageAlt": "Biblia abierta"
+      },
+      "trinidad": {
+        "title": "Dios",
+        "subtitle": "Uno en tres personas",
+        "shortDescription": "Padre, Hijo y Espíritu Santo",
+        "longDescription": "Creemos en un solo Dios eterno que existe en tres personas: el Padre, el Hijo y el Espíritu Santo. Aunque son tres, son un solo Dios con la misma naturaleza, los mismos atributos y la misma perfección. Por lo tanto, los tres merecen el mismo respeto, confianza y obediencia de nuestra parte.",
+        "imageAlt": "Luz divina"
+      },
+      "jesucristo": {
+        "title": "Jesucristo",
+        "subtitle": "Dios hecho hombre",
+        "shortDescription": "Plenamente Dios y hombre",
+        "longDescription": "Creemos que Jesucristo es plenamente Dios y plenamente hombre a la vez. Él ya existía desde siempre como Dios, pero se hizo hombre al ser concebido por el Espíritu Santo y nacer de una virgen, sin dejar de ser divino. Murió en la cruz como el sacrificio perfecto en nuestro lugar, resucitó al tercer día y ascendió al cielo. Hoy, desde allí, actúa como nuestro defensor y representante ante Dios mientras esperamos Su regreso.",
+        "imageAlt": "Cruz al atardecer"
+      },
+      "espirituSanto": {
+        "title": "El Espíritu Santo",
+        "subtitle": "Nuestra guía",
+        "shortDescription": "Mora en los creyentes",
+        "longDescription": "Creemos que el Espíritu Santo es la tercera persona de la Trinidad. Su labor es darle la gloria a Jesús y ayudar a las personas a reconocer su pecado y su necesidad de Dios. Cuando alguien confía en Jesús, el Espíritu lo transforma y lo une a la Iglesia en ese mismo instante. Además, vive en el creyente para guiarlo, enseñarle y darle las fuerzas para vivir una vida que agrade a Dios.",
+        "imageAlt": "Luz y espiritualidad"
+      },
+      "salvacion": {
+        "title": "La Salvación",
+        "subtitle": "Un regalo eterno",
+        "shortDescription": "Por gracia mediante la fe",
+        "longDescription": "Creemos que cuando alguien confía en el Señor Jesucristo y en Su obra, pasa de inmediato de la muerte espiritual a la vida. En ese momento, Dios lo acepta y lo declara <em><strong>justo</strong></em>, tal como acepta a Jesús mismo. Esta unión con Cristo es para siempre. Somos salvos únicamente por Su sacrificio en la cruz. Al creer, somos <em><strong>nacidos de nuevo</strong></em> y sellados por el Espíritu Santo, confiando en que Dios siempre cumple Sus promesas.",
+        "imageAlt": "Luz de esperanza"
+      },
+      "humanidad": {
+        "title": "El Ser Humano",
+        "subtitle": "Nuestra condición",
+        "shortDescription": "Creado a imagen de Dios",
+        "longDescription": "Creemos que fuimos creados a imagen de Dios, pero el pecado nos separó de Él. Como resultado, la humanidad perdió su conexión espiritual con Dios y quedó bajo una <em><strong>depravación total</strong></em>, lo que significa que estamos espiritualmente incapacitados para salvarnos por nosotros mismos. Esta condición se transmite a toda la raza humana, siendo Jesucristo la única excepción.",
+        "imageAlt": "Comunidad de personas"
+      },
+      "regresoCristo": {
+        "title": "El Regreso de Cristo",
+        "subtitle": "Nuestra esperanza",
+        "shortDescription": "Segunda venida de Cristo",
+        "longDescription": "Creemos que después de un tiempo de gran dificultad en el mundo (la gran tribulación), el Señor Jesucristo regresará de forma física y personal. Vendrá con todo Su poder y gloria para establecer Su reino de mil años (el Milenio), derrotar el mal, restaurar la Creación de su actual sufrimiento, cumplir Sus promesas con Israel y ser reconocido por todo el mundo como Dios.",
+        "imageAlt": "Regreso de Cristo"
+      },
+      "resurreccion": {
+        "title": "La Resurrección",
+        "subtitle": "El futuro eterno",
+        "shortDescription": "El futuro eterno",
+        "longDescription": "Creemos que todas las personas que han muerto volverán a vivir físicamente. Quienes confiaron en Dios resucitarán para vivir en una alegría eterna junto a Él. Por otro lado, quienes rechazaron Su amor resucitarán para enfrentar un juicio y una separación consciente y eterna de Dios.",
+        "imageAlt": "Resurrección de los muertos"
+      },
+      "iglesia": {
+        "title": "La Iglesia",
+        "subtitle": "Una familia unida",
+        "shortDescription": "El cuerpo de Cristo",
+        "longDescription": "Creemos que la Iglesia no es un lugar, sino la unión de todas las personas que han sido transformadas por el Espíritu Santo mediante la fe. En el momento en que alguien recibe a Cristo en su corazón, pasa a formar parte de esta gran familia espiritual que llamamos la 'iglesia universal'.",
+        "imageAlt": "Iglesia reunida"
+      },
+      "bautismoSantaCena": {
+        "title": "El Bautismo",
+        "subtitle": "y la Santa Cena",
+        "shortDescription": "Bautismo y Santa Cena",
+        "longDescription": "Creemos que Jesús nos dejó dos ceremonias especiales: el Bautismo en agua y la Santa Cena. Queremos ser claros: participar en ellas no nos salva, pero son medios muy importantes para dar testimonio público de nuestra fe y recordar el sacrificio de Jesús por nosotros.",
+        "imageAlt": "Bautismo y Santa Cena"
+      },
+      "matrimonio": {
+        "title": "El Matrimonio",
+        "subtitle": "El diseño de Dios",
+        "shortDescription": "El diseño de Dios",
+        "longDescription": "Creemos que el matrimonio es una institución sagrada creada por Dios desde el principio. Según lo que Él demanda en la Biblia, el matrimonio es la unión exclusiva y fiel entre un hombre y una mujer. Este diseño divino tiene como propósito reflejar el amor de Cristo por Su Iglesia, proporcionar compañía mutua y ser la base para la familia.",
+        "imageAlt": "Matrimonio cristiano"
+      },
+      "estiloVidaCristiana": {
+        "title": "Una vida santa",
+        "subtitle": "El estilo de vida cristiano",
+        "shortDescription": "El Estilo de Vida Cristiano",
+        "longDescription": "Creemos que hemos sido llamados a vivir de una manera santa, guiados por el Espíritu de Dios y no por nuestros impulsos egoístas. Aunque mientras estemos en este mundo seguiremos luchando con nuestra naturaleza humana (la carne), nuestra meta es someter cada área de nuestra vida al control de Cristo con la ayuda del Espíritu Santo.",
+        "imageAlt": "Vida cristiana"
+      }
+    }
+  },
+  "about": {
+    "title": "Nosotros",
+    "description": "Conoce nuestra historia y misión",
+    "pageTitle": "Historia de la Iglesia:",
+    "pageTitleEmphasis": "Un camino de fe",
+    "pageDescription": "Somos una comunidad de fe comprometida con el amor de Cristo. Descubre nuestra historia, misión y los valores que nos guían cada día.",
+    "history": {
+      "past": {
+        "title": "El Pasado:",
+        "titleEmphasis": "Semillas en un hogar",
+        "content1": "La historia de la Iglesia Terres de l'Ebre no comienza en un gran edificio, sino en la calidez de un hogar. La iglesia nació en el pueblo de Xerta, cerca de Tortosa. En aquellos primeros dias, las reuniones se realizaban de forma sencilla en la casa del pastor y su familia. Poco después, otros miembros que compartian la misma visión se unieron, abriendo tambien sus casas para estudiar la Biblia. Les movia un proposito claro: crecer juntos en la Palabra de Dios y formar una comunidad en una zona donde no habia iglesias con una base doctirnal sana y sólida.",
+        "badge1": "Un nombre con propósito: Luz en el territorio",
+        "content2": "Fue precisamente esa visión la que dio identidad a la congregación. Se decidió el nombre de Iglesia Biblica Terres de L'EBre porque el objetivo es ser una luz espiritual en todo el territorio. El deseo de la iglesia es que el mensaje del Evangelio brille en cada rincón de la región, llevando esperanza a cada comunidad vecina",
+        "badge2": "Un paso de fe: Hacia Tortosa",
+        "content3": "Con el paso de los años, se vio cómo Dios hacia crecer ese pequeño grupo. Llegó un momento en que las casasresultaron pequeñasy se entendió la necesidad de dar un paso hacia adelante. Con la intención de estar en un sitio más centrico y que fuera de fácil acceso para aquellas personas que lo necesitaran, se tomó la decisión de mudarse a Tortosa. Ese paso se dio de una manera que solo se explica por la fe: se alquiló un local sin tener el dinero necesario, pero con la plena confianza en que Dios proveeria.Asi fue como comenzaron las reuniones en Tortosa y. poco a poco, la iglesia fue consolidándose hasta llegar a ser lo que es hoy."
+      },
+      "present": {
+        "title": "El Presente:",
+        "titleEmphasis": "Una familia que crece",
+        "content": "Actualmente, la iglesia atrae a personas de diferentes pueblos que desean congregarse y conectar como una verdadera familia en Cristo. Aunque sigue siendo una comunidad pequeña, la iglesia camina con alegria y expectativa."
+      },
+      "future": {
+        "title": "El Futuro:",
+        "titleEmphasis": "Nuestra esperanza",
+        "content": "La congregación no confia en sus propias fuerzas, sino enla promesa biblica que la sostiene: existe la conviccion de que Dios seguirá añadiendo cada dia a la iglesia los que han de ser salvos"
+      },
+      "cta": "En el corazón de nuestra comunidad",
+      "parallaxQuote": "En el corazón de nuestra comunidad",
+      "imageAltPast": "Edificio histórico de la iglesia",
+      "imageAltPresent": "Comunidad de la iglesia reunida",
+      "imageAltFuture": "Amanecer esperanzador",
+      "imageAltParallax": "Vista de Tortosa"
+    },
+    "purpose": {
+      "badge": "Propósito",
+      "title": "Lo que nos mueve",
+      "mission": {
+        "title": "Misión",
+        "description": "Guiar a cada persona a una relación profunda con Dios, fundamentada en Su Palabra y apoyada por una comunidad que camina en amor."
+      },
+      "vision": {
+        "title": "Visión",
+        "description": "Consolidarnos como una familia de fe donde cada miembro crezca espiritualmente y sirva al prójimo con integridad."
+      }
+    },
+    "leadership": {
+      "title": "Nuestro Liderazgo",
+      "showHistory": "Trayectoria",
+      "hideHistory": "Ocultar",
+      "items": [
+        {
+          "name": "Andrés Molina",
+          "role": "Pastor",
+          "description": "Graduado en Teología Pastoral tras cuatro años en el seminario SEFOVAN, cuenta con la certificación oficial internacional del Southwestern Baptist Theological Seminary (Dallas, Texas). Tras servir en varias iglesias de Barcelona, se trasladó a Xerta, donde durante la pandemia inició reuniones de oración en su hogar ante la falta de una comunidad de base bíblica. Lo que comenzó con familiares y vecinos creció hasta establecerse en un local en Tortosa. Hoy, en este 2026, continúa guiando a la congregación con amor, compromiso y dedicación."
+        }
+      ]
+    },
+    "values": {
+      "badge": "Nuestros Valores",
+      "title": "Los pilares de nuestra fe",
+      "items": [
+        {
+          "title": "Amor",
+          "description": "Amamos a Dios sobre todas las cosas y a nuestro prójimo como a nosotros mismos."
+        },
+        {
+          "title": "Comunidad",
+          "description": "Creemos en el poder de la comunidad y el compañerismo entre creyentes."
+        },
+        {
+          "title": "Palabra",
+          "description": "La Biblia es nuestra guía y autoridad en todo lo que hacemos y enseñamos."
+        }
+      ]
+    }
+  },
+  "schedule": {
+    "title": "Horarios",
+    "description": "Horarios de nuestras actividades y servicios"
+  },
+  "gallery": {
+    "title": "Galería",
+    "description": "Momentos especiales de nuestra comunidad",
+    "pageTitle": "Nuestra vida en",
+    "pageTitleEmphasis": "Comunidad",
+    "pageDescription": "Explora los momentos que hemos compartido. Cada imagen y video es un testimonio de nuestra fe, alegría y comunión.",
+    "descriptionPart1": "Explora los momentos que hemos compartido. Cada imagen y video es un testimonio de",
+    "faithJoyCommunion": "nuestra fe, alegría y comunión",
+    "viewMoreInstagram": "Ver más en Instagram",
+    "close": "Cerrar"
+  },
+  "contact": {
+    "title": "Contacto",
+    "description": "Ponte en contacto con nosotros",
+    "pageTitle": "Nos encantaría",
+    "pageTitleEmphasis": "saber de ti.",
+    "pageDescription": "Ya sea que tengas una pregunta sobre nuestros servicios, o simplemente quieras saludar, nuestras puertas y corazones están abiertos.",
+    "visitUs": "Visítanos",
+    "callUs": "Llámanos",
+    "hours": "Horario",
+    "mapTitle": "Ubicación de la iglesia",
+    "ariaInstagram": "Visitar nuestro Instagram",
+    "ariaFacebook": "Visitar nuestro Facebook",
+    "ariaYoutube": "Visitar nuestro canal de YouTube",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "message": "Mensaje",
+      "submit": "Enviar",
+      "sending": "Enviando...",
+      "success": "Mensaje enviado correctamente",
+      "error": "Error al enviar el mensaje"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "notFound": "No encontrado",
+    "backToHome": "Volver al inicio"
+  }
+}

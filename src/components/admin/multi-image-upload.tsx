@@ -30,6 +30,22 @@ interface MultiImageUploadProps {
   maxSizeMB?: number
 }
 
+function validateFile(
+  file: File,
+  maxSizeBytes: number,
+  maxSizeMB: number
+): string | null {
+  if (!file.type.startsWith("image/")) {
+    return "Solo se permiten archivos de imagen"
+  }
+  if (file.size > maxSizeBytes) {
+    return `El archivo supera el limite de ${maxSizeMB}MB`
+  }
+  return null
+}
+
+const generateId = () => Math.random().toString(36).substring(2, 9)
+
 export function MultiImageUpload({
   onUploadComplete,
   onError,
@@ -43,18 +59,6 @@ export function MultiImageUpload({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const maxSizeBytes = maxSizeMB * 1024 * 1024
-
-  const generateId = () => Math.random().toString(36).substring(2, 9)
-
-  const validateFile = (file: File): string | null => {
-    if (!file.type.startsWith("image/")) {
-      return "Solo se permiten archivos de imagen"
-    }
-    if (file.size > maxSizeBytes) {
-      return `El archivo supera el limite de ${maxSizeMB}MB`
-    }
-    return null
-  }
 
   const addFiles = useCallback(
     (newFiles: FileList | File[]) => {
@@ -78,7 +82,7 @@ export function MultiImageUpload({
       const newFileItems: FileWithPreview[] = []
 
       filesToAdd.forEach((file) => {
-        const error = validateFile(file)
+        const error = validateFile(file, maxSizeBytes, maxSizeMB)
 
         const fileItem: FileWithPreview = {
           id: generateId(),
@@ -92,7 +96,7 @@ export function MultiImageUpload({
 
       setFiles((prev) => [...prev, ...newFileItems])
     },
-    [files.length, maxFiles, maxSizeBytes, onError]
+    [files.length, maxFiles, maxSizeBytes, maxSizeMB, onError]
   )
 
   const removeFile = useCallback((id: string) => {

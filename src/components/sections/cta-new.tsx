@@ -1,8 +1,15 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
-export function CtaNew() {
+interface CtaNewProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function CtaNew({ lang, dict }: CtaNewProps) {
   return (
     <aside
       id="nuevos"
@@ -15,8 +22,8 @@ export function CtaNew() {
           className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-14 rounded-full px-10 text-sm font-bold tracking-wider text-white shadow-lg hover:shadow-xl"
           size={"lg"}
         >
-          <Link href="/creencias" className="gap-3">
-            Conócenos un poco más
+          <Link href={`/${lang}/creencias`} className="gap-3">
+            {dict.home.ctaNew.button}
             <ChevronRight className="size-4" aria-hidden="true" />
           </Link>
         </Button>

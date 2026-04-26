@@ -73,45 +73,89 @@ model Imagen {
 }
 
 model Evento {
-  id            String       @id @default(cuid())
+  id            String              @id @default(cuid())
   nombre        String
   descripcion   String?
-  fecha         DateTime     // Fecha base del evento
+  fecha         DateTime            // Fecha base del evento
   horaInicio    String
   horaFin       String?
   ubicacion     String?
-  imagen        String?      // URL de la imagen del evento
-  periodicidad  Periodicidad @default(ninguna)
-  repetirHasta  DateTime?    // Fecha límite para eventos periódicos
-  activo        Boolean      @default(true)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  imagen        String?             // URL de la imagen del evento
+  periodicidad  Periodicidad        @default(ninguna)
+  repetirHasta  DateTime?           // Fecha límite para eventos periódicos
+  activo        Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  translations  EventoTranslation[]
 }
 
 model Horario {
-  id               String   @id @default(cuid())
+  id               String               @id @default(cuid())
   titulo           String
-  subtitulo        String?  // Para formato "Estudio Bíblico *semanal*"
-  descripcionLarga String?  // Descripción extendida para sección de detalle
-  dia              String   // "Domingos", "Miercoles", "Sabados"
-  hora             String   // "11:00h"
-  icono            String   @default("Church") // Lucide icon name
-  imagen           String?  // URL de imagen para sección de detalle
-  mostrarDetalle   Boolean  @default(false) // Si aparece en la sección inferior
-  order            Int      @default(0)
-  activo           Boolean  @default(true)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  subtitulo        String?              // Para formato "Estudio Bíblico *semanal*"
+  descripcionLarga String?              // Descripción extendida para sección de detalle
+  dia              String               // "Domingos", "Miercoles", "Sabados"
+  hora             String               // "11:00h"
+  icono            String               @default("Church") // Lucide icon name
+  imagen           String?              // URL de imagen para sección de detalle
+  mostrarDetalle   Boolean              @default(false) // Si aparece en la sección inferior
+  order            Int                  @default(0)
+  activo           Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  translations     HorarioTranslation[]
 }
 
 model Testimonio {
+  id           String                  @id @default(cuid())
+  nombre       String
+  descripcion  String
+  videoUrl     String
+  thumbnail    String
+  order        Int                     @default(0)
+  activo       Boolean                 @default(true)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  translations TestimonioTranslation[]
+}
+
+// ==================== TRADUCCIONES ====================
+
+model EventoTranslation {
   id          String   @id @default(cuid())
+  eventoId    String
+  evento      Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  lang        String   // "es", "ca", "en"
   nombre      String
-  descripcion String
-  videoUrl    String
-  thumbnail   String
-  order       Int      @default(0)
-  activo      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  descripcion String?
+  ubicacion   String?
+
+  @@unique([eventoId, lang])
+  @@index([eventoId])
+}
+
+model HorarioTranslation {
+  id               String  @id @default(cuid())
+  horarioId        String
+  horario          Horario @relation(fields: [horarioId], references: [id], onDelete: Cascade)
+  lang             String  // "es", "ca", "en"
+  titulo           String
+  subtitulo        String?
+  descripcionLarga String?
+  dia              String  // "Domingos" / "Diumenges" / "Sundays"
+
+  @@unique([horarioId, lang])
+  @@index([horarioId])
+}
+
+model TestimonioTranslation {
+  id           String     @id @default(cuid())
+  testimonioId String
+  testimonio   Testimonio @relation(fields: [testimonioId], references: [id], onDelete: Cascade)
+  lang         String     // "es", "ca", "en"
+  nombre       String
+  descripcion  String
+
+  @@unique([testimonioId, lang])
+  @@index([testimonioId])
 }

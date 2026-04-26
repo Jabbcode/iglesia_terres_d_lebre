@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeInUp } from "@/components/ui/motion"
+import type { Dictionary } from "@/dictionaries"
 
 export interface Leader {
   name: string
@@ -14,9 +15,10 @@ export interface Leader {
 
 interface LeaderCardProps {
   leader: Leader
+  dict: Dictionary
 }
 
-export function LeaderCard({ leader }: LeaderCardProps) {
+export function LeaderCard({ leader, dict }: LeaderCardProps) {
   const [showHistory, setShowHistory] = useState(false)
 
   return (
@@ -54,7 +56,9 @@ export function LeaderCard({ leader }: LeaderCardProps) {
             onClick={() => setShowHistory(!showHistory)}
           >
             <Info className="mr-1 size-3" />
-            {showHistory ? "Ocultar" : "Trayectoria"}
+            {showHistory
+              ? dict.about.leadership.hideHistory
+              : dict.about.leadership.showHistory}
           </Button>
         </div>
       </div>

@@ -8,6 +8,13 @@ export const periodicidadEnum = z.enum([
   "anual",
 ])
 
+const eventoTranslationSchema = z.object({
+  lang: z.enum(["ca", "en"]),
+  nombre: z.string(),
+  descripcion: z.string().nullable().optional(),
+  ubicacion: z.string().nullable().optional(),
+})
+
 export const createEventoSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
   descripcion: z.string().nullable().optional(),
@@ -22,6 +29,7 @@ export const createEventoSchema = z.object({
   periodicidad: periodicidadEnum.default("ninguna"),
   repetirHasta: z.string().datetime().nullable().optional(),
   activo: z.boolean().default(true),
+  translations: z.array(eventoTranslationSchema).optional(),
 })
 
 export const updateEventoSchema = createEventoSchema.partial()

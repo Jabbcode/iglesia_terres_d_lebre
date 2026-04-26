@@ -8,8 +8,15 @@ import { motion, AnimatePresence } from "framer-motion"
 import { FadeInUp } from "@/components/ui/motion"
 import { api } from "@/shared/api"
 import type { Imagen } from "@/modules/galeria"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
-export function Gallery() {
+interface GalleryProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function Gallery({ lang: _lang, dict }: GalleryProps) {
   const [imagenes, setImagenes] = useState<Imagen[]>([])
   const [loading, setLoading] = useState(true)
   const [lightbox, setLightbox] = useState<number | null>(null)
@@ -75,12 +82,14 @@ export function Gallery() {
         <FadeInUp>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-4 text-center text-4xl font-bold sm:text-5xl lg:text-6xl">
-              Nuestra vida en{" "}
-              <span className="text-amber font-serif italic">Comunidad</span>
+              {dict.gallery.pageTitle}{" "}
+              <span className="text-amber font-serif italic">
+                {dict.gallery.pageTitleEmphasis}
+              </span>
             </h1>
             <p className="text-muted-foreground mx-auto max-w-2xl text-center text-base leading-relaxed">
-              Explora los momentos que hemos compartido. Cada imagen y video es
-              un testimonio de <em>nuestra fe, alegría y comunión</em>.
+              {dict.gallery.descriptionPart1}{" "}
+              <em>{dict.gallery.faithJoyCommunion}</em>.
             </p>
           </div>
         </FadeInUp>
@@ -131,7 +140,7 @@ export function Gallery() {
             >
               <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
                 <Instagram className="size-4" />
-                Ver más en Instagram
+                {dict.gallery.viewMoreInstagram}
               </a>
             </Button>
           </div>
@@ -154,7 +163,7 @@ export function Gallery() {
               className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             >
               <X className="size-5" />
-              <span className="sr-only">Cerrar</span>
+              <span className="sr-only">{dict.gallery.close}</span>
             </button>
 
             <motion.img

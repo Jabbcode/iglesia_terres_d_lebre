@@ -41,8 +41,6 @@ export default function EditarImagenPage({
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<ImagenForm>({
     resolver: zodResolver(imagenSchema),

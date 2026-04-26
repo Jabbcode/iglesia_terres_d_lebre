@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import {
   IGLESIA_NAME,
@@ -7,21 +6,6 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
 } from "@/lib/constant"
-import { JsonLd } from "@/components/seo/json-ld"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/next"
-import { GoogleAnalytics } from "@next/third-parties/google"
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-})
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -70,22 +54,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
 }
 
+// Root layout is intentionally minimal — nested layouts provide <html> and <body>
+// so that [lang]/layout.tsx can set the correct lang attribute per locale.
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <html lang="es">
-      <body
-        className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
-      >
-        <JsonLd />
-        {children}
-        <Analytics />
-        <SpeedInsights />
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
-      </body>
-    </html>
-  )
+  return children
 }
