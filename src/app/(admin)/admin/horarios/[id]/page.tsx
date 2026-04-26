@@ -322,7 +322,11 @@ export default function EditarHorarioPage({
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Imagen
               </label>
-              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
+              <div
+                className={
+                  !mostrarDetalle ? "pointer-events-none opacity-50" : ""
+                }
+              >
                 <ImageUpload
                   value={imagen}
                   onChange={setImagen}

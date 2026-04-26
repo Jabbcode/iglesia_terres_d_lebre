@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server"
 import { horarioService } from "@/modules/horarios"
 import { withAuth } from "@/modules/auth"
 import { success, handleError } from "@/shared/api"

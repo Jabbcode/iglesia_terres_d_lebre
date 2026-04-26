@@ -6,6 +6,18 @@ import { Button } from "@/components/ui/button"
 import { FadeInUp } from "@/components/ui/motion"
 import Link from "next/link"
 import type { Evento } from "@/modules/eventos"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
+import { useIsMobile } from "@/hooks/use-media-query"
+import { api } from "@/shared/api"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
 function NoEventsIllustration() {
   return (
@@ -84,20 +96,16 @@ function NoEventsIllustration() {
     </svg>
   )
 }
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
-import { useIsMobile } from "@/hooks/use-media-query"
-import { api } from "@/shared/api"
 
-function formatDate(dateStr: string | Date): string {
+const localeMap: Record<string, string> = {
+  es: "es-ES",
+  ca: "ca-ES",
+  en: "en-US",
+}
+
+function formatDate(dateStr: string | Date, lang: string): string {
   const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr
-  return date.toLocaleDateString("es-ES", {
+  return date.toLocaleDateString(localeMap[lang] ?? "es-ES", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -106,9 +114,11 @@ function formatDate(dateStr: string | Date): string {
 
 interface EventCardProps {
   evento: Evento
+  lang: string
+  dict: Dictionary
 }
 
-function EventCard({ evento }: EventCardProps) {
+function EventCard({ evento, lang, dict }: EventCardProps) {
   const [showDescription, setShowDescription] = useState(false)
 
   return (
@@ -140,7 +150,7 @@ function EventCard({ evento }: EventCardProps) {
         <div className="text-amber mb-3 flex items-center gap-2">
           <CalendarDays className="size-4" />
           <span className="text-xs font-semibold uppercase">
-            {formatDate(evento.fecha)}
+            {formatDate(evento.fecha, lang)}
           </span>
         </div>
         <h3 className="text-foreground mb-4 text-lg font-bold">
@@ -160,7 +170,9 @@ function EventCard({ evento }: EventCardProps) {
               onClick={() => setShowDescription(!showDescription)}
             >
               <Info className="mr-1 size-3" />
-              {showDescription ? "Ocultar" : "Saber más"}
+              {showDescription
+                ? dict.home.upcomingEvents.hide
+                : dict.home.upcomingEvents.learnMore}
             </Button>
           </div>
           {/* Ubicación */}
@@ -176,18 +188,23 @@ function EventCard({ evento }: EventCardProps) {
   )
 }
 
-export function UpcomingEvents() {
+interface UpcomingEventsProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
   const isMobile = useIsMobile()
 
   useEffect(() => {
     api
-      .get<Evento[]>("/api/public/eventos")
+      .get<Evento[]>(`/api/public/eventos?lang=${lang}`)
       .then(setEventos)
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [lang])
 
   if (loading) {
     return (
@@ -209,17 +226,18 @@ export function UpcomingEvents() {
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <NoEventsIllustration />
               <h2 className="text-foreground mt-6 text-2xl font-bold sm:text-3xl">
-                No hay eventos proximos
+                {dict.home.upcomingEvents.noEvents}
               </h2>
               <p className="text-muted-foreground mt-3 max-w-md text-base leading-relaxed">
-                Por el momento no tenemos eventos programados, pero te invitamos
-                a conocer nuestros horarios de servicios regulares.
+                {dict.home.upcomingEvents.noEventsDescription}
               </p>
               <Button
                 asChild
                 className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
               >
-                <Link href="/horarios">Ver horarios de servicios</Link>
+                <Link href={`/${lang}/horarios`}>
+                  {dict.home.upcomingEvents.viewSchedules}
+                </Link>
               </Button>
             </div>
           </FadeInUp>
@@ -234,14 +252,13 @@ export function UpcomingEvents() {
         {/* Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-            PRÓXIMOS EVENTOS
+            {dict.home.upcomingEvents.badge}
           </p>
           <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
-            Únete a nuestras actividades
+            {dict.home.upcomingEvents.title}
           </h2>
           <p className="text-muted-foreground text-base leading-relaxed">
-            Estas son algunas de las próximas actividades que hemos preparado
-            para nuestra comunidad.
+            {dict.home.upcomingEvents.description}
           </p>
         </div>
 
@@ -250,7 +267,7 @@ export function UpcomingEvents() {
           <div className="flex flex-wrap justify-center gap-6">
             {eventos.map((evento, index) => (
               <FadeInUp key={evento.id} delay={index * 0.1}>
-                <EventCard evento={evento} />
+                <EventCard evento={evento} lang={lang} dict={dict} />
               </FadeInUp>
             ))}
           </div>
@@ -276,7 +293,7 @@ export function UpcomingEvents() {
                     key={evento.id}
                     className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
                   >
-                    <EventCard evento={evento} />
+                    <EventCard evento={evento} lang={lang} dict={dict} />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -298,7 +315,9 @@ export function UpcomingEvents() {
             asChild
             className="bg-amber hover:bg-amber-dark mt-6 h-11 rounded-full px-8 text-sm font-semibold"
           >
-            <Link href="/horarios">Ver todos los horarios</Link>
+            <Link href={`/${lang}/horarios`}>
+              {dict.home.upcomingEvents.viewAllSchedules}
+            </Link>
           </Button>
         </div>
       </div>

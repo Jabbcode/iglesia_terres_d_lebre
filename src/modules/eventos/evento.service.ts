@@ -38,6 +38,16 @@ export const eventoService = {
         periodicidad: data.periodicidad as Periodicidad,
         repetirHasta: data.repetirHasta ? new Date(data.repetirHasta) : null,
         activo: data.activo,
+        translations: data.translations
+          ? {
+              create: data.translations.map((t) => ({
+                lang: t.lang,
+                nombre: t.nombre,
+                descripcion: t.descripcion ?? null,
+                ubicacion: t.ubicacion ?? null,
+              })),
+            }
+          : undefined,
       },
     })
   },

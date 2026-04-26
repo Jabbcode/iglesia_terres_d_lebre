@@ -6,6 +6,13 @@ import { MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Countdown } from "@/components/sections/countdown"
 import { useConfigStore } from "@/stores/config-store"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
+
+interface NextServiceProps {
+  lang: Locale
+  dict: Dictionary
+}
 
 function getNextSundayServiceDate(): Date {
   const now = new Date()
@@ -20,20 +27,20 @@ function getNextSundayServiceDate(): Date {
   return nextSunday
 }
 
-export function NextService() {
+export function NextService({ lang, dict }: NextServiceProps) {
   const { config, fetchConfig } = useConfigStore()
 
   useEffect(() => {
     fetchConfig()
   }, [fetchConfig])
 
-  const serviceTime = "Domingo, 11:30"
+  const serviceTime = `${dict.home.nextService.sunday}, 11:30`
   const address = config?.direccion?.replace("\n", ", ") || ""
   const nextServiceDate = getNextSundayServiceDate().toISOString()
 
   return (
     <aside
-      aria-label="Información del próximo servicio"
+      aria-label={dict.home.nextService.ariaLabel}
       className="relative z-10 mx-auto -mt-12 max-w-5xl px-4"
     >
       <div className="border-border/50 rounded-2xl border bg-white p-6 shadow-lg sm:p-8">
@@ -41,7 +48,7 @@ export function NextService() {
           {/* Service info */}
           <div className="text-center lg:text-left">
             <p className="text-amber mb-1 text-xs font-bold tracking-widest">
-              PRÓXIMO SERVICIO
+              {dict.home.nextService.badge}
             </p>
             <h2 className="text-foreground text-xl font-bold sm:text-2xl">
               {serviceTime}
@@ -59,9 +66,9 @@ export function NextService() {
             asChild
             className="bg-amber shadow-amber/25 hover:bg-amber-dark hover:shadow-amber/30 h-10 gap-2 rounded-full px-5 text-xs font-semibold text-white shadow-lg hover:shadow-xl"
           >
-            <Link href="/contacto">
+            <Link href={`/${lang}/contacto`}>
               <MapPin className="size-4" aria-hidden="true" />
-              Cómo llegar
+              {dict.home.nextService.cta}
             </Link>
           </Button>
         </div>

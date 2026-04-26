@@ -19,7 +19,6 @@ import { CSS } from "@dnd-kit/utilities"
 import { GripVertical, Edit, Trash2 } from "lucide-react"
 import { useState } from "react"
 import type { Horario } from "@/modules/horarios"
-import { api } from "@/shared/api"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
@@ -143,13 +142,14 @@ export function DraggableHorarios({
   const [items, setItems] = useState(horarios)
   const [saving, setSaving] = useState(false)
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    // Solo sincronizar si el número de items cambió (se agregó/eliminó)
-    // Esto evita sobrescribir cambios locales pendientes
+    // Only resync when count changes (add/remove) to avoid overwriting pending local drag state
     if (items.length !== horarios.length) {
       setItems(horarios)
     }
   }, [horarios.length])
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

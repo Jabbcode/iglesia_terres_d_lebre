@@ -27,6 +27,8 @@ import { FadeInUp } from "@/components/ui/motion"
 import { useIsMobile } from "@/hooks/use-media-query"
 import { api } from "@/shared/api"
 import type { Horario } from "@/modules/horarios"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
 
 const iconMap: Record<string, LucideIcon> = {
   Church,
@@ -42,18 +44,23 @@ const iconMap: Record<string, LucideIcon> = {
   Star,
 }
 
-export function Schedule() {
+interface ScheduleProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function Schedule({ lang, dict }: ScheduleProps) {
   const [horarios, setHorarios] = useState<Horario[]>([])
   const [loading, setLoading] = useState(true)
   const isMobile = useIsMobile()
 
   useEffect(() => {
     api
-      .get<Horario[]>("/api/public/horarios")
+      .get<Horario[]>(`/api/public/horarios?lang=${lang}`)
       .then(setHorarios)
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [lang])
 
   const getIcon = (iconName: string | null): LucideIcon => {
     if (iconName && iconMap[iconName]) {
@@ -106,14 +113,21 @@ export function Schedule() {
         <FadeInUp>
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
-              Nuestros{" "}
-              <span className="text-amber font-serif italic">Horarios</span>
+              {dict.home.schedule.title}{" "}
+              <span className="text-amber font-serif italic">
+                {dict.home.schedule.titleEmphasis}
+              </span>
             </h1>
             <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-              Únete a nuestra comunidad. Un espacio para{" "}
-              <em className="text-amber not-italic">crecer en la fe</em>,
-              compartir en <em className="text-amber not-italic">comunión</em> y
-              adorar juntos.
+              {dict.home.schedule.descriptionPart1}{" "}
+              <em className="text-amber not-italic">
+                {dict.home.schedule.growInFaith}
+              </em>
+              , {dict.home.schedule.descriptionPart2}{" "}
+              <em className="text-amber not-italic">
+                {dict.home.schedule.communion}
+              </em>{" "}
+              {dict.home.schedule.descriptionPart3}
             </p>
           </div>
         </FadeInUp>
@@ -231,7 +245,7 @@ export function Schedule() {
                     <div className="flex items-center gap-3">
                       <Icon className="text-amber size-5" strokeWidth={1.5} />
                       <span className="text-foreground text-sm font-semibold">
-                        {horario.dia} a las {horario.hora}
+                        {horario.dia} {dict.home.schedule.at} {horario.hora}
                       </span>
                     </div>
                   </div>

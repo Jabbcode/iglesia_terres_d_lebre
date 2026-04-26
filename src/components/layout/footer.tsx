@@ -4,17 +4,53 @@ import { useEffect } from "react"
 import Link from "next/link"
 import { Mail, Phone, MapPin, MessageSquareMore } from "lucide-react"
 import { useConfigStore } from "@/stores/config-store"
+import type { Locale } from "@/lib/i18n/config"
 
-const navLinks = [
-  { href: "/creencias", label: "Creencias" },
-  { href: "/nosotros", label: "Nosotros" },
-  { href: "/horarios", label: "Horarios" },
-  { href: "/galeria", label: "Galería" },
-  { href: "/contacto", label: "Contacto" },
-]
+interface FooterProps {
+  lang: Locale
+}
 
-export function Footer() {
+export function Footer({ lang }: FooterProps) {
   const { config, fetchConfig } = useConfigStore()
+
+  const navLinks = [
+    {
+      href: `/${lang}/creencias`,
+      label:
+        lang === "es" ? "Creencias" : lang === "ca" ? "Creences" : "Beliefs",
+    },
+    {
+      href: `/${lang}/nosotros`,
+      label:
+        lang === "es" ? "Nosotros" : lang === "ca" ? "Nosaltres" : "About Us",
+    },
+    {
+      href: `/${lang}/horarios`,
+      label:
+        lang === "es" ? "Horarios" : lang === "ca" ? "Horaris" : "Schedule",
+    },
+    {
+      href: `/${lang}/galeria`,
+      label: lang === "es" ? "Galería" : lang === "ca" ? "Galeria" : "Gallery",
+    },
+    {
+      href: `/${lang}/contacto`,
+      label:
+        lang === "es" ? "Contacto" : lang === "ca" ? "Contacte" : "Contact",
+    },
+  ]
+
+  const footerTexts = {
+    links: lang === "es" ? "ENLACES" : lang === "ca" ? "ENLLAÇOS" : "LINKS",
+    contact:
+      lang === "es" ? "CONTACTO" : lang === "ca" ? "CONTACTE" : "CONTACT",
+    copyright:
+      lang === "es"
+        ? "Todos los derechos reservados"
+        : lang === "ca"
+          ? "Tots els drets reservats"
+          : "All rights reserved",
+  }
 
   useEffect(() => {
     fetchConfig()
@@ -34,7 +70,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Column 1 - Logo & Description */}
           <div className="flex flex-col items-center space-y-4 text-center sm:col-span-2 sm:items-start sm:text-left lg:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2">
+            <Link href={`/${lang}`} className="inline-flex items-center gap-2">
               <img
                 src="/logo_white.png"
                 alt="Logo Iglesia Bíblica Terres de l'Ebre"
@@ -82,7 +118,7 @@ export function Footer() {
             className="text-center sm:text-left"
           >
             <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
-              ENLACES
+              {footerTexts.links}
             </h2>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-1">
               {navLinks.map((link) => (
@@ -101,7 +137,7 @@ export function Footer() {
           {/* Column 3 - Contact */}
           <div className="text-center sm:text-left">
             <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
-              CONTACTO
+              {footerTexts.contact}
             </h2>
             <address className="space-y-3 not-italic">
               {direccion && (
@@ -142,7 +178,7 @@ export function Footer() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:px-6 sm:text-left lg:px-8">
           <p>
             &copy; {new Date().getFullYear()} Iglesia Bíblica Terres de
-            l&apos;Ebre. Todos los derechos reservados.
+            l&apos;Ebre. {footerTexts.copyright}.
           </p>
         </div>
       </div>

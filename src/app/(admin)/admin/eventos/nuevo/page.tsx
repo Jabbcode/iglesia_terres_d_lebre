@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { uploadImage } from "@/lib/supabase"
@@ -30,6 +31,13 @@ const eventoSchema = z.object({
   periodicidad: z.enum(["ninguna", "semanal", "quincenal", "mensual", "anual"]),
   repetirHasta: z.string(),
   activo: z.boolean(),
+  // Traducciones
+  nombre_ca: z.string(),
+  descripcion_ca: z.string(),
+  ubicacion_ca: z.string(),
+  nombre_en: z.string(),
+  descripcion_en: z.string(),
+  ubicacion_en: z.string(),
 })
 
 type EventoForm = z.infer<typeof eventoSchema>
@@ -44,7 +52,6 @@ export default function NuevoEventoPage() {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<EventoForm>({
     resolver: zodResolver(eventoSchema),
@@ -55,6 +62,12 @@ export default function NuevoEventoPage() {
       periodicidad: "ninguna",
       repetirHasta: "",
       activo: true,
+      nombre_ca: "",
+      descripcion_ca: "",
+      ubicacion_ca: "",
+      nombre_en: "",
+      descripcion_en: "",
+      ubicacion_en: "",
     },
   })
 
@@ -93,6 +106,20 @@ export default function NuevoEventoPage() {
             ? new Date(data.repetirHasta).toISOString()
             : null,
         activo: data.activo,
+        translations: [
+          {
+            lang: "ca",
+            nombre: data.nombre_ca || data.nombre,
+            descripcion: data.descripcion_ca || data.descripcion,
+            ubicacion: data.ubicacion_ca || data.ubicacion,
+          },
+          {
+            lang: "en",
+            nombre: data.nombre_en || data.nombre,
+            descripcion: data.descripcion_en || data.descripcion,
+            ubicacion: data.ubicacion_en || data.ubicacion,
+          },
+        ],
       }
 
       await api.post("/api/admin/eventos", payload)
@@ -293,6 +320,53 @@ export default function NuevoEventoPage() {
             )}
           </div>
         </div>
+
+        {/* Traducciones */}
+        <TranslationFields
+          lang="ca"
+          langName="Catalán"
+          fields={[
+            {
+              name: "nombre_ca",
+              label: "Nombre del Evento (Catalán)",
+              register: register("nombre_ca"),
+            },
+            {
+              name: "descripcion_ca",
+              label: "Descripción (Catalán)",
+              type: "textarea",
+              register: register("descripcion_ca"),
+            },
+            {
+              name: "ubicacion_ca",
+              label: "Ubicación (Catalán)",
+              register: register("ubicacion_ca"),
+            },
+          ]}
+        />
+
+        <TranslationFields
+          lang="en"
+          langName="Inglés"
+          fields={[
+            {
+              name: "nombre_en",
+              label: "Event Name (English)",
+              register: register("nombre_en"),
+            },
+            {
+              name: "descripcion_en",
+              label: "Description (English)",
+              type: "textarea",
+              register: register("descripcion_en"),
+            },
+            {
+              name: "ubicacion_en",
+              label: "Location (English)",
+              register: register("ubicacion_en"),
+            },
+          ]}
+        />
 
         <div className="flex justify-end gap-3">
           <Link href="/admin/eventos">

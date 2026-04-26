@@ -15,6 +15,13 @@ import { VideoModal } from "@/components/ui/video-modal"
 import { useIsMobile } from "@/hooks/use-media-query"
 import { api } from "@/shared/api"
 import type { Testimonio } from "@/modules/testimonios"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
+
+interface TestimoniosSectionProps {
+  lang: Locale
+  dict: Dictionary
+}
 
 function getYouTubeEmbedUrl(url: string): string {
   if (url.includes("/embed/")) return url
@@ -96,7 +103,7 @@ function TestimoniosSkeleton() {
   )
 }
 
-export function TestimoniosSection() {
+export function TestimoniosSection({ lang, dict }: TestimoniosSectionProps) {
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [testimonios, setTestimonios] = useState<Testimonio[]>([])
   const [loading, setLoading] = useState(true)
@@ -104,11 +111,11 @@ export function TestimoniosSection() {
 
   useEffect(() => {
     api
-      .get<Testimonio[]>("/api/public/testimonios")
+      .get<Testimonio[]>(`/api/public/testimonios?lang=${lang}`)
       .then(setTestimonios)
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [lang])
 
   if (!loading && testimonios.length === 0) return null
 
@@ -118,14 +125,13 @@ export function TestimoniosSection() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
-              Testimonios
+              {dict.home.testimonials.badge}
             </p>
             <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
-              Vidas transformadas
+              {dict.home.testimonials.title}
             </h2>
             <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
-              Escucha las historias de personas cuyas vidas han sido
-              transformadas por el amor de Cristo en nuestra comunidad.
+              {dict.home.testimonials.description}
             </p>
           </div>
 

@@ -11,6 +11,13 @@ import {
 } from "lucide-react"
 import { useConfigStore } from "@/stores/config-store"
 import { FadeInUp } from "@/components/ui/motion"
+import type { Locale } from "@/lib/i18n/config"
+import type { Dictionary } from "@/dictionaries"
+
+interface ContactProps {
+  lang: Locale
+  dict: Dictionary
+}
 
 function decodeHtmlEntities(str: string): string {
   const textarea = document.createElement("textarea")
@@ -18,7 +25,7 @@ function decodeHtmlEntities(str: string): string {
   return textarea.value
 }
 
-export function Contact() {
+export function Contact({ lang: _lang, dict }: ContactProps) {
   const { config, fetchConfig } = useConfigStore()
 
   useEffect(() => {
@@ -42,13 +49,13 @@ export function Contact() {
         <FadeInUp>
           <div className="mx-auto mb-14 max-w-2xl text-center">
             <h2 className="text-foreground mb-4 text-4xl font-bold sm:text-5xl lg:text-6xl">
-              Nos encantaría{" "}
-              <span className="text-amber font-serif italic">saber de ti.</span>
+              {dict.contact.pageTitle}{" "}
+              <span className="text-amber font-serif italic">
+                {dict.contact.pageTitleEmphasis}
+              </span>
             </h2>
             <p className="text-muted-foreground text-base leading-relaxed">
-              Ya sea que tengas una pregunta sobre nuestros servicios, o
-              simplemente quieras saludar, nuestras puertas y corazones están
-              abiertos.
+              {dict.contact.pageDescription}
             </p>
           </div>
         </FadeInUp>
@@ -61,7 +68,9 @@ export function Contact() {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <MapPin className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">Visítanos</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.visitUs}
+              </h3>
               <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                 {direccion}
               </p>
@@ -74,7 +83,9 @@ export function Contact() {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <Phone className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">Llámanos</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.callUs}
+              </h3>
               <p className="text-muted-foreground text-sm">{telefono}</p>
             </div>
           </FadeInUp>
@@ -85,7 +96,9 @@ export function Contact() {
               <div className="bg-amber/10 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
                 <Clock className="text-amber size-6" />
               </div>
-              <h3 className="text-foreground mb-2 font-bold">Horario</h3>
+              <h3 className="text-foreground mb-2 font-bold">
+                {dict.contact.hours}
+              </h3>
               <p className="text-muted-foreground text-sm">{horarioAtencion}</p>
             </div>
           </FadeInUp>
@@ -99,9 +112,10 @@ export function Contact() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaInstagram}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Instagram className="size-5" />
+                <Instagram className="size-5" aria-hidden="true" />
               </a>
             )}
             {facebookUrl && (
@@ -109,9 +123,10 @@ export function Contact() {
                 href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaFacebook}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Facebook className="size-5" />
+                <Facebook className="size-5" aria-hidden="true" />
               </a>
             )}
             {youtubeUrl && (
@@ -119,9 +134,10 @@ export function Contact() {
                 href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={dict.contact.ariaYoutube}
                 className="border-border hover:border-amber hover:text-amber flex size-12 items-center justify-center rounded-full border bg-white transition-colors"
               >
-                <Youtube className="size-5" />
+                <Youtube className="size-5" aria-hidden="true" />
               </a>
             )}
           </div>
@@ -132,7 +148,7 @@ export function Contact() {
           <FadeInUp delay={0.3}>
             <div className="border-border/50 mx-auto max-w-4xl overflow-hidden rounded-2xl border shadow-sm">
               <iframe
-                title="Ubicación de la iglesia"
+                title={dict.contact.mapTitle}
                 src={googleMapsEmbed}
                 width="100%"
                 height="350"

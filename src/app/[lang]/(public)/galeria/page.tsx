@@ -1,0 +1,39 @@
+import type { Metadata } from "next"
+import { Gallery } from "@/components/sections/gallery"
+import { getDictionary } from "@/dictionaries"
+import { locales, type Locale } from "@/lib/i18n/config"
+import { SITE_URL } from "@/lib/constant"
+
+export async function generateStaticParams() {
+  return locales.map((lang) => ({ lang }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: Locale }>
+}): Promise<Metadata> {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+
+  return {
+    title: dict.gallery.title,
+    description: dict.gallery.description,
+    alternates: {
+      canonical: `${SITE_URL}/${lang}/galeria`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `${SITE_URL}/${l}/galeria`])
+      ),
+    },
+  }
+}
+
+export default async function GalleryPage({
+  params,
+}: {
+  params: Promise<{ lang: Locale }>
+}) {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+  return <Gallery lang={lang} dict={dict} />
+}
