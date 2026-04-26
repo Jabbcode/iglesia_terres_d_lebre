@@ -43,9 +43,22 @@ export const testimonioService = {
   },
 
   async update(id: string, data: UpdateTestimonioInput) {
+    const { translations, ...testimonioData } = data
     return prisma.testimonio.update({
       where: { id },
-      data,
+      data: {
+        ...testimonioData,
+        translations: translations
+          ? {
+              deleteMany: {},
+              create: translations.map((t) => ({
+                lang: t.lang,
+                nombre: t.nombre,
+                descripcion: t.descripcion,
+              })),
+            }
+          : undefined,
+      },
     })
   },
 

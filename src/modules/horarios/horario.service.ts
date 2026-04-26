@@ -42,9 +42,24 @@ export const horarioService = {
   },
 
   async update(id: string, data: UpdateHorarioInput) {
+    const { translations, ...horarioData } = data
     return prisma.horario.update({
       where: { id },
-      data,
+      data: {
+        ...horarioData,
+        translations: translations
+          ? {
+              deleteMany: {},
+              create: translations.map((t) => ({
+                lang: t.lang,
+                titulo: t.titulo,
+                subtitulo: t.subtitulo ?? null,
+                descripcionLarga: t.descripcionLarga ?? null,
+                dia: t.dia,
+              })),
+            }
+          : undefined,
+      },
     })
   },
 
