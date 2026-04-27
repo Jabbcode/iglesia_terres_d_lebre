@@ -180,7 +180,8 @@ export function Navbar({ lang }: NavbarProps) {
               </nav>
             </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </div>
     </header>
   )

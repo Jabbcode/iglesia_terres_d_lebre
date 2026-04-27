@@ -1,3 +1,4 @@
+import "flag-icons/css/flag-icons.min.css"
 import { Inter, Playfair_Display } from "next/font/google"
 import { JsonLd } from "@/components/seo/json-ld"
 import { SpeedInsights } from "@vercel/speed-insights/next"
