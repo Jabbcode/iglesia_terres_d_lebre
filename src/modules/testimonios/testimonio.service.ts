@@ -8,6 +8,7 @@ export const testimonioService = {
   async getAll() {
     return prisma.testimonio.findMany({
       orderBy: { order: "asc" },
+      include: { translations: true },
     })
   },
 
@@ -15,12 +16,14 @@ export const testimonioService = {
     return prisma.testimonio.findMany({
       where: { activo: true },
       orderBy: { order: "asc" },
+      include: { translations: true },
     })
   },
 
   async getById(id: string) {
     return prisma.testimonio.findUnique({
       where: { id },
+      include: { translations: true },
     })
   },
 
