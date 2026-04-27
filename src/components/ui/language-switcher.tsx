@@ -1,43 +1,53 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { locales, localeNames, type Locale } from "@/lib/i18n/config"
-import { Globe } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { locales, type Locale } from "@/lib/i18n/config"
+
+const localeFlags: Record<Locale, string> = {
+  es: "🇪🇸",
+  ca: "🏴󠁥󠁳󠁣󠁴󠁿",
+  en: "🇬🇧",
+}
+
+const localeLabels: Record<Locale, string> = {
+  es: "ES",
+  ca: "CA",
+  en: "EN",
+}
 
 export function LanguageSwitcher({ currentLang }: { currentLang: Locale }) {
   const pathname = usePathname()
   const router = useRouter()
 
-  const switchLocale = (newLocale: Locale) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLocale = e.target.value as Locale
     if (newLocale === currentLang) return
-
-    // Replace the locale prefix in the current pathname
     const segments = pathname.split("/")
     segments[1] = newLocale
-    const newPath = segments.join("/")
-
-    router.push(newPath)
+    router.push(segments.join("/"))
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-gray-200 bg-white p-1 shadow-sm">
-      <Globe className="ml-2 h-4 w-4 text-gray-500" />
-      {locales.map((locale) => (
-        <button
-          key={locale}
-          onClick={() => switchLocale(locale)}
-          className={cn(
-            "rounded-full px-3 py-1.5 text-sm font-medium transition-all",
-            locale === currentLang
-              ? "bg-amber text-white shadow-sm"
-              : "text-gray-600 hover:bg-gray-100"
-          )}
-          aria-label={`Switch to ${localeNames[locale]}`}
-        >
-          {locale.toUpperCase()}
-        </button>
-      ))}
+    <div className="relative flex items-center">
+      <span className="pointer-events-none absolute left-2 text-base leading-none">
+        {localeFlags[currentLang]}
+      </span>
+      <select
+        value={currentLang}
+        onChange={handleChange}
+        className="h-9 appearance-none rounded-full border border-gray-200 bg-white pl-8 pr-6 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30 cursor-pointer"
+        aria-label="Seleccionar idioma"
+      >
+        {locales.map((locale) => (
+          <option key={locale} value={locale}>
+            {localeFlags[locale]} {localeLabels[locale]}
+          </option>
+        ))}
+      </select>
+      {/* chevron */}
+      <span className="pointer-events-none absolute right-2 text-gray-400 text-xs">
+        ▾
+      </span>
     </div>
   )
 }

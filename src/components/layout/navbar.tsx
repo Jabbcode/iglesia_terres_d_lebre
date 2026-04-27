@@ -121,10 +121,12 @@ export function Navbar({ lang }: NavbarProps) {
           )}
         </nav>
 
-        {/* Mobile hamburger */}
-        <Sheet open={open} onOpenChange={setOpen}>
+        {/* Mobile: language switcher + hamburger */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher currentLang={lang} />
+          <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
+            <Button variant="ghost" size="icon">
               <Menu className="size-6" />
               <span className="sr-only">Abrir menú</span>
             </Button>
@@ -149,9 +151,6 @@ export function Navbar({ lang }: NavbarProps) {
                   </div>
                 </span>
               </Link>
-              <div className="px-4">
-                <LanguageSwitcher currentLang={lang} />
-              </div>
               <nav className="flex flex-col gap-4 px-4">
                 {navLinks.map((link) => (
                   <Link
