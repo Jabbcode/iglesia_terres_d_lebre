@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { TranslationFields } from "@/components/admin/translation-fields"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 import { api } from "@/shared/api"
@@ -20,6 +21,12 @@ const testimonioSchema = z.object({
   videoUrl: z.string().url("URL de video invalida"),
   order: z.number().int(),
   activo: z.boolean(),
+  // Traducciones Català
+  ca_nombre: z.string(),
+  ca_descripcion: z.string(),
+  // Traducciones English
+  en_nombre: z.string(),
+  en_descripcion: z.string(),
 })
 
 type TestimonioForm = z.infer<typeof testimonioSchema>
@@ -36,9 +43,7 @@ export default function EditarTestimonioPage({
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [thumbnail, setThumbnail] = useState<string | File | null>(null)
-  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(
-    null
-  )
+  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(null)
   const confirm = useConfirm()
 
   const {
@@ -54,6 +59,8 @@ export default function EditarTestimonioPage({
     api
       .get<Testimonio>(`/api/admin/testimonios/${id}`)
       .then((data) => {
+        const ca = data.translations?.find((t) => t.lang === "ca")
+        const en = data.translations?.find((t) => t.lang === "en")
         setThumbnailOriginal(data.thumbnail)
         setThumbnail(data.thumbnail)
         reset({
@@ -62,6 +69,10 @@ export default function EditarTestimonioPage({
           videoUrl: data.videoUrl,
           order: data.order,
           activo: data.activo,
+          ca_nombre: ca?.nombre || "",
+          ca_descripcion: ca?.descripcion || "",
+          en_nombre: en?.nombre || "",
+          en_descripcion: en?.descripcion || "",
         })
       })
       .catch(() => {})
@@ -73,7 +84,6 @@ export default function EditarTestimonioPage({
     setError(null)
 
     try {
-      // Upload new thumbnail if it's a File
       let thumbnailUrl: string | null = null
       if (thumbnail instanceof File) {
         thumbnailUrl = await uploadImage(thumbnail, "testimonios")
@@ -92,7 +102,6 @@ export default function EditarTestimonioPage({
         return
       }
 
-      // Delete old thumbnail if it changed
       if (thumbnailOriginal && thumbnailOriginal !== thumbnailUrl) {
         try {
           await api.post("/api/admin/images/delete", { url: thumbnailOriginal })
@@ -101,9 +110,27 @@ export default function EditarTestimonioPage({
         }
       }
 
+      const translations = [
+        {
+          lang: "ca" as const,
+          nombre: data.ca_nombre || data.nombre,
+          descripcion: data.ca_descripcion || data.descripcion,
+        },
+        {
+          lang: "en" as const,
+          nombre: data.en_nombre || data.nombre,
+          descripcion: data.en_descripcion || data.descripcion,
+        },
+      ]
+
       await api.put(`/api/admin/testimonios/${id}`, {
-        ...data,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        videoUrl: data.videoUrl,
+        order: data.order,
+        activo: data.activo,
         thumbnail: thumbnailUrl,
+        translations,
       })
       router.push("/admin/testimonios")
     } catch {
@@ -116,13 +143,11 @@ export default function EditarTestimonioPage({
   const handleDelete = async () => {
     const confirmed = await confirm({
       title: "Eliminar testimonio",
-      description:
-        "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
+      description: "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
       confirmLabel: "Eliminar",
       cancelLabel: "Cancelar",
       variant: "danger",
     })
-
     if (!confirmed) return
 
     setDeleting(true)
@@ -155,36 +180,26 @@ export default function EditarTestimonioPage({
           <ArrowLeft className="size-4" />
           Volver a testimonios
         </Link>
-        <h1 className="text-foreground text-2xl font-bold">
-          Editar Testimonio
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Modifica los datos del testimonio
-        </p>
+        <h1 className="text-foreground text-2xl font-bold">Editar Testimonio</h1>
+        <p className="text-muted-foreground mt-1">Modifica los datos del testimonio</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
         {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-            {error}
-          </div>
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
         )}
 
         <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
           <div className="space-y-4">
             <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Nombre
-              </label>
+              <label className="text-foreground mb-1 block text-sm font-medium">Nombre</label>
               <input
                 {...register("nombre")}
                 placeholder="Ej: Maria Garcia"
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.nombre.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
               )}
             </div>
 
@@ -199,9 +214,7 @@ export default function EditarTestimonioPage({
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.descripcion && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.descripcion.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.descripcion.message}</p>
               )}
             </div>
 
@@ -215,20 +228,15 @@ export default function EditarTestimonioPage({
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               <p className="text-muted-foreground mt-1 text-xs">
-                Usa el formato embed de YouTube (ej:
-                https://www.youtube.com/embed/VIDEO_ID)
+                Usa el formato embed de YouTube (ej: https://www.youtube.com/embed/VIDEO_ID)
               </p>
               {errors.videoUrl && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.videoUrl.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.videoUrl.message}</p>
               )}
             </div>
 
             <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Thumbnail
-              </label>
+              <label className="text-foreground mb-1 block text-sm font-medium">Thumbnail</label>
               <ImageUpload
                 value={thumbnail}
                 onChange={setThumbnail}
@@ -238,16 +246,13 @@ export default function EditarTestimonioPage({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
+                <label className="text-foreground mb-1 block text-sm font-medium">Orden</label>
                 <input
                   {...register("order", { valueAsNumber: true })}
                   type="number"
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-end pb-2">
                 <div className="flex items-center gap-2">
                   <input
@@ -256,10 +261,7 @@ export default function EditarTestimonioPage({
                     id="activo"
                     className="border-border size-4 rounded"
                   />
-                  <label
-                    htmlFor="activo"
-                    className="text-foreground text-sm font-medium"
-                  >
+                  <label htmlFor="activo" className="text-foreground text-sm font-medium">
                     Testimonio activo
                   </label>
                 </div>
@@ -268,28 +270,34 @@ export default function EditarTestimonioPage({
           </div>
         </div>
 
+        <TranslationFields
+          lang="ca"
+          langName="Català"
+          fields={[
+            { name: "ca_nombre", label: "Nombre", placeholder: "Ej: Maria Garcia", register: register("ca_nombre") },
+            { name: "ca_descripcion", label: "Testimonio", type: "textarea", rows: 4, placeholder: "El testimoni de la persona...", register: register("ca_descripcion") },
+          ]}
+        />
+
+        <TranslationFields
+          lang="en"
+          langName="English"
+          fields={[
+            { name: "en_nombre", label: "Name", placeholder: "Ex: Maria Garcia", register: register("en_nombre") },
+            { name: "en_descripcion", label: "Testimony", type: "textarea", rows: 4, placeholder: "The person's testimony...", register: register("en_descripcion") },
+          ]}
+        />
+
         <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={deleting}
-            className="gap-2"
-          >
+          <Button type="button" variant="destructive" onClick={handleDelete} disabled={deleting} className="gap-2">
             <Trash2 className="size-4" />
             {deleting ? "Eliminando..." : "Eliminar"}
           </Button>
           <div className="flex gap-3">
             <Link href="/admin/testimonios">
-              <Button type="button" variant="outline">
-                Cancelar
-              </Button>
+              <Button type="button" variant="outline">Cancelar</Button>
             </Link>
-            <Button
-              type="submit"
-              disabled={saving}
-              className="bg-amber hover:bg-amber-dark gap-2"
-            >
+            <Button type="submit" disabled={saving} className="bg-amber hover:bg-amber-dark gap-2">
               <Save className="size-4" />
               {saving ? "Guardando..." : "Guardar Cambios"}
             </Button>

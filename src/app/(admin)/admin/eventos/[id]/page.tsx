@@ -9,6 +9,7 @@ import { Save, ArrowLeft, Trash2, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Evento } from "@/modules/eventos"
@@ -32,6 +33,14 @@ const eventoSchema = z.object({
   periodicidad: z.enum(["ninguna", "semanal", "quincenal", "mensual", "anual"]),
   repetirHasta: z.string(),
   activo: z.boolean(),
+  // Traducciones Català
+  nombre_ca: z.string(),
+  descripcion_ca: z.string(),
+  ubicacion_ca: z.string(),
+  // Traducciones English
+  nombre_en: z.string(),
+  descripcion_en: z.string(),
+  ubicacion_en: z.string(),
 })
 
 type EventoForm = z.infer<typeof eventoSchema>
@@ -70,12 +79,13 @@ export default function EditarEventoPage({
       .then((data) => {
         const evento = data.find((e) => e.id === id)
         if (evento) {
+          const ca = evento.translations?.find((t) => t.lang === "ca")
+          const en = evento.translations?.find((t) => t.lang === "en")
           const fechaDate = new Date(evento.fecha)
           const repetirHastaDate = evento.repetirHasta
             ? new Date(evento.repetirHasta)
             : null
 
-          // Set original image
           setImagenOriginal(evento.imagen || null)
           setImagen(evento.imagen || null)
 
@@ -91,6 +101,12 @@ export default function EditarEventoPage({
               ? repetirHastaDate.toISOString().split("T")[0]
               : "",
             activo: evento.activo,
+            nombre_ca: ca?.nombre || "",
+            descripcion_ca: ca?.descripcion || "",
+            ubicacion_ca: ca?.ubicacion || "",
+            nombre_en: en?.nombre || "",
+            descripcion_en: en?.descripcion || "",
+            ubicacion_en: en?.ubicacion || "",
           })
         }
       })
@@ -103,7 +119,6 @@ export default function EditarEventoPage({
     setError(null)
 
     try {
-      // Upload new image if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
         imagenUrl = await uploadImage(imagen, "eventos")
@@ -116,17 +131,30 @@ export default function EditarEventoPage({
         imagenUrl = imagen
       }
 
-      // Delete old image if it changed or was removed
       if (imagenOriginal && imagenOriginal !== imagenUrl) {
         try {
           await api.post("/api/admin/images/delete", { url: imagenOriginal })
         } catch (error) {
           console.error("Failed to delete old image from storage:", error)
-          // Continue anyway - don't block the update
         }
       }
 
-      const payload = {
+      const translations = [
+        {
+          lang: "ca" as const,
+          nombre: data.nombre_ca || data.nombre,
+          descripcion: data.descripcion_ca || data.descripcion || null,
+          ubicacion: data.ubicacion_ca || data.ubicacion || null,
+        },
+        {
+          lang: "en" as const,
+          nombre: data.nombre_en || data.nombre,
+          descripcion: data.descripcion_en || data.descripcion || null,
+          ubicacion: data.ubicacion_en || data.ubicacion || null,
+        },
+      ]
+
+      await api.patch(`/api/admin/eventos/${id}`, {
         nombre: data.nombre,
         descripcion: data.descripcion || null,
         fecha: new Date(data.fecha).toISOString(),
@@ -140,9 +168,8 @@ export default function EditarEventoPage({
             ? new Date(data.repetirHasta).toISOString()
             : null,
         activo: data.activo,
-      }
-
-      await api.patch(`/api/admin/eventos/${id}`, payload)
+        translations,
+      })
       router.push("/admin/eventos")
     } catch {
       setError("Error de conexion")
@@ -372,6 +399,61 @@ export default function EditarEventoPage({
             )}
           </div>
         </div>
+
+        {/* Traducciones */}
+        <TranslationFields
+          lang="ca"
+          langName="Català"
+          fields={[
+            {
+              name: "nombre_ca",
+              label: "Nombre del Evento",
+              placeholder: "Ej: Culte de Diumenge",
+              register: register("nombre_ca"),
+            },
+            {
+              name: "descripcion_ca",
+              label: "Descripción",
+              type: "textarea",
+              rows: 3,
+              placeholder: "Descripció de l'esdeveniment...",
+              register: register("descripcion_ca"),
+            },
+            {
+              name: "ubicacion_ca",
+              label: "Ubicación",
+              placeholder: "Ej: Sala principal",
+              register: register("ubicacion_ca"),
+            },
+          ]}
+        />
+
+        <TranslationFields
+          lang="en"
+          langName="English"
+          fields={[
+            {
+              name: "nombre_en",
+              label: "Event Name",
+              placeholder: "Ex: Sunday Service",
+              register: register("nombre_en"),
+            },
+            {
+              name: "descripcion_en",
+              label: "Description",
+              type: "textarea",
+              rows: 3,
+              placeholder: "Event description...",
+              register: register("descripcion_en"),
+            },
+            {
+              name: "ubicacion_en",
+              label: "Location",
+              placeholder: "Ex: Main hall",
+              register: register("ubicacion_en"),
+            },
+          ]}
+        />
 
         <div className="flex justify-between">
           <Button

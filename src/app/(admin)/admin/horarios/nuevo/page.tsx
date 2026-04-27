@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { IconSelector } from "@/components/admin/icon-selector"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { DIAS_SEMANA } from "@/lib/constants"
@@ -24,6 +25,16 @@ const horarioSchema = z.object({
   icono: z.string(),
   mostrarDetalle: z.boolean(),
   activo: z.boolean(),
+  // Traducciones Català
+  ca_titulo: z.string(),
+  ca_subtitulo: z.string(),
+  ca_dia: z.string(),
+  ca_descripcionLarga: z.string(),
+  // Traducciones English
+  en_titulo: z.string(),
+  en_subtitulo: z.string(),
+  en_dia: z.string(),
+  en_descripcionLarga: z.string(),
 })
 
 type HorarioForm = z.infer<typeof horarioSchema>
@@ -48,12 +59,13 @@ export default function NuevoHorarioPage() {
       icono: "Church",
       mostrarDetalle: false,
       activo: true,
+      ca_titulo: "", ca_subtitulo: "", ca_dia: "", ca_descripcionLarga: "",
+      en_titulo: "", en_subtitulo: "", en_dia: "", en_descripcionLarga: "",
     },
   })
 
   const mostrarDetalle = watch("mostrarDetalle")
 
-  // Desactivar mostrarDetalle si se elimina la imagen
   useEffect(() => {
     if (!imagen && mostrarDetalle) {
       setValue("mostrarDetalle", false)
@@ -65,7 +77,6 @@ export default function NuevoHorarioPage() {
     setError(null)
 
     try {
-      // Upload image if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
         imagenUrl = await uploadImage(imagen, "horarios")
@@ -78,19 +89,35 @@ export default function NuevoHorarioPage() {
         imagenUrl = imagen
       }
 
-      // Obtener el máximo order actual para asignar el nuevo
       let newOrder = 0
       try {
-        const response = await api.get<{ maxOrder: number }>(
-          "/api/admin/horarios/max-order"
-        )
+        const response = await api.get<{ maxOrder: number }>("/api/admin/horarios/max-order")
         newOrder = response.maxOrder + 1
       } catch {
-        // Si falla, usar 0
         newOrder = 0
       }
 
-      const payload = {
+      const translations = []
+      if (data.ca_titulo) {
+        translations.push({
+          lang: "ca" as const,
+          titulo: data.ca_titulo,
+          subtitulo: data.ca_subtitulo || null,
+          dia: data.ca_dia || data.dia,
+          descripcionLarga: data.ca_descripcionLarga || null,
+        })
+      }
+      if (data.en_titulo) {
+        translations.push({
+          lang: "en" as const,
+          titulo: data.en_titulo,
+          subtitulo: data.en_subtitulo || null,
+          dia: data.en_dia || data.dia,
+          descripcionLarga: data.en_descripcionLarga || null,
+        })
+      }
+
+      await api.post("/api/admin/horarios", {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
         descripcionLarga: data.descripcionLarga || null,
@@ -101,9 +128,8 @@ export default function NuevoHorarioPage() {
         mostrarDetalle: data.mostrarDetalle,
         order: newOrder,
         activo: data.activo,
-      }
-
-      await api.post("/api/admin/horarios", payload)
+        translations: translations.length > 0 ? translations : undefined,
+      })
       router.push("/admin/horarios")
     } catch {
       setError("Error de conexion")
@@ -265,11 +291,7 @@ export default function NuevoHorarioPage() {
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Imagen
               </label>
-              <div
-                className={
-                  !mostrarDetalle ? "pointer-events-none opacity-50" : ""
-                }
-              >
+              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
                 <ImageUpload
                   value={imagen}
                   onChange={setImagen}
@@ -297,6 +319,29 @@ export default function NuevoHorarioPage() {
             </div>
           </div>
         </div>
+
+        {/* Traducciones */}
+        <TranslationFields
+          lang="ca"
+          langName="Català"
+          fields={[
+            { name: "ca_titulo", label: "Título", placeholder: "Ej: Culte Dominical", register: register("ca_titulo") },
+            { name: "ca_subtitulo", label: "Subtítulo (opcional)", placeholder: "Ej: setmanal", register: register("ca_subtitulo") },
+            { name: "ca_dia", label: "Día", placeholder: "Ej: Diumenge", register: register("ca_dia") },
+            { name: "ca_descripcionLarga", label: "Descripción larga (opcional)", type: "textarea", rows: 3, placeholder: "Descripció detallada...", register: register("ca_descripcionLarga") },
+          ]}
+        />
+
+        <TranslationFields
+          lang="en"
+          langName="English"
+          fields={[
+            { name: "en_titulo", label: "Title", placeholder: "Ex: Sunday Service", register: register("en_titulo") },
+            { name: "en_subtitulo", label: "Subtitle (optional)", placeholder: "Ex: weekly", register: register("en_subtitulo") },
+            { name: "en_dia", label: "Day", placeholder: "Ex: Sunday", register: register("en_dia") },
+            { name: "en_descripcionLarga", label: "Long description (optional)", type: "textarea", rows: 3, placeholder: "Detailed description...", register: register("en_descripcionLarga") },
+          ]}
+        />
 
         <div className="flex justify-end gap-3">
           <Link href="/admin/horarios">

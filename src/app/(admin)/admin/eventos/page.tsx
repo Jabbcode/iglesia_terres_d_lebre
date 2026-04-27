@@ -1,19 +1,19 @@
 "use client"
 
-import { Calendar, MapPin, Clock, RefreshCw } from "lucide-react"
+import { Calendar, MapPin, Clock, RefreshCw, Edit, Trash2 } from "lucide-react"
 import { EmptyState } from "@/components/admin/empty-state"
-import {
-  AdminListHeader,
-  AdminListSkeleton,
-  AdminListItem,
-} from "@/components/admin/admin-list"
+import { AdminListHeader, AdminListSkeleton } from "@/components/admin/admin-list"
+import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
 import { useAdminData } from "@/hooks/use-admin-data"
 import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
 import { formatearPeriodicidad } from "@/lib/event-utils"
+import { useRouter } from "next/navigation"
 import type { Evento } from "@/modules/eventos"
 import { PERIODICIDAD } from "@/lib/constants"
 
 export default function EventosPage() {
+  const router = useRouter()
   const {
     data: eventos,
     isLoading,
@@ -70,50 +70,76 @@ export default function EventosPage() {
       ) : (
         <div className="space-y-3">
           {eventos.map((evento) => (
-            <AdminListItem
+            <div
               key={evento.id}
-              id={evento.id}
-              editHref={`/admin/eventos/${evento.id}`}
-              activo={evento.activo}
-              onToggleActivo={() => handleToggle(evento.id, evento.activo)}
-              onDelete={() => handleDelete(evento.id)}
+              className="border-border/50 rounded-lg border bg-white shadow-sm"
             >
-              <div className="flex items-center gap-2">
-                <h3 className="text-foreground font-semibold">
-                  {evento.nombre}
-                </h3>
-                {evento.periodicidad !== PERIODICIDAD.NINGUNA && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-                    <RefreshCw className="size-3" />
-                    {formatearPeriodicidad(evento.periodicidad)}
-                  </span>
-                )}
+              <div className="flex items-center justify-between gap-4 p-4">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div className="bg-amber/10 text-amber flex size-12 items-center justify-center rounded-lg flex-shrink-0">
+                    <Calendar className="size-5" />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-foreground font-semibold truncate">
+                        {evento.nombre}
+                      </h3>
+                      {evento.periodicidad !== PERIODICIDAD.NINGUNA && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 flex-shrink-0">
+                          <RefreshCw className="size-3" />
+                          {formatearPeriodicidad(evento.periodicidad)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-muted-foreground mt-1 flex flex-wrap gap-3 text-sm">
+                      <span className="flex items-center gap-1">
+                        <Clock className="size-3.5" />
+                        {formatDate(evento.fecha)}
+                        {evento.periodicidad !== PERIODICIDAD.NINGUNA && " (base)"}
+                        {" · "}
+                        {evento.horaInicio}
+                        {evento.horaFin && ` - ${evento.horaFin}`}
+                      </span>
+                      {evento.ubicacion && (
+                        <span className="flex items-center gap-1">
+                          <MapPin className="size-3.5" />
+                          {evento.ubicacion}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <Switch
+                    checked={evento.activo}
+                    onCheckedChange={() => handleToggle(evento.id, evento.activo)}
+                    className="cursor-pointer"
+                  />
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/admin/eventos/${evento.id}`)}
+                      className="text-amber hover:bg-amber/10 hover:text-amber cursor-pointer"
+                      title="Editar"
+                    >
+                      <Edit className="size-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(evento.id)}
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                      title="Eliminar"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
-              {evento.descripcion && (
-                <p className="text-muted-foreground mt-1 line-clamp-1 text-sm">
-                  {evento.descripcion}
-                </p>
-              )}
-              <div className="text-muted-foreground mt-2 flex flex-wrap gap-4 text-sm">
-                <span className="flex items-center gap-1">
-                  <Calendar className="size-4" />
-                  {formatDate(evento.fecha)}
-                  {evento.periodicidad !== PERIODICIDAD.NINGUNA &&
-                    " (fecha base)"}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="size-4" />
-                  {evento.horaInicio}
-                  {evento.horaFin && ` - ${evento.horaFin}`}
-                </span>
-                {evento.ubicacion && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="size-4" />
-                    {evento.ubicacion}
-                  </span>
-                )}
-              </div>
-            </AdminListItem>
+            </div>
           ))}
         </div>
       )}

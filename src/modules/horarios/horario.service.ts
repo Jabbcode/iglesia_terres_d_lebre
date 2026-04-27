@@ -5,6 +5,7 @@ export const horarioService = {
   async getAll() {
     return prisma.horario.findMany({
       orderBy: { order: "asc" },
+      include: { translations: true },
     })
   },
 
@@ -12,12 +13,14 @@ export const horarioService = {
     return prisma.horario.findMany({
       where: { activo: true },
       orderBy: { order: "asc" },
+      include: { translations: true },
     })
   },
 
   async getById(id: string) {
     return prisma.horario.findUnique({
       where: { id },
+      include: { translations: true },
     })
   },
 
