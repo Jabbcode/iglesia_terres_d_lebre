@@ -13,7 +13,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang } = await params
+  const { lang: langStr } = await params
+  const lang = langStr as Locale
   const dict = await getDictionary(lang)
 
   return {
@@ -33,7 +34,8 @@ export default async function AboutPage({
 }: {
   params: Promise<{ lang: string }>
 }) {
-  const { lang } = await params
+  const { lang: langStr } = await params
+  const lang = langStr as Locale
   const dict = await getDictionary(lang)
   return <AboutUs lang={lang} dict={dict} />
 }
