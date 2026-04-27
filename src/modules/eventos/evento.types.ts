@@ -1,5 +1,7 @@
-// Re-export Prisma types for use throughout the app
-export type { Evento, Periodicidad } from "@prisma/client"
-
-// Re-export Zod input types
+import type { Evento as PrismaEvento, EventoTranslation, Periodicidad } from "@prisma/client"
 export type { CreateEventoInput, UpdateEventoInput } from "./evento.schema"
+export type { Periodicidad }
+
+export type Evento = PrismaEvento & {
+  translations: EventoTranslation[]
+}

@@ -8,6 +8,7 @@ import { z } from "zod"
 import { Save, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { uploadImage } from "@/lib/supabase"
@@ -18,6 +19,12 @@ const testimonioSchema = z.object({
   videoUrl: z.string().url("URL de video invalida"),
   order: z.number().int(),
   activo: z.boolean(),
+  // Traducciones Català
+  ca_nombre: z.string(),
+  ca_descripcion: z.string(),
+  // Traducciones English
+  en_nombre: z.string(),
+  en_descripcion: z.string(),
 })
 
 type TestimonioForm = z.infer<typeof testimonioSchema>
@@ -37,6 +44,8 @@ export default function NuevoTestimonioPage() {
     defaultValues: {
       order: 0,
       activo: true,
+      ca_nombre: "", ca_descripcion: "",
+      en_nombre: "", en_descripcion: "",
     },
   })
 
@@ -45,7 +54,6 @@ export default function NuevoTestimonioPage() {
     setError(null)
 
     try {
-      // Upload thumbnail if it's a File
       let thumbnailUrl: string | null = null
       if (thumbnail instanceof File) {
         thumbnailUrl = await uploadImage(thumbnail, "testimonios")
@@ -64,9 +72,30 @@ export default function NuevoTestimonioPage() {
         return
       }
 
+      const translations = []
+      if (data.ca_nombre || data.ca_descripcion) {
+        translations.push({
+          lang: "ca" as const,
+          nombre: data.ca_nombre || data.nombre,
+          descripcion: data.ca_descripcion || data.descripcion,
+        })
+      }
+      if (data.en_nombre || data.en_descripcion) {
+        translations.push({
+          lang: "en" as const,
+          nombre: data.en_nombre || data.nombre,
+          descripcion: data.en_descripcion || data.descripcion,
+        })
+      }
+
       await api.post("/api/admin/testimonios", {
-        ...data,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        videoUrl: data.videoUrl,
+        order: data.order,
+        activo: data.activo,
         thumbnail: thumbnailUrl,
+        translations: translations.length > 0 ? translations : undefined,
       })
       router.push("/admin/testimonios")
     } catch {
@@ -111,9 +140,7 @@ export default function NuevoTestimonioPage() {
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.nombre.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
               )}
             </div>
 
@@ -128,9 +155,7 @@ export default function NuevoTestimonioPage() {
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               {errors.descripcion && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.descripcion.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.descripcion.message}</p>
               )}
             </div>
 
@@ -144,13 +169,10 @@ export default function NuevoTestimonioPage() {
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               />
               <p className="text-muted-foreground mt-1 text-xs">
-                Usa el formato embed de YouTube (ej:
-                https://www.youtube.com/embed/VIDEO_ID)
+                Usa el formato embed de YouTube (ej: https://www.youtube.com/embed/VIDEO_ID)
               </p>
               {errors.videoUrl && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.videoUrl.message}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{errors.videoUrl.message}</p>
               )}
             </div>
 
@@ -176,7 +198,6 @@ export default function NuevoTestimonioPage() {
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-end pb-2">
                 <div className="flex items-center gap-2">
                   <input
@@ -185,10 +206,7 @@ export default function NuevoTestimonioPage() {
                     id="activo"
                     className="border-border size-4 rounded"
                   />
-                  <label
-                    htmlFor="activo"
-                    className="text-foreground text-sm font-medium"
-                  >
+                  <label htmlFor="activo" className="text-foreground text-sm font-medium">
                     Testimonio activo
                   </label>
                 </div>
@@ -197,17 +215,29 @@ export default function NuevoTestimonioPage() {
           </div>
         </div>
 
+        <TranslationFields
+          lang="ca"
+          langName="Català"
+          fields={[
+            { name: "ca_nombre", label: "Nombre", placeholder: "Ej: Maria Garcia", register: register("ca_nombre") },
+            { name: "ca_descripcion", label: "Testimonio", type: "textarea", rows: 4, placeholder: "El testimoni de la persona...", register: register("ca_descripcion") },
+          ]}
+        />
+
+        <TranslationFields
+          lang="en"
+          langName="English"
+          fields={[
+            { name: "en_nombre", label: "Name", placeholder: "Ex: Maria Garcia", register: register("en_nombre") },
+            { name: "en_descripcion", label: "Testimony", type: "textarea", rows: 4, placeholder: "The person's testimony...", register: register("en_descripcion") },
+          ]}
+        />
+
         <div className="flex justify-end gap-3">
           <Link href="/admin/testimonios">
-            <Button type="button" variant="outline">
-              Cancelar
-            </Button>
+            <Button type="button" variant="outline">Cancelar</Button>
           </Link>
-          <Button
-            type="submit"
-            disabled={saving}
-            className="bg-amber hover:bg-amber-dark gap-2"
-          >
+          <Button type="submit" disabled={saving} className="bg-amber hover:bg-amber-dark gap-2">
             <Save className="size-4" />
             {saving ? "Guardando..." : "Crear Testimonio"}
           </Button>

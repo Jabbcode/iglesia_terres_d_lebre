@@ -10,6 +10,7 @@ export const eventoService = {
     return prisma.evento.findMany({
       where: filters,
       orderBy: { fecha: "asc" },
+      include: { translations: true },
     })
   },
 
@@ -19,6 +20,7 @@ export const eventoService = {
   async getById(id: string) {
     return prisma.evento.findUnique({
       where: { id },
+      include: { translations: true },
     })
   },
 
@@ -74,6 +76,18 @@ export const eventoService = {
         : null
     }
     if (data.activo !== undefined) updateData.activo = data.activo
+
+    if (data.translations !== undefined) {
+      updateData.translations = {
+        deleteMany: {},
+        create: data.translations.map((t) => ({
+          lang: t.lang,
+          nombre: t.nombre,
+          descripcion: t.descripcion ?? null,
+          ubicacion: t.ubicacion ?? null,
+        })),
+      }
+    }
 
     return prisma.evento.update({
       where: { id },
