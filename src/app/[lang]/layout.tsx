@@ -4,7 +4,8 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from "@next/third-parties/google"
-import { locales, type Locale } from "@/lib/i18n/config"
+import { locales, isValidLocale, type Locale } from "@/lib/i18n/config"
+import { notFound } from "next/navigation"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,7 +29,9 @@ export default async function LangLayout({
   children: React.ReactNode
   params: Promise<{ lang: string }>
 }) {
-  const { lang } = (await params) as { lang: Locale }
+  const { lang: langStr } = await params
+  if (!isValidLocale(langStr)) notFound()
+  const lang = langStr as Locale
 
   return (
     <html lang={lang}>
