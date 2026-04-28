@@ -1,4 +1,8 @@
 {
+  "iglesia": {
+    "nombre": "Terres de l'Ebre",
+    "descripcion": "Som una família de fe a les Terres de l'Ebre. Un lloc on cada persona és benvinguda tal com és."
+  },
   "nav": {
     "home": "Inici",
     "beliefs": "Creences",
