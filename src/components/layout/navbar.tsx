@@ -11,7 +11,6 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { useConfigStore } from "@/stores/config-store"
 import { cn } from "@/lib/utils"
 import { api } from "@/shared/api"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
@@ -19,12 +18,12 @@ import type { Locale } from "@/lib/i18n/config"
 
 interface NavbarProps {
   lang: Locale
+  iglesia: { nombre: string; descripcion: string }
 }
 
-export function Navbar({ lang }: NavbarProps) {
+export function Navbar({ lang, iglesia }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
-  const { config } = useConfigStore()
   const pathname = usePathname()
 
   const navLinks = [
@@ -87,7 +86,7 @@ export function Navbar({ lang }: NavbarProps) {
                 Iglesia Biblica
               </span>
               <span className="relative top-0.5 text-sm md:text-lg">
-                {config?.nombreIglesia}
+                {iglesia.nombre}
               </span>
             </div>
           </span>
@@ -146,7 +145,7 @@ export function Navbar({ lang }: NavbarProps) {
                       Iglesia Biblica
                     </span>
                     <span className="text-sm relative">
-                      {config?.nombreIglesia}
+                      {iglesia.nombre}
                     </span>
                   </div>
                 </span>
