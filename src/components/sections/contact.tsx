@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import {
   MapPin,
   Phone,
@@ -9,8 +8,8 @@ import {
   Facebook,
   Youtube,
 } from "lucide-react"
-import { useConfigStore } from "@/stores/config-store"
 import { FadeInUp } from "@/components/ui/motion"
+import { siteConfig } from "@/config/site"
 import type { Locale } from "@/lib/i18n/config"
 import type { Dictionary } from "@/dictionaries"
 
@@ -19,28 +18,9 @@ interface ContactProps {
   dict: Dictionary
 }
 
-function decodeHtmlEntities(str: string): string {
-  const textarea = document.createElement("textarea")
-  textarea.innerHTML = str
-  return textarea.value
-}
-
 export function Contact({ lang: _lang, dict }: ContactProps) {
-  const { config, fetchConfig } = useConfigStore()
-
-  useEffect(() => {
-    fetchConfig()
-  }, [fetchConfig])
-
-  const direccion = config?.direccion || ""
-  const telefono = config?.telefono || ""
-  const horarioAtencion = config?.horarioAtencion || ""
-  const instagramUrl = config?.instagram || ""
-  const facebookUrl = config?.facebook || ""
-  const youtubeUrl = config?.youtube || ""
-  const googleMapsEmbed = config?.googleMapsEmbed
-    ? decodeHtmlEntities(config.googleMapsEmbed)
-    : ""
+  const { direccion, telefono, horarioAtencion, googleMapsEmbed } = siteConfig.contact
+  const { instagram: instagramUrl, facebook: facebookUrl, youtube: youtubeUrl } = siteConfig.socialMedia
 
   return (
     <section id="contacto" className="bg-cream py-20">
@@ -86,7 +66,12 @@ export function Contact({ lang: _lang, dict }: ContactProps) {
               <h3 className="text-foreground mb-2 font-bold">
                 {dict.contact.callUs}
               </h3>
-              <p className="text-muted-foreground text-sm">{telefono}</p>
+              <a
+                href={`tel:${telefono.replace(/\s+/g, "")}`}
+                className="text-muted-foreground hover:text-amber text-sm transition-colors"
+              >
+                {telefono}
+              </a>
             </div>
           </FadeInUp>
 

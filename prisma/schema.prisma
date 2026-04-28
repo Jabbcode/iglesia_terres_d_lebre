@@ -41,24 +41,9 @@ model User {
 }
 
 model ConfigSitio {
-  id                String   @id @default("default")
-  // General
-  nombreIglesia     String   @default("Iglesia Biblica Terres de l'Ebre")
-  descripcion       String   @default("Somos una familia de fe")
-  // Hero
-  videoHero         String?  
-  // Redes sociales
-  instagram         String?
-  facebook          String?
-  youtube           String?
-  // Contacto
-  direccion         String?
-  telefono          String?
-  email             String?
-  horarioAtencion   String?
-  googleMapsUrl     String?
-  googleMapsEmbed   String?
-  updatedAt         DateTime @updatedAt
+  id        String   @id @default("default")
+  videoHero String?
+  updatedAt DateTime @updatedAt
 }
 
 model Imagen {

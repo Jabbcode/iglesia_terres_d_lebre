@@ -1,11 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
 import Link from "next/link"
 import { MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Countdown } from "@/components/sections/countdown"
-import { useConfigStore } from "@/stores/config-store"
+import { siteConfig } from "@/config/site"
 import type { Locale } from "@/lib/i18n/config"
 import type { Dictionary } from "@/dictionaries"
 
@@ -28,14 +27,8 @@ function getNextSundayServiceDate(): Date {
 }
 
 export function NextService({ lang, dict }: NextServiceProps) {
-  const { config, fetchConfig } = useConfigStore()
-
-  useEffect(() => {
-    fetchConfig()
-  }, [fetchConfig])
-
   const serviceTime = `${dict.home.nextService.sunday}, 11:30`
-  const address = config?.direccion?.replace("\n", ", ") || ""
+  const address = siteConfig.contact.direccion.replace("\n", ", ")
   const nextServiceDate = getNextSundayServiceDate().toISOString()
 
   return (

@@ -1,4 +1,8 @@
 {
+  "iglesia": {
+    "nombre": "Terres de l'Ebre",
+    "descripcion": "We are a faith family in Terres de l'Ebre. A place where everyone is welcome just as they are."
+  },
   "nav": {
     "home": "Home",
     "beliefs": "Beliefs",

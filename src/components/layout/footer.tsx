@@ -1,18 +1,14 @@
-"use client"
-
-import { useEffect } from "react"
 import Link from "next/link"
 import { Mail, Phone, MapPin, MessageSquareMore } from "lucide-react"
-import { useConfigStore } from "@/stores/config-store"
+import { siteConfig } from "@/config/site"
 import type { Locale } from "@/lib/i18n/config"
 
 interface FooterProps {
   lang: Locale
+  iglesia: { nombre: string; descripcion: string }
 }
 
-export function Footer({ lang }: FooterProps) {
-  const { config, fetchConfig } = useConfigStore()
-
+export function Footer({ lang, iglesia }: FooterProps) {
   const navLinks = [
     {
       href: `/${lang}/creencias`,
@@ -52,17 +48,8 @@ export function Footer({ lang }: FooterProps) {
           : "All rights reserved",
   }
 
-  useEffect(() => {
-    fetchConfig()
-  }, [fetchConfig])
-
-  const direccion = config?.direccion?.replace("\n", ", ") || ""
-  const telefono = config?.telefono || ""
-  const email = config?.email || ""
-  const descripcion =
-    config?.descripcion ||
-    "Somos una familia de fe en Terres de l'Ebre. Un lugar donde cada persona es bienvenida tal como es."
-  const whatsappNumber = telefono.replace(/\s+/g, "").replace("+", "")
+  const { direccion, telefono, email } = siteConfig.contact
+  const whatsappNumber = telefono ? telefono.replace(/\s+/g, "").replace("+", "") : ""
 
   return (
     <footer className="bg-foreground text-white">
@@ -82,13 +69,13 @@ export function Footer({ lang }: FooterProps) {
                     Iglesia Biblica
                   </span>
                   <span className="relative top-0.5 text-lg">
-                    {config?.nombreIglesia}
+                    {iglesia.nombre}
                   </span>
                 </div>
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-white/60">
-              {descripcion}
+              {iglesia.descripcion}
             </p>
             <div className="flex gap-3">
               {telefono && (
@@ -177,8 +164,7 @@ export function Footer({ lang }: FooterProps) {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:px-6 sm:text-left lg:px-8">
           <p>
-            &copy; {new Date().getFullYear()} Iglesia Bíblica Terres de
-            l&apos;Ebre. {footerTexts.copyright}.
+            &copy; {new Date().getFullYear()} Iglesia Biblica {iglesia.nombre}. {footerTexts.copyright}.
           </p>
         </div>
       </div>
