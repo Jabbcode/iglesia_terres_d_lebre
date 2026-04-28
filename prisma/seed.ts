@@ -24,22 +24,7 @@ async function main() {
   const _config = await prisma.configSitio.upsert({
     where: { id: "default" },
     update: {},
-    create: {
-      id: "default",
-      nombreIglesia: "Iglesia Biblica Terres de l'Ebre",
-      descripcion:
-        "Somos una familia de fe en Terres de l'Ebre. Un lugar donde cada persona es bienvenida tal como es.",
-      instagram: "https://instagram.com/iglesiabiblica",
-      facebook: "https://facebook.com/iglesiabiblica",
-      youtube: "https://youtube.com/@iglesiabiblica",
-      direccion: "Calle Ejemplo 123\nTortosa, Tarragona 43500",
-      telefono: "+34 600 000 000",
-      email: "info@iglesiabiblica.es",
-      horarioAtencion: "Lun-Vie, 9:00-17:00",
-      googleMapsUrl: "https://maps.google.com/?q=Tortosa",
-      googleMapsEmbed:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2987.123456789!2d0.5216!3d40.8125",
-    },
+    create: { id: "default" },
   })
   console.log("Created site config")
 
