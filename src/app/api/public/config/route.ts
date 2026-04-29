@@ -1,5 +1,5 @@
 import { configService } from "@/modules/config"
-import { success, notFound, handleError } from "@/shared/api"
+import { publicSuccess, notFound, handleError } from "@/shared/api"
 
 export async function GET() {
   try {
@@ -9,7 +9,7 @@ export async function GET() {
       return notFound("Configuración no encontrada")
     }
 
-    return success(config)
+    return publicSuccess(config)
   } catch (error) {
     return handleError(error)
   }

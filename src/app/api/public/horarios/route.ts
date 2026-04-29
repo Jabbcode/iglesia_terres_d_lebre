@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 import { horarioService } from "@/modules/horarios"
-import { success, handleError } from "@/shared/api"
+import { publicSuccess, success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
 
 export async function GET(request: NextRequest) {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return success(horariosConTraducciones)
+    return publicSuccess(horariosConTraducciones)
   } catch (error) {
     return handleError(error)
   }

@@ -1,3 +1,4 @@
+export const revalidate = 86400
 import type { Metadata } from "next"
 import { Beliefs } from "@/components/sections/beliefs"
 import { getDictionary } from "@/dictionaries"

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 import { testimonioService } from "@/modules/testimonios"
-import { success, handleError } from "@/shared/api"
+import { publicSuccess, success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
 
 export async function GET(request: NextRequest) {
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return success(testimoniosConTraducciones)
+    return publicSuccess(testimoniosConTraducciones)
   } catch (error) {
     return handleError(error)
   }

@@ -1,3 +1,4 @@
+export const revalidate = 86400
 import type { Metadata } from "next"
 import { Schedule } from "@/components/sections/schedule"
 import { getDictionary } from "@/dictionaries"

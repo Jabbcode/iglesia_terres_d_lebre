@@ -9,6 +9,19 @@ export function success<T>(data: T, status = 200) {
 }
 
 /**
+ * Cached success response for public endpoints.
+ * CDN (Vercel Edge) caches 24h, stale-while-revalidate 1h.
+ */
+export function publicSuccess<T>(data: T) {
+  return NextResponse.json(data, {
+    status: 200,
+    headers: {
+      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
+    },
+  })
+}
+
+/**
  * Created response helper (201)
  */
 export function created<T>(data: T) {

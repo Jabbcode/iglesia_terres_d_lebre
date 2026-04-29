@@ -4,9 +4,8 @@ import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 import { SITE_URL } from "@/lib/constant"
 import { imagenService } from "@/modules/galeria"
-import { REVALIDATE_24H } from "@/lib/constants/cache"
 
-export const revalidate = REVALIDATE_24H
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
