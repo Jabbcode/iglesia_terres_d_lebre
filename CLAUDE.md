@@ -11,6 +11,16 @@ Sitio web de iglesia cristiana con panel de administración.
 - @.claude/context/workflow.md — flujo Git, branches, PRs, deploy
 - @.claude/context/decisions.md — decisiones técnicas tomadas y su razonamiento
 
+## Mantenimiento del contexto
+
+Al terminar cualquier implementación significativa, actualizar los ficheros de contexto si aplica:
+
+- **`arquitectura.md`** — si cambia el stack, se añaden módulos, cambia la estructura de carpetas o el flujo de datos
+- **`workflow.md`** — si cambian convenciones de branches, proceso de deploy o comandos frecuentes
+- **`decisions.md`** — si se toma una decisión técnica no obvia (qué se hizo, por qué, qué alternativas se descartaron)
+
+No documentar cada cambio menor — solo lo que un Claude nuevo necesitaría saber para no repetir errores o entender por qué el código es como es.
+
 ## Reglas esenciales
 
 - **Siempre crear PR y esperar confirmación antes de mergear**
