@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 
-export const revalidate = 86400
+import { REVALIDATE_24H } from "@/lib/constants/cache"
+export const revalidate = REVALIDATE_24H
 import { Hero } from "@/components/sections/hero"
 import { NextService } from "@/components/sections/next-service"
 import { Community } from "@/components/sections/community"

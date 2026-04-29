@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
-export const revalidate = 86400
+import { REVALIDATE_24H } from "@/lib/constants/cache"
+export const revalidate = REVALIDATE_24H
 
 import { Gallery } from "@/components/sections/gallery"
 import { getDictionary } from "@/dictionaries"
