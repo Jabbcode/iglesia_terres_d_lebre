@@ -27,7 +27,9 @@ src/
     testimonios/
   shared/api/            ← helpers de respuesta HTTP
   lib/
+    constants/index.ts   ← PERIODICIDAD, DIAS_SEMANA_OPTIONS, SEMANA_DEL_MES_OPTIONS…
     constants/cache.ts   ← REVALIDATE_24H, STALE_WHILE_REVALIDATE_1H
+    event-utils.ts       ← calcularProximaOcurrencia, agregarPeriodo (lógica recurrencia)
     prisma.ts
     supabase.ts          ← solo supabaseAdmin (service_role), sin cliente browser
 ```
@@ -35,6 +37,7 @@ src/
 ## Módulos
 
 Cada módulo en `src/modules/` sigue la misma estructura:
+
 ```
 modules/nombre/
   index.ts           ← exports públicos
@@ -52,7 +55,9 @@ modules/nombre/
 ## Uploads
 
 Solo desde servidor. Flujo:
+
 ```
 Browser → POST /api/admin/upload (JWT verificado) → Supabase Storage (service_role)
 ```
+
 Nunca desde el browser directamente a Supabase.

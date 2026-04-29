@@ -9,11 +9,12 @@ Registro de decisiones importantes tomadas y su razonamiento.
 **Por qué:** Reducir hits a Supabase DB. Datos públicos cambian raramente (solo cuando un admin edita).
 
 **Cómo funciona:**
+
 - Layer 1: Vercel Edge CDN cachea respuestas de `/api/public/*` 24h
 - Layer 2: Páginas públicas pre-generadas con ISR, se regeneran cada 24h
 - Layer 3: `unstable_cache` en servicios evita queries a DB incluso entre requests del mismo servidor
 
-**TTL:** 24h. Se invalida inmediatamente con `revalidatePath` cuando un admin guarda cambios.
+**TTL:** 24h. Se invalida inmediatamente con `revalidateTag` cuando un admin guarda cambios.
 
 ---
 
@@ -45,6 +46,34 @@ La constante `REVALIDATE_24H` sí funciona en `unstable_cache` y headers (son va
 **Decisión:** Habilitar RLS en todas las tablas públicas sin añadir políticas.
 
 **Por qué:** Bloquea acceso via PostgREST API (cliente browser). Prisma conecta como superuser de PostgreSQL y bypassa RLS automáticamente, por lo que la app sigue funcionando.
+
+---
+
+## revalidateTag en lugar de revalidatePath para invalidar caché
+
+**Decisión:** Usar `revalidateTag(tag, {})` en todas las rutas admin, nunca `revalidatePath`.
+
+**Por qué:** `revalidatePath` solo limpia la caché de una ruta específica (la URL del endpoint API). No toca los entries de `unstable_cache` que usan las páginas ISR. `revalidateTag` limpia por tag todos los entries del Data Cache, incluyendo los del servidor ISR.
+
+**Correcto:** `revalidateTag("galeria", {})`  
+**Incorrecto:** `revalidatePath("/api/public/galeria")`
+
+El segundo argumento `{}` es requerido por Next.js 16 (firma: `revalidateTag(tag: string, profile: CacheLifeConfig)`).
+
+---
+
+## Eventos recurrentes: mensual vs mensual_relativo
+
+**Decisión:** Dos valores de periodicidad distintos para patrones mensuales.
+
+- `mensual` — se repite el mismo día del mes (ej: siempre el 15)
+- `mensual_relativo` — se repite el Nth día de la semana del mes (ej: 1er Domingo), con soporte para "último" (-1)
+
+**Por qué:** Un solo valor `mensual` no puede expresar ambos patrones sin ambigüedad. Separar evita lógica condicional en el cálculo y hace la intención explícita en BD.
+
+**Campos DB:** `semanaDelMes Int?` (1/2/3/4/-1) y `diaSemanaRelativo Int?` (0=Dom…6=Sáb, índice JS). Ambos son `null` cuando `periodicidad !== mensual_relativo`.
+
+**Lógica de cálculo:** `src/lib/event-utils.ts` → función `agregarPeriodo`, case `mensual_relativo`. El "último" se calcula como `primerOcurrencia + Math.floor((diasEnMes - primerOcurrencia) / 7) * 7`.
 
 ---
 
