@@ -1,0 +1,22 @@
+# Prepare Release
+
+Ejecuta el flujo completo de release: develop → main → tag → GitHub Release → sync develop.
+
+## Pasos
+
+1. Confirmar la versión con el usuario (semver: MAJOR.MINOR.PATCH)
+2. Crear PR de `develop` → `main` con título "Release vX.Y.Z"
+3. **Esperar confirmación del usuario**
+4. Mergear PR a `main`
+5. Actualizar `CHANGELOG.md` con la nueva versión y fecha
+6. Actualizar `"version"` en `package.json`
+7. Commit en `main`: `chore: release vX.Y.Z`
+8. Crear tag: `git tag vX.Y.Z && git push origin vX.Y.Z`
+9. Crear GitHub Release: `gh release create vX.Y.Z --title "vX.Y.Z" --notes-file <changelog-section>`
+10. Sync `main` → `develop`: merge main into develop y push
+11. Confirmar al usuario que el release está publicado
+
+## Notas
+
+- El CHANGELOG sigue formato Keep a Changelog (Added / Changed / Fixed / Security / Removed)
+- El sync final asegura que `develop` tenga el CHANGELOG y version bump actualizados

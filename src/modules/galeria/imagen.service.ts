@@ -1,5 +1,7 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import { deleteImage } from "@/lib/supabase"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type {
   CreateImagenInput,
   UpdateImagenInput,
@@ -31,6 +33,20 @@ export const imagenService = {
         span: true,
       },
     })
+  },
+
+  async getPublicCached(limit = 20) {
+    return unstable_cache(
+      () =>
+        prisma.imagen.findMany({
+          where: { activo: true },
+          orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+          take: limit,
+          select: { id: true, src: true, alt: true, span: true },
+        }),
+      ["galeria-public", String(limit)],
+      { tags: ["galeria"], revalidate: REVALIDATE_24H }
+    )()
   },
 
   /**

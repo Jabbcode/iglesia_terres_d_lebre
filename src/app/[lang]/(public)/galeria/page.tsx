@@ -7,6 +7,9 @@ import { Gallery } from "@/components/sections/gallery"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 import { SITE_URL } from "@/lib/constant"
+import { imagenService } from "@/modules/galeria"
+
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
@@ -40,6 +43,9 @@ export default async function GalleryPage({
 }) {
   const { lang: langStr } = await params
   const lang = langStr as Locale
-  const dict = await getDictionary(lang)
-  return <Gallery lang={lang} dict={dict} />
+  const [dict, imagenes] = await Promise.all([
+    getDictionary(lang),
+    imagenService.getPublicCached(20),
+  ])
+  return <Gallery lang={lang} dict={dict} imagenes={imagenes} />
 }

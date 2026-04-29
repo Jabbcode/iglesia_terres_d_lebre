@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { testimonioService } from "@/modules/testimonios"
 import { publicSuccess, success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
 
@@ -8,22 +8,12 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const lang = searchParams.get("lang") || "es"
 
-    // Validate locale
     if (!isValidLocale(lang)) {
       return success([])
     }
 
-    const testimonios = await prisma.testimonio.findMany({
-      where: { activo: true },
-      orderBy: { order: "asc" },
-      include: {
-        translations: {
-          where: { lang },
-        },
-      },
-    })
+    const testimonios = await testimonioService.getPublicCached(lang)
 
-    // Map to use translated fields when available
     const testimoniosConTraducciones = testimonios.map((testimonio) => {
       const translation = testimonio.translations[0]
 
@@ -31,7 +21,7 @@ export async function GET(request: NextRequest) {
         ...testimonio,
         nombre: translation?.nombre || testimonio.nombre,
         descripcion: translation?.descripcion || testimonio.descripcion,
-        translations: undefined, // Remove translations from response
+        translations: undefined,
       }
     })
 

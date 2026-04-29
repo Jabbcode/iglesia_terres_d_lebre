@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type {
   CreateTestimonioInput,
   UpdateTestimonioInput,
@@ -18,6 +20,19 @@ export const testimonioService = {
       orderBy: { order: "asc" },
       include: { translations: true },
     })
+  },
+
+  async getPublicCached(lang: string) {
+    return unstable_cache(
+      () =>
+        prisma.testimonio.findMany({
+          where: { activo: true },
+          orderBy: { order: "asc" },
+          include: { translations: { where: { lang } } },
+        }),
+      ["testimonios-public", lang],
+      { tags: ["testimonios"], revalidate: REVALIDATE_24H }
+    )()
   },
 
   async getById(id: string) {

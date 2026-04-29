@@ -3,7 +3,7 @@ import { publicSuccess, notFound, handleError } from "@/shared/api"
 
 export async function GET() {
   try {
-    const config = await configService.get()
+    const config = await configService.getPublicCached()
 
     if (!config) {
       return notFound("Configuración no encontrada")
