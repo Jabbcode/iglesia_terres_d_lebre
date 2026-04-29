@@ -8,10 +8,6 @@ import { imagenService } from "@/modules/galeria"
 
 export const revalidate = 86400
 
-export async function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
-}
-
 export async function generateMetadata({
   params,
 }: {

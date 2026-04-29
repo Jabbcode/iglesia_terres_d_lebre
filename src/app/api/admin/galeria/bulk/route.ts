@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import {
   imagenService,
   bulkCreateSchema,
@@ -15,7 +15,7 @@ export const POST = withAuth(async (request: NextRequest) => {
 
     const result = await imagenService.createMany(images)
 
-    revalidatePath("/api/public/galeria")
+    revalidateTag("galeria", {})
     return created({
       message: `${result.count} imágenes creadas correctamente`,
       count: result.count,
@@ -32,7 +32,7 @@ export const PUT = withAuth(async (request: NextRequest) => {
 
     const updates = await imagenService.bulkUpdate(data)
 
-    revalidatePath("/api/public/galeria")
+    revalidateTag("galeria", {})
     return success({
       message: "Imágenes actualizadas correctamente",
       count: updates.length,

@@ -10,10 +10,6 @@ import { SITE_URL } from "@/lib/constant"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 
-export async function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
-}
-
 export async function generateMetadata({
   params,
 }: {

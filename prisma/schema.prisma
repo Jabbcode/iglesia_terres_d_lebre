@@ -25,6 +25,7 @@ enum Periodicidad {
   semanal
   quincenal
   mensual
+  mensual_relativo
   anual
 }
 
@@ -66,8 +67,10 @@ model Evento {
   horaFin       String?
   ubicacion     String?
   imagen        String?             // URL de la imagen del evento
-  periodicidad  Periodicidad        @default(ninguna)
-  repetirHasta  DateTime?           // Fecha límite para eventos periódicos
+  periodicidad       Periodicidad        @default(ninguna)
+  semanaDelMes       Int?                // 1=1ª, 2=2ª, 3=3ª, 4=4ª, -1=última
+  diaSemanaRelativo  Int?                // 0=Dom, 1=Lun … 6=Sáb (índice JS)
+  repetirHasta       DateTime?           // Fecha límite para eventos periódicos
   activo        Boolean             @default(true)
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @updatedAt
