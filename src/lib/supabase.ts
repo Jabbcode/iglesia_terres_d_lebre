@@ -1,47 +1,20 @@
 import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-// Client for browser (uploads)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Server client with service role for deletions (only use in API routes)
+// Server client with service role (only use in API routes)
 export const supabaseAdmin = supabaseServiceKey
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null
 
-export async function uploadImage(
-  file: File,
-  folder: string
-): Promise<string | null> {
-  const fileExt = file.name.split(".").pop()
-  const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-
-  const { error } = await supabase.storage
-    .from("images")
-    .upload(fileName, file, {
-      cacheControl: "3600",
-      upsert: false,
-    })
-
-  if (error) {
-    console.error("Error uploading image:", error)
-    return null
-  }
-
-  const { data } = supabase.storage.from("images").getPublicUrl(fileName)
-
-  return data.publicUrl
-}
-
 export async function deleteImage(url: string): Promise<boolean> {
   try {
-    const client = supabaseAdmin || supabase
+    if (!supabaseAdmin) {
+      console.error("supabaseAdmin not configured")
+      return false
+    }
 
-    // Extract path from Supabase URL
-    // URL format: https://{project}.supabase.co/storage/v1/object/public/images/{path}
     const match = url.match(/\/storage\/v1\/object\/public\/images\/(.+)$/)
     const path = match ? match[1] : null
 
@@ -50,7 +23,7 @@ export async function deleteImage(url: string): Promise<boolean> {
       return false
     }
 
-    const { error } = await client.storage.from("images").remove([path])
+    const { error } = await supabaseAdmin.storage.from("images").remove([path])
 
     if (error) {
       console.error("Error deleting image from storage:", error)
@@ -64,21 +37,25 @@ export async function deleteImage(url: string): Promise<boolean> {
   }
 }
 
-export async function uploadVideo(file: File, folder: string) {
-  const fileName = `${Date.now()}-${file.name}`
+export async function uploadFile(
+  file: File,
+  folder: string
+): Promise<string | null> {
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("folder", folder)
 
-  const { error } = await supabase.storage
-    .from("videos")
-    .upload(`${folder}/${fileName}`, file)
+  const response = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+  })
 
-  if (error) {
-    console.error(error)
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}))
+    console.error("Error uploading file:", data.error)
     return null
   }
 
-  const { data } = supabase.storage
-    .from("videos")
-    .getPublicUrl(`${folder}/${fileName}`)
-
-  return data.publicUrl
+  const data = await response.json()
+  return data.url ?? null
 }

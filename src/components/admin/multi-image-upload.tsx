@@ -10,7 +10,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
 interface FileWithPreview {
@@ -156,7 +156,7 @@ export function MultiImageUpload({
       )
 
       try {
-        const url = await uploadImage(fileItem.file, folder)
+        const url = await uploadFile(fileItem.file, folder)
 
         if (!url) {
           throw new Error("Error al subir")

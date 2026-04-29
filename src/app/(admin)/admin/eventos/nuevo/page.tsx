@@ -11,7 +11,7 @@ import { ImageUpload } from "@/components/admin/image-upload"
 import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 
 const periodicidadOptions = [
   { value: "ninguna", label: "Sin repeticion" },
@@ -82,7 +82,7 @@ export default function NuevoEventoPage() {
       // Upload image to Supabase if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
-        imagenUrl = await uploadImage(imagen, "eventos")
+        imagenUrl = await uploadFile(imagen, "eventos")
         if (!imagenUrl) {
           setError("Error al subir la imagen")
           setSaving(false)
