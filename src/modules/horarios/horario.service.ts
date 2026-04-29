@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import type { CreateHorarioInput, UpdateHorarioInput } from "./horario.schema"
 
@@ -15,6 +16,19 @@ export const horarioService = {
       orderBy: { order: "asc" },
       include: { translations: true },
     })
+  },
+
+  async getPublicCached(lang: string) {
+    return unstable_cache(
+      () =>
+        prisma.horario.findMany({
+          where: { activo: true },
+          orderBy: { order: "asc" },
+          include: { translations: { where: { lang } } },
+        }),
+      ["horarios-public", lang],
+      { tags: ["horarios"], revalidate: 86400 }
+    )()
   },
 
   async getById(id: string) {

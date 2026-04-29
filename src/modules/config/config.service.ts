@@ -1,7 +1,19 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import type { UpdateConfigInput } from "./config.schema"
 
 const DEFAULT_ID = "default"
+
+const getConfigCached = unstable_cache(
+  async () => {
+    const config = await prisma.configSitio.findUnique({
+      where: { id: DEFAULT_ID },
+    })
+    return config
+  },
+  ["config-public"],
+  { tags: ["config"], revalidate: 86400 }
+)
 
 export const configService = {
   async get() {
@@ -16,6 +28,10 @@ export const configService = {
     }
 
     return config
+  },
+
+  async getPublicCached() {
+    return getConfigCached()
   },
 
   async update(data: UpdateConfigInput) {

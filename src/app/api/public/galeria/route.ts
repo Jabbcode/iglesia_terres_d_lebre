@@ -5,7 +5,7 @@ const MAX_IMAGES = 20
 
 export async function GET() {
   try {
-    const imagenes = await imagenService.getPublic(MAX_IMAGES)
+    const imagenes = await imagenService.getPublicCached(MAX_IMAGES)
     return success(imagenes)
   } catch (error) {
     return handleError(error)

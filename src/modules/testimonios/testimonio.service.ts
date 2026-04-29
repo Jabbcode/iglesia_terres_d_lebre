@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import type {
   CreateTestimonioInput,
@@ -18,6 +19,19 @@ export const testimonioService = {
       orderBy: { order: "asc" },
       include: { translations: true },
     })
+  },
+
+  async getPublicCached(lang: string) {
+    return unstable_cache(
+      () =>
+        prisma.testimonio.findMany({
+          where: { activo: true },
+          orderBy: { order: "asc" },
+          include: { translations: { where: { lang } } },
+        }),
+      ["testimonios-public", lang],
+      { tags: ["testimonios"], revalidate: 86400 }
+    )()
   },
 
   async getById(id: string) {

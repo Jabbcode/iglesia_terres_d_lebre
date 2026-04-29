@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { horarioService } from "@/modules/horarios"
 import { success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
 
@@ -8,22 +8,12 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const lang = searchParams.get("lang") || "es"
 
-    // Validate locale
     if (!isValidLocale(lang)) {
       return success([])
     }
 
-    const horarios = await prisma.horario.findMany({
-      where: { activo: true },
-      orderBy: { order: "asc" },
-      include: {
-        translations: {
-          where: { lang },
-        },
-      },
-    })
+    const horarios = await horarioService.getPublicCached(lang)
 
-    // Map to use translated fields when available
     const horariosConTraducciones = horarios.map((horario) => {
       const translation = horario.translations[0]
 
@@ -34,7 +24,7 @@ export async function GET(request: NextRequest) {
         descripcionLarga:
           translation?.descripcionLarga || horario.descripcionLarga,
         dia: translation?.dia || horario.dia,
-        translations: undefined, // Remove translations from response
+        translations: undefined,
       }
     })
 
