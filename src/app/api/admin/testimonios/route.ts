@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import {
   testimonioService,
   createTestimonioSchema,
@@ -21,7 +21,7 @@ export const POST = withAuth(async (request: NextRequest) => {
     const body = await request.json()
     const data = createTestimonioSchema.parse(body)
     const testimonio = await testimonioService.create(data)
-    revalidatePath("/api/public/testimonios")
+    revalidateTag("testimonios", {})
     return created(testimonio)
   } catch (error) {
     return handleError(error)

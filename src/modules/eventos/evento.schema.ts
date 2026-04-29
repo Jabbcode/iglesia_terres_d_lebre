@@ -5,6 +5,7 @@ export const periodicidadEnum = z.enum([
   "semanal",
   "quincenal",
   "mensual",
+  "mensual_relativo",
   "anual",
 ])
 
@@ -27,6 +28,8 @@ export const createEventoSchema = z.object({
     z.string().url("URL inválida").nullable().optional()
   ),
   periodicidad: periodicidadEnum.default("ninguna"),
+  semanaDelMes: z.number().int().nullable().optional(),
+  diaSemanaRelativo: z.number().int().min(0).max(6).nullable().optional(),
   repetirHasta: z.string().datetime().nullable().optional(),
   activo: z.boolean().default(true),
   translations: z.array(eventoTranslationSchema).optional(),

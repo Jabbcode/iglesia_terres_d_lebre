@@ -38,6 +38,8 @@ export const eventoService = {
         ubicacion: data.ubicacion ?? null,
         imagen: data.imagen ?? null,
         periodicidad: data.periodicidad as Periodicidad,
+        semanaDelMes: data.semanaDelMes ?? null,
+        diaSemanaRelativo: data.diaSemanaRelativo ?? null,
         repetirHasta: data.repetirHasta ? new Date(data.repetirHasta) : null,
         activo: data.activo,
         translations: data.translations
@@ -70,6 +72,10 @@ export const eventoService = {
     if (data.imagen !== undefined) updateData.imagen = data.imagen
     if (data.periodicidad !== undefined)
       updateData.periodicidad = data.periodicidad as Periodicidad
+    if (data.semanaDelMes !== undefined)
+      updateData.semanaDelMes = data.semanaDelMes ?? null
+    if (data.diaSemanaRelativo !== undefined)
+      updateData.diaSemanaRelativo = data.diaSemanaRelativo ?? null
     if (data.repetirHasta !== undefined) {
       updateData.repetirHasta = data.repetirHasta
         ? new Date(data.repetirHasta)

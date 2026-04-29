@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { horarioService, createHorarioSchema } from "@/modules/horarios"
 import { withAuth } from "@/modules/auth"
 import { success, created, handleError } from "@/shared/api"
@@ -18,7 +18,7 @@ export const POST = withAuth(async (request: NextRequest) => {
     const body = await request.json()
     const data = createHorarioSchema.parse(body)
     const horario = await horarioService.create(data)
-    revalidatePath("/api/public/horarios")
+    revalidateTag("horarios", {})
     return created(horario)
   } catch (error) {
     return handleError(error)
