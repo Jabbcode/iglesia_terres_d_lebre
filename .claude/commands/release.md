@@ -13,8 +13,10 @@ Ejecuta el flujo completo de release: develop → main → tag → GitHub Releas
 7. Commit en `main`: `chore: release vX.Y.Z`
 8. Crear tag: `git tag vX.Y.Z && git push origin vX.Y.Z`
 9. Crear GitHub Release: `gh release create vX.Y.Z --title "vX.Y.Z" --notes "Ver [CHANGELOG.md](...) para el detalle de cambios."` — sin descripción propia, el CHANGELOG es la fuente de verdad
-10. Sync `main` → `develop`: merge main into develop y push
-11. Confirmar al usuario que el release está publicado
+10. Crear PR de `main` → `develop` con título "chore: sync develop con main vX.Y.Z"
+11. **Esperar confirmación del usuario**
+12. Mergear PR de sync
+13. Confirmar al usuario que el release está publicado y develop sincronizado
 
 ## Notas
 

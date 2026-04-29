@@ -28,7 +28,9 @@ Cuando hay suficientes cambios en `develop` para publicar:
 4. Actualizar CHANGELOG.md y package.json con nueva versión
 5. Crear tag: git tag vX.Y.Z && git push origin vX.Y.Z
 6. Crear GitHub Release desde el tag
-7. Sync: merge main → develop (trae CHANGELOG y version bump)
+7. Crear PR de `main` → `develop` con título "chore: sync develop con main vX.Y.Z"
+8. Esperar confirmación
+9. Mergear — develop queda con CHANGELOG y version bump actualizados
 ```
 
 ## Hotfixes (bug urgente en producción)
@@ -39,7 +41,9 @@ git checkout -b fix/nombre main   ← branch desde main directamente
 → PR hacia main
 → esperar confirmación
 → mergear
-→ sync main → develop
+→ PR de sync: main → develop
+→ esperar confirmación
+→ mergear
 ```
 
 ## Versionado semántico
