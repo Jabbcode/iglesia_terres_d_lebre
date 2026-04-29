@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+
 import { Gallery } from "@/components/sections/gallery"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
