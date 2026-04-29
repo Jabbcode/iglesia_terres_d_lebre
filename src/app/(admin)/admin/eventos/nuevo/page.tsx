@@ -12,14 +12,11 @@ import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { uploadFile } from "@/lib/supabase"
-
-const periodicidadOptions = [
-  { value: "ninguna", label: "Sin repeticion" },
-  { value: "semanal", label: "Semanal" },
-  { value: "quincenal", label: "Quincenal" },
-  { value: "mensual", label: "Mensual" },
-  { value: "anual", label: "Anual" },
-] as const
+import {
+  PERIODICIDAD_OPTIONS,
+  SEMANA_DEL_MES_OPTIONS,
+  DIAS_SEMANA_OPTIONS,
+} from "@/lib/constants"
 
 const eventoSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -28,7 +25,14 @@ const eventoSchema = z.object({
   horaInicio: z.string().min(1, "Hora de inicio requerida"),
   horaFin: z.string(),
   ubicacion: z.string(),
-  periodicidad: z.enum(["ninguna", "semanal", "quincenal", "mensual", "anual"]),
+  periodicidad: z.enum([
+    "ninguna",
+    "semanal",
+    "quincenal",
+    "mensual",
+    "mensual_relativo",
+    "anual",
+  ]),
   repetirHasta: z.string(),
   activo: z.boolean(),
   // Traducciones
@@ -47,6 +51,8 @@ export default function NuevoEventoPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [imagen, setImagen] = useState<string | File | null>(null)
+  const [semanaDelMes, setSemanaDelMes] = useState<number>(1)
+  const [diaSemanaRelativo, setDiaSemanaRelativo] = useState<number>(0)
 
   const {
     register,
@@ -73,13 +79,13 @@ export default function NuevoEventoPage() {
 
   const periodicidad = watch("periodicidad")
   const esPeriodico = periodicidad !== "ninguna"
+  const esMensualRelativo = periodicidad === "mensual_relativo"
 
   const onSubmit = async (data: EventoForm) => {
     setSaving(true)
     setError(null)
 
     try {
-      // Upload image to Supabase if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
         imagenUrl = await uploadFile(imagen, "eventos")
@@ -101,6 +107,8 @@ export default function NuevoEventoPage() {
         ubicacion: data.ubicacion || null,
         imagen: imagenUrl,
         periodicidad: data.periodicidad,
+        semanaDelMes: esMensualRelativo ? semanaDelMes : null,
+        diaSemanaRelativo: esMensualRelativo ? diaSemanaRelativo : null,
         repetirHasta:
           esPeriodico && data.repetirHasta
             ? new Date(data.repetirHasta).toISOString()
@@ -285,13 +293,54 @@ export default function NuevoEventoPage() {
                 {...register("periodicidad")}
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               >
-                {periodicidadOptions.map((opt) => (
+                {PERIODICIDAD_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
                 ))}
               </select>
             </div>
+
+            {esMensualRelativo && (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="text-foreground mb-1 block text-sm font-medium">
+                      Semana del mes
+                    </label>
+                    <select
+                      value={semanaDelMes}
+                      onChange={(e) => setSemanaDelMes(Number(e.target.value))}
+                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                    >
+                      {SEMANA_DEL_MES_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-foreground mb-1 block text-sm font-medium">
+                      Dia de la semana
+                    </label>
+                    <select
+                      value={diaSemanaRelativo}
+                      onChange={(e) =>
+                        setDiaSemanaRelativo(Number(e.target.value))
+                      }
+                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                    >
+                      {DIAS_SEMANA_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
 
             {esPeriodico && (
               <div>
@@ -312,9 +361,30 @@ export default function NuevoEventoPage() {
             {esPeriodico && (
               <div className="rounded-lg bg-amber-50 p-3">
                 <p className="text-sm text-amber-800">
-                  <strong>Nota:</strong> La fecha del evento se usara como fecha
-                  base. El sistema calculara automaticamente la proxima
-                  ocurrencia.
+                  {esMensualRelativo ? (
+                    <>
+                      <strong>Nota:</strong> Se repetira el{" "}
+                      <strong>
+                        {
+                          SEMANA_DEL_MES_OPTIONS.find(
+                            (o) => o.value === semanaDelMes
+                          )?.label
+                        }{" "}
+                        {
+                          DIAS_SEMANA_OPTIONS.find(
+                            (o) => o.value === diaSemanaRelativo
+                          )?.label
+                        }
+                      </strong>{" "}
+                      de cada mes.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Nota:</strong> La fecha del evento se usara como
+                      fecha base. El sistema calculara automaticamente la
+                      proxima ocurrencia.
+                    </>
+                  )}
                 </p>
               </div>
             )}

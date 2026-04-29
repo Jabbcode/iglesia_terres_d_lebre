@@ -14,14 +14,11 @@ import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Evento } from "@/modules/eventos"
 import { uploadFile } from "@/lib/supabase"
-
-const periodicidadOptions = [
-  { value: "ninguna", label: "Sin repeticion" },
-  { value: "semanal", label: "Semanal" },
-  { value: "quincenal", label: "Quincenal" },
-  { value: "mensual", label: "Mensual" },
-  { value: "anual", label: "Anual" },
-] as const
+import {
+  PERIODICIDAD_OPTIONS,
+  SEMANA_DEL_MES_OPTIONS,
+  DIAS_SEMANA_OPTIONS,
+} from "@/lib/constants"
 
 const eventoSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -30,7 +27,14 @@ const eventoSchema = z.object({
   horaInicio: z.string().min(1, "Hora de inicio requerida"),
   horaFin: z.string(),
   ubicacion: z.string(),
-  periodicidad: z.enum(["ninguna", "semanal", "quincenal", "mensual", "anual"]),
+  periodicidad: z.enum([
+    "ninguna",
+    "semanal",
+    "quincenal",
+    "mensual",
+    "mensual_relativo",
+    "anual",
+  ]),
   repetirHasta: z.string(),
   activo: z.boolean(),
   // Traducciones Català
@@ -58,6 +62,8 @@ export default function EditarEventoPage({
   const [error, setError] = useState<string | null>(null)
   const [imagen, setImagen] = useState<string | File | null>(null)
   const [imagenOriginal, setImagenOriginal] = useState<string | null>(null)
+  const [semanaDelMes, setSemanaDelMes] = useState<number>(1)
+  const [diaSemanaRelativo, setDiaSemanaRelativo] = useState<number>(0)
   const confirm = useConfirm()
 
   const {
@@ -72,6 +78,7 @@ export default function EditarEventoPage({
 
   const periodicidad = watch("periodicidad")
   const esPeriodico = periodicidad !== "ninguna"
+  const esMensualRelativo = periodicidad === "mensual_relativo"
 
   useEffect(() => {
     api
@@ -88,6 +95,10 @@ export default function EditarEventoPage({
 
           setImagenOriginal(evento.imagen || null)
           setImagen(evento.imagen || null)
+
+          if (evento.semanaDelMes != null) setSemanaDelMes(evento.semanaDelMes)
+          if (evento.diaSemanaRelativo != null)
+            setDiaSemanaRelativo(evento.diaSemanaRelativo)
 
           reset({
             nombre: evento.nombre,
@@ -163,6 +174,8 @@ export default function EditarEventoPage({
         ubicacion: data.ubicacion || null,
         imagen: imagenUrl,
         periodicidad: data.periodicidad,
+        semanaDelMes: esMensualRelativo ? semanaDelMes : null,
+        diaSemanaRelativo: esMensualRelativo ? diaSemanaRelativo : null,
         repetirHasta:
           esPeriodico && data.repetirHasta
             ? new Date(data.repetirHasta).toISOString()
@@ -364,13 +377,54 @@ export default function EditarEventoPage({
                 {...register("periodicidad")}
                 className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
               >
-                {periodicidadOptions.map((opt) => (
+                {PERIODICIDAD_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
                 ))}
               </select>
             </div>
+
+            {esMensualRelativo && (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="text-foreground mb-1 block text-sm font-medium">
+                      Semana del mes
+                    </label>
+                    <select
+                      value={semanaDelMes}
+                      onChange={(e) => setSemanaDelMes(Number(e.target.value))}
+                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                    >
+                      {SEMANA_DEL_MES_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-foreground mb-1 block text-sm font-medium">
+                      Dia de la semana
+                    </label>
+                    <select
+                      value={diaSemanaRelativo}
+                      onChange={(e) =>
+                        setDiaSemanaRelativo(Number(e.target.value))
+                      }
+                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                    >
+                      {DIAS_SEMANA_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
 
             {esPeriodico && (
               <div>
@@ -391,9 +445,30 @@ export default function EditarEventoPage({
             {esPeriodico && (
               <div className="rounded-lg bg-amber-50 p-3">
                 <p className="text-sm text-amber-800">
-                  <strong>Nota:</strong> La fecha del evento se usara como fecha
-                  base. El sistema calculara automaticamente la proxima
-                  ocurrencia.
+                  {esMensualRelativo ? (
+                    <>
+                      <strong>Nota:</strong> Se repetira el{" "}
+                      <strong>
+                        {
+                          SEMANA_DEL_MES_OPTIONS.find(
+                            (o) => o.value === semanaDelMes
+                          )?.label
+                        }{" "}
+                        {
+                          DIAS_SEMANA_OPTIONS.find(
+                            (o) => o.value === diaSemanaRelativo
+                          )?.label
+                        }
+                      </strong>{" "}
+                      de cada mes.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Nota:</strong> La fecha del evento se usara como
+                      fecha base. El sistema calculara automaticamente la
+                      proxima ocurrencia.
+                    </>
+                  )}
                 </p>
               </div>
             )}
