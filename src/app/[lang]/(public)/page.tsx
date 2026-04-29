@@ -1,4 +1,6 @@
 import { Metadata } from "next"
+
+export const revalidate = 86400
 import { Hero } from "@/components/sections/hero"
 import { NextService } from "@/components/sections/next-service"
 import { Community } from "@/components/sections/community"

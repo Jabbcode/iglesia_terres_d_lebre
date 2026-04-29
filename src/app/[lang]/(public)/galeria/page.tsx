@@ -1,4 +1,7 @@
 import type { Metadata } from "next"
+
+export const revalidate = 86400
+
 import { Gallery } from "@/components/sections/gallery"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
