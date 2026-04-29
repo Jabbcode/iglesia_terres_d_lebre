@@ -16,7 +16,7 @@ export function publicSuccess<T>(data: T) {
   return NextResponse.json(data, {
     status: 200,
     headers: {
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=300",
+      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
     },
   })
 }
