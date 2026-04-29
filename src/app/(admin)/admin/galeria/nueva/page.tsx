@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/image-upload"
 import Link from "next/link"
 import { api } from "@/shared/api"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 
 const imagenSchema = z.object({
   alt: z.string().min(1, "Texto alternativo requerido"),
@@ -46,7 +46,7 @@ export default function NuevaImagenPage() {
       // Upload image if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
-        imagenUrl = await uploadImage(imagen, "galeria")
+        imagenUrl = await uploadFile(imagen, "galeria")
         if (!imagenUrl) {
           setError("Error al subir la imagen")
           setSaving(false)

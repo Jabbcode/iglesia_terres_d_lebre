@@ -14,7 +14,7 @@ import { TranslationFields } from "@/components/admin/translation-fields"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import { DIAS_SEMANA } from "@/lib/constants"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 
 const horarioSchema = z.object({
   titulo: z.string().min(1, "Titulo requerido"),
@@ -79,7 +79,7 @@ export default function NuevoHorarioPage() {
     try {
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
-        imagenUrl = await uploadImage(imagen, "horarios")
+        imagenUrl = await uploadFile(imagen, "horarios")
         if (!imagenUrl) {
           setError("Error al subir la imagen")
           setSaving(false)

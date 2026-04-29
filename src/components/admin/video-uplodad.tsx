@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import { X, Loader2, Video } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { uploadVideo } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
 interface VideoUploadProps {
@@ -40,7 +40,7 @@ export function VideoUpload({
     setUploading(true)
 
     try {
-      const url = await uploadVideo(file, folder)
+      const url = await uploadFile(file, folder)
       if (url) {
         onChange(url)
       } else {

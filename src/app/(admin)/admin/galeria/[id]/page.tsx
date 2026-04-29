@@ -12,7 +12,7 @@ import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Imagen } from "@/modules/galeria"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 
 const imagenSchema = z.object({
   alt: z.string().optional(),
@@ -73,7 +73,7 @@ export default function EditarImagenPage({
       // Upload new image if it's a File
       let imagenUrl: string | null = null
       if (imagen instanceof File) {
-        imagenUrl = await uploadImage(imagen, "galeria")
+        imagenUrl = await uploadFile(imagen, "galeria")
         if (!imagenUrl) {
           setError("Error al subir la imagen")
           setSaving(false)

@@ -13,7 +13,7 @@ import { useConfirm } from "@/components/admin/confirm-dialog"
 import Link from "next/link"
 import { api } from "@/shared/api"
 import type { Testimonio } from "@/modules/testimonios"
-import { uploadImage } from "@/lib/supabase"
+import { uploadFile } from "@/lib/supabase"
 
 const testimonioSchema = z.object({
   nombre: z.string().min(1, "Nombre requerido"),
@@ -86,7 +86,7 @@ export default function EditarTestimonioPage({
     try {
       let thumbnailUrl: string | null = null
       if (thumbnail instanceof File) {
-        thumbnailUrl = await uploadImage(thumbnail, "testimonios")
+        thumbnailUrl = await uploadFile(thumbnail, "testimonios")
         if (!thumbnailUrl) {
           setError("Error al subir la imagen")
           setSaving(false)
