@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server"
+import { revalidatePath } from "next/cache"
 import {
   testimonioService,
   updateTestimonioSchema,
@@ -30,6 +31,7 @@ export const PUT = withAuth(
       const body = await request.json()
       const data = updateTestimonioSchema.parse(body)
       const testimonio = await testimonioService.update(id, data)
+      revalidatePath("/api/public/testimonios")
       return success(testimonio)
     } catch (error) {
       return handleError(error)
@@ -44,6 +46,7 @@ export const PATCH = withAuth(
       const body = await request.json()
       const data = updateTestimonioSchema.parse(body)
       const testimonio = await testimonioService.update(id, data)
+      revalidatePath("/api/public/testimonios")
       return success(testimonio)
     } catch (error) {
       return handleError(error)
@@ -56,6 +59,7 @@ export const DELETE = withAuth(
     try {
       const { id } = await context.params
       await testimonioService.delete(id)
+      revalidatePath("/api/public/testimonios")
       return success({ deleted: true })
     } catch (error) {
       return handleError(error)

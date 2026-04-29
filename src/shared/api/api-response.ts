@@ -1,11 +1,28 @@
 import { NextResponse } from "next/server"
 import { ZodError } from "zod"
+import {
+  REVALIDATE_24H,
+  STALE_WHILE_REVALIDATE_1H,
+} from "@/lib/constants/cache"
 
 /**
  * Success response helper
  */
 export function success<T>(data: T, status = 200) {
   return NextResponse.json(data, { status })
+}
+
+/**
+ * Cached success response for public endpoints.
+ * CDN (Vercel Edge) caches 24h, stale-while-revalidate 1h.
+ */
+export function publicSuccess<T>(data: T) {
+  return NextResponse.json(data, {
+    status: 200,
+    headers: {
+      "Cache-Control": `public, s-maxage=${REVALIDATE_24H}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_1H}`,
+    },
+  })
 }
 
 /**

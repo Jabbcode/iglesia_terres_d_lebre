@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server"
+import { revalidatePath } from "next/cache"
 import { horarioService } from "@/modules/horarios"
 import { withAuth } from "@/modules/auth"
 import { success, handleError } from "@/shared/api"
@@ -24,6 +25,7 @@ export const PATCH = withAuth(async (request: NextRequest) => {
     )
 
     await Promise.all(updates)
+    revalidatePath("/api/public/horarios")
     return success({ success: true })
   } catch (error) {
     return handleError(error)

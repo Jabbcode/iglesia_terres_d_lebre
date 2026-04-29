@@ -1,0 +1,2 @@
+export const REVALIDATE_24H = 86400
+export const STALE_WHILE_REVALIDATE_1H = 3600
