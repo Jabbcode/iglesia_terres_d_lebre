@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { calcularProximaOcurrencia } from "@/lib/event-utils"
-import { success, handleError } from "@/shared/api"
+import { publicSuccess, success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
 
 export async function GET(request: NextRequest) {
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         return a.horaInicio.localeCompare(b.horaInicio)
       })
 
-    return success(eventosConProximaFecha)
+    return publicSuccess(eventosConProximaFecha)
   } catch (error) {
     return handleError(error)
   }
