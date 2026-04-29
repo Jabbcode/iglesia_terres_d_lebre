@@ -12,7 +12,7 @@ Ejecuta el flujo completo de release: develop → main → tag → GitHub Releas
 6. Actualizar `"version"` en `package.json`
 7. Commit en `main`: `chore: release vX.Y.Z`
 8. Crear tag: `git tag vX.Y.Z && git push origin vX.Y.Z`
-9. Crear GitHub Release: `gh release create vX.Y.Z --title "vX.Y.Z" --notes-file <changelog-section>`
+9. Crear GitHub Release: `gh release create vX.Y.Z --title "vX.Y.Z" --notes "Ver [CHANGELOG.md](...) para el detalle de cambios."` — sin descripción propia, el CHANGELOG es la fuente de verdad
 10. Sync `main` → `develop`: merge main into develop y push
 11. Confirmar al usuario que el release está publicado
 
