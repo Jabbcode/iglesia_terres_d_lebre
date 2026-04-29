@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server"
 import { ZodError } from "zod"
+import {
+  REVALIDATE_24H,
+  STALE_WHILE_REVALIDATE_1H,
+} from "@/lib/constants/cache"
 
 /**
  * Success response helper
@@ -16,7 +20,7 @@ export function publicSuccess<T>(data: T) {
   return NextResponse.json(data, {
     status: 200,
     headers: {
-      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
+      "Cache-Control": `public, s-maxage=${REVALIDATE_24H}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_1H}`,
     },
   })
 }
