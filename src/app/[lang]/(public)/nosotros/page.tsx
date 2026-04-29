@@ -1,4 +1,8 @@
 import type { Metadata } from "next"
+
+import { REVALIDATE_24H } from "@/lib/constants/cache"
+export const revalidate = REVALIDATE_24H
+
 import { AboutUs } from "@/components/sections/about-us"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
