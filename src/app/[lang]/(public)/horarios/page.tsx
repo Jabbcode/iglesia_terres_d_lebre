@@ -1,9 +1,6 @@
 export const revalidate = 86400
 import type { Metadata } from "next"
 
-import { REVALIDATE_24H } from "@/lib/constants/cache"
-export const revalidate = REVALIDATE_24H
-
 import { Schedule } from "@/components/sections/schedule"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
