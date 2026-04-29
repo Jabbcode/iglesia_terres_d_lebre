@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type {
   CreateTestimonioInput,
   UpdateTestimonioInput,
@@ -30,7 +31,7 @@ export const testimonioService = {
           include: { translations: { where: { lang } } },
         }),
       ["testimonios-public", lang],
-      { tags: ["testimonios"], revalidate: 86400 }
+      { tags: ["testimonios"], revalidate: REVALIDATE_24H }
     )()
   },
 

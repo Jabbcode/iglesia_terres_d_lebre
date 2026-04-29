@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import { deleteImage } from "@/lib/supabase"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type {
   CreateImagenInput,
   UpdateImagenInput,
@@ -44,7 +45,7 @@ export const imagenService = {
           select: { id: true, src: true, alt: true, span: true },
         }),
       ["galeria-public", String(limit)],
-      { tags: ["galeria"], revalidate: 86400 }
+      { tags: ["galeria"], revalidate: REVALIDATE_24H }
     )()
   },
 

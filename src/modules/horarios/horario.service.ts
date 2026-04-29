@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type { CreateHorarioInput, UpdateHorarioInput } from "./horario.schema"
 
 export const horarioService = {
@@ -27,7 +28,7 @@ export const horarioService = {
           include: { translations: { where: { lang } } },
         }),
       ["horarios-public", lang],
-      { tags: ["horarios"], revalidate: 86400 }
+      { tags: ["horarios"], revalidate: REVALIDATE_24H }
     )()
   },
 

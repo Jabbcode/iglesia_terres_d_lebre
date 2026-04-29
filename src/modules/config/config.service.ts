@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type { UpdateConfigInput } from "./config.schema"
 
 const DEFAULT_ID = "default"
@@ -12,7 +13,7 @@ const getConfigCached = unstable_cache(
     return config
   },
   ["config-public"],
-  { tags: ["config"], revalidate: 86400 }
+  { tags: ["config"], revalidate: REVALIDATE_24H }
 )
 
 export const configService = {
