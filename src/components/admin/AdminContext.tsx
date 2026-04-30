@@ -15,6 +15,8 @@ interface AdminContextType {
   openSidebar: () => void
   closeSidebar: () => void
   toggleSidebar: () => void
+  collapsed: boolean
+  toggleCollapsed: () => void
   role: Role | null
 }
 
@@ -22,6 +24,11 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined)
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem("sidebar-collapsed") === "true"
+  )
   const [role, setRole] = useState<Role | null>(null)
 
   useEffect(() => {
@@ -36,10 +43,24 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const openSidebar = () => setSidebarOpen(true)
   const closeSidebar = () => setSidebarOpen(false)
   const toggleSidebar = () => setSidebarOpen((prev) => !prev)
+  const toggleCollapsed = () =>
+    setCollapsed((prev) => {
+      const next = !prev
+      localStorage.setItem("sidebar-collapsed", String(next))
+      return next
+    })
 
   return (
     <AdminContext.Provider
-      value={{ sidebarOpen, openSidebar, closeSidebar, toggleSidebar, role }}
+      value={{
+        sidebarOpen,
+        openSidebar,
+        closeSidebar,
+        toggleSidebar,
+        collapsed,
+        toggleCollapsed,
+        role,
+      }}
     >
       {children}
     </AdminContext.Provider>
