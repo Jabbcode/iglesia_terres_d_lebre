@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Plus, Trash2, KeyRound, X } from "lucide-react"
+import { Plus, Trash2, KeyRound, X, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/components/admin/confirm-dialog"
 import { api } from "@/shared/api"
@@ -30,6 +30,8 @@ export default function UsuariosPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [resetTarget, setResetTarget] = useState<UsuarioPublico | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [showCreatePassword, setShowCreatePassword] = useState(false)
+  const [showResetPassword, setShowResetPassword] = useState(false)
   const confirm = useConfirm()
 
   const createForm = useForm<CreateForm>({
@@ -54,6 +56,7 @@ export default function UsuariosPage() {
       const nuevo = await api.post<UsuarioPublico>("/api/admin/usuarios", data)
       setUsuarios((prev) => [...prev, nuevo])
       setShowCreate(false)
+      setShowCreatePassword(false)
       createForm.reset({ role: "EDITOR" })
     } catch {
       setError("Error al crear usuario")
@@ -65,6 +68,7 @@ export default function UsuariosPage() {
     try {
       await api.patch(`/api/admin/usuarios/${resetTarget.id}`, data)
       setResetTarget(null)
+      setShowResetPassword(false)
       passwordForm.reset()
     } catch {
       setError("Error al cambiar contraseña")
@@ -166,11 +170,25 @@ export default function UsuariosPage() {
               <label className="text-foreground mb-1 block text-sm font-medium">
                 Contraseña
               </label>
-              <input
-                {...createForm.register("password")}
-                type="password"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
+              <div className="relative">
+                <input
+                  {...createForm.register("password")}
+                  type={showCreatePassword ? "text" : "password"}
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 pr-10 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCreatePassword((v) => !v)}
+                  className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+                  tabIndex={-1}
+                >
+                  {showCreatePassword ? (
+                    <EyeOff className="size-4" />
+                  ) : (
+                    <Eye className="size-4" />
+                  )}
+                </button>
+              </div>
               {createForm.formState.errors.password && (
                 <p className="mt-1 text-xs text-red-500">
                   {createForm.formState.errors.password.message}
@@ -234,13 +252,25 @@ export default function UsuariosPage() {
             onSubmit={passwordForm.handleSubmit(handleResetPassword)}
             className="flex gap-4"
           >
-            <div className="flex-1">
+            <div className="relative flex-1">
               <input
                 {...passwordForm.register("newPassword")}
-                type="password"
+                type={showResetPassword ? "text" : "password"}
                 placeholder="Nueva contraseña (mínimo 8 caracteres)"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 pr-10 focus:outline-none"
               />
+              <button
+                type="button"
+                onClick={() => setShowResetPassword((v) => !v)}
+                className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+                tabIndex={-1}
+              >
+                {showResetPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </button>
               {passwordForm.formState.errors.newPassword && (
                 <p className="mt-1 text-xs text-red-500">
                   {passwordForm.formState.errors.newPassword.message}
