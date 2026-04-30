@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server"
 import { usuarioService, updateUsuarioSchema } from "@/modules/usuarios"
-import { withAuth, type RouteContext } from "@/modules/auth"
+import { withAdmin, type RouteContext } from "@/modules/auth"
 import { getSession } from "@/lib/auth"
 import { success, handleError, badRequest } from "@/shared/api"
 
-export const PATCH = withAuth(
+export const PATCH = withAdmin(
   async (request: NextRequest, context: RouteContext) => {
     try {
       const { id } = await context.params
@@ -18,7 +18,7 @@ export const PATCH = withAuth(
   }
 )
 
-export const DELETE = withAuth(
+export const DELETE = withAdmin(
   async (_request: NextRequest, context: RouteContext) => {
     try {
       const { id } = await context.params

@@ -7,7 +7,9 @@ import { z } from "zod"
 import { Plus, Trash2, KeyRound, X, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/components/admin/confirm-dialog"
+import { useRouter } from "next/navigation"
 import { api } from "@/shared/api"
+import { useAdmin } from "@/components/admin/AdminContext"
 import type { UsuarioPublico } from "@/modules/usuarios"
 
 const createSchema = z.object({
@@ -25,6 +27,8 @@ type CreateForm = z.infer<typeof createSchema>
 type PasswordForm = z.infer<typeof passwordSchema>
 
 export default function UsuariosPage() {
+  const router = useRouter()
+  const { role } = useAdmin()
   const [usuarios, setUsuarios] = useState<UsuarioPublico[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
@@ -33,6 +37,12 @@ export default function UsuariosPage() {
   const [showCreatePassword, setShowCreatePassword] = useState(false)
   const [showResetPassword, setShowResetPassword] = useState(false)
   const confirm = useConfirm()
+
+  useEffect(() => {
+    if (role !== null && role !== "ADMIN") {
+      router.replace("/admin")
+    }
+  }, [role, router])
 
   const createForm = useForm<CreateForm>({
     resolver: zodResolver(createSchema),
