@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { Plus, ImagePlus } from "lucide-react"
+import { Plus, ImagePlus, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/admin/empty-state"
 import { useConfirm } from "@/components/admin/confirm-dialog"
@@ -80,6 +80,8 @@ export function GalleryOrganizer() {
     }
   }
 
+  const missingAlt = images.filter((img) => img.activo && !img.alt.trim())
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -135,6 +137,19 @@ export function GalleryOrganizer() {
           </Link>
         </div>
       </div>
+
+      {missingAlt.length > 0 && (
+        <div className="flex items-start gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-yellow-500" />
+          <span>
+            <strong>{missingAlt.length}</strong> imagen
+            {missingAlt.length !== 1
+              ? "es visibles no tienen"
+              : " visible no tiene"}{" "}
+            texto alternativo. Edítalas para mejorar la accesibilidad y el SEO.
+          </span>
+        </div>
+      )}
 
       {images.length === 0 ? (
         <EmptyState

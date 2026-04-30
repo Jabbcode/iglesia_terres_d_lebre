@@ -9,6 +9,8 @@ import { UpcomingEvents } from "@/components/sections/upcoming-events"
 import { SITE_URL } from "@/lib/constant"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
+import { organizationSchema, eventSchema } from "@/lib/json-ld"
+import { eventoService } from "@/modules/eventos"
 
 export async function generateMetadata({
   params,
@@ -43,10 +45,19 @@ export default async function Home({
 }) {
   const { lang: langStr } = await params
   const lang = langStr as Locale
-  const dict = await getDictionary(lang)
+  const [dict, eventos] = await Promise.all([
+    getDictionary(lang),
+    eventoService.getUpcoming(5),
+  ])
+
+  const jsonLd = [organizationSchema(), ...eventos.map((e) => eventSchema(e))]
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero lang={lang} dict={dict} />
       <NextService lang={lang} dict={dict} />
       <Community lang={lang} dict={dict} />
