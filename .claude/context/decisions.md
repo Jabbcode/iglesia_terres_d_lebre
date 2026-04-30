@@ -116,3 +116,41 @@ El segundo argumento `{}` es requerido por Next.js 16 (firma: `revalidateTag(tag
 **Por qué:** El componente cliente mostraba skeleton en cada navegación aunque los datos estuvieran cacheados. Con fetch en servidor, los datos van embebidos en el HTML del ISR — sin skeleton, sin fetch adicional.
 
 **Archivo:** `src/app/[lang]/(public)/galeria/page.tsx` pasa `imagenes` como prop a `<Gallery>`.
+
+---
+
+## Galería pública: límite fijo + orden por fecha de subida
+
+**Decisión:** La galería pública muestra siempre las últimas 20 imágenes ordenadas por `createdAt DESC`. No hay paginación.
+
+**Por qué:** Si el usuario puede cargar más fotos infinitamente, pierde el incentivo de ir a Instagram. El objetivo es que las 20 fotos más recientes actúen de showcase, y el botón de Instagram sea el CTA para ver más. Las imágenes antiguas desaparecen automáticamente cuando se suben nuevas.
+
+**Implementación:** `imagenService.getPublicCached(20)` con `orderBy: { createdAt: "desc" }`.
+
+---
+
+## `activo` en galería como filtro de exclusión
+
+**Decisión:** El campo `activo` de `Imagen` es un filtro de exclusión, no de activación. Las imágenes se crean con `activo: true` por defecto y el admin lo desactiva para ocultarlas.
+
+**Por qué:** Cambia el flujo de trabajo — subir ya implica publicar. Ocultar es la acción excepcional. Semánticamente el toggle se llama "Visible", no "Activa".
+
+---
+
+## Gestión de usuarios: `SELECT_PUBLIC` + `withAdmin`
+
+**Decisión:** El módulo `usuarios` expone solo `{ id, name, email, role, createdAt }` (`SELECT_PUBLIC`). La contraseña nunca viaja fuera del servicio. Las rutas `/api/admin/usuarios/*` usan `withAdmin` (403 si no es ADMIN).
+
+**Por qué:** Protección en tres capas — API (withAdmin → 403), Sidebar (enlace oculto para EDITOR), Page (redirect a `/admin` si `role !== "ADMIN"`). El `SELECT_PUBLIC` es la garantía de que un bug en la API no pueda exponer el hash de contraseña.
+
+**Nota:** La auto-eliminación está bloqueada explícitamente: el endpoint compara el `id` del recurso con el `userId` de la sesión y devuelve `badRequest` si coinciden.
+
+---
+
+## JSON-LD centralizado en `src/lib/json-ld.ts`
+
+**Decisión:** Helpers `organizationSchema`, `localBusinessSchema` y `eventSchema` centralizados en `src/lib/json-ld.ts`. Se inyectan como `<script type="application/ld+json">` en los Server Components de página (no en layouts).
+
+**Por qué:** Inyectar en el layout global produciría JSON-LD duplicado en todas las páginas. Inyectar por página permite adaptar el tipo de schema al contenido (Organization en home, Church en contacto, Event para cada evento próximo).
+
+**Datos:** Usan `siteConfig` (dirección, teléfono, redes) y `IGLESIA_NAME`/`SITE_URL` de `src/lib/constant.ts`.

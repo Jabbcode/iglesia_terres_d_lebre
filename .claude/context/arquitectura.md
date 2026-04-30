@@ -26,6 +26,7 @@ src/
     horarios/
     eventos/
     testimonios/
+    usuarios/            ← CRUD de usuarios (solo ADMIN vía withAdmin)
   shared/api/            ← helpers de respuesta HTTP
   lib/
     constants/index.ts   ← PERIODICIDAD, DIAS_SEMANA_OPTIONS, SEMANA_DEL_MES_OPTIONS…
@@ -33,6 +34,7 @@ src/
     event-utils.ts       ← calcularProximaOcurrencia, agregarPeriodo (lógica recurrencia)
     rate-limit.ts        ← isRateLimited, recordFailure (in-memory, por IP)
     auth.ts              ← signToken, verifyToken, getSession (JWT via jose)
+    json-ld.ts           ← organizationSchema, localBusinessSchema, eventSchema
     prisma.ts
     supabase.ts          ← solo supabaseAdmin (service_role), sin cliente browser
 test/                    ← tests (Vitest), espeja estructura de src/
@@ -55,11 +57,19 @@ modules/nombre/
   nombre.types.ts    ← tipos TypeScript
 ```
 
-## Autenticación
+## Autenticación y autorización
 
 - JWT almacenado en cookie httpOnly
-- Middleware `withAuth` protege todas las rutas `/api/admin/*`
+- `withAuth` — cualquier usuario autenticado (ADMIN o EDITOR)
+- `withAdmin` — solo rol ADMIN; devuelve 403 si el rol es EDITOR
 - Login en `/api/auth/login`, logout en `/api/auth/logout`
+- Las rutas de usuarios (`/api/admin/usuarios/*`) usan `withAdmin`
+
+## Security headers
+
+Configurados en `next.config.ts` para todas las rutas:
+`X-Content-Type-Options`, `X-Frame-Options: DENY`, `X-XSS-Protection`,
+`Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security`
 
 ## Uploads
 
