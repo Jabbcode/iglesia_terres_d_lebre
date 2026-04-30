@@ -56,7 +56,7 @@ export const imagenService = {
       src: img.src,
       alt: "",
       span: "normal" as const,
-      activo: false,
+      activo: true,
       order: 0,
     }))
 

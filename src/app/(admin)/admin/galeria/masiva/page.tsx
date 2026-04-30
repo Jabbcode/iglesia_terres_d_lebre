@@ -72,7 +72,8 @@ export default function SubidaMasivaPage() {
         </Link>
         <h1 className="text-foreground text-2xl font-bold">Subir imagenes</h1>
         <p className="text-muted-foreground mt-1">
-          Sube hasta 10 imagenes a la vez. Todas quedaran inactivas por defecto.
+          Sube hasta 10 imagenes a la vez. Quedarán visibles en la galería por
+          fecha de subida. Edita cada una para añadir el texto alternativo.
         </p>
       </div>
 
@@ -154,8 +155,8 @@ export default function SubidaMasivaPage() {
             </Button>
 
             <p className="text-muted-foreground mt-2 text-center text-xs">
-              Las imagenes quedaran inactivas. Edita cada una para configurar
-              alt, tipo y activarlas.
+              Las imágenes quedarán visibles. Edita cada una para añadir el
+              texto alternativo o usa el switch para ocultarlas.
             </p>
           </div>
         )}
