@@ -51,6 +51,19 @@ Si no está claro cómo aplicar una convención existente a un caso nuevo, **pre
 
 ---
 
+## Tests — convenciones obligatorias
+
+- **Ubicación:** `test/` en la raíz, espejando `src/`. Nunca co-located junto al fichero de producción.
+- **Nombrado:** `nombre.test.ts` (sin `.spec.`).
+- **Mocks:** siempre en fichero separado (`test/mocks/<nombre>.mock.ts`), nunca inline en el `.test.ts`.
+- **Idioma:** descripciones de `describe`/`it` en español.
+- **Patrón:** AAA — Arrange / Act / Assert, separados por línea en blanco dentro del `it`.
+- **Fechas:** `new Date(año, mes - 1, día)` (constructor local) para evitar variaciones de timezone entre entornos.
+- **Un concepto por test:** si el título de un `it` necesita "y", probablemente son dos tests.
+- **Imports explícitos:** `import { describe, it, expect } from "vitest"` (no globals).
+
+---
+
 ## Cuándo preguntar antes de actuar
 
 Preguntar explícitamente al usuario si:

@@ -8,6 +8,7 @@
 - **Storage:** Supabase Storage (uploads solo desde servidor via service_role)
 - **Deploy:** Vercel (CDN Edge Network)
 - **i18n:** es / ca / en (`src/lib/i18n/`)
+- **Testing:** Vitest v4 (`vitest.config.ts`)
 
 ## Estructura de carpetas
 
@@ -30,8 +31,16 @@ src/
     constants/index.ts   ← PERIODICIDAD, DIAS_SEMANA_OPTIONS, SEMANA_DEL_MES_OPTIONS…
     constants/cache.ts   ← REVALIDATE_24H, STALE_WHILE_REVALIDATE_1H
     event-utils.ts       ← calcularProximaOcurrencia, agregarPeriodo (lógica recurrencia)
+    rate-limit.ts        ← isRateLimited, recordFailure (in-memory, por IP)
+    auth.ts              ← signToken, verifyToken, getSession (JWT via jose)
     prisma.ts
     supabase.ts          ← solo supabaseAdmin (service_role), sin cliente browser
+test/                    ← tests (Vitest), espeja estructura de src/
+  lib/
+  modules/
+  shared/
+  mocks/                 ← mocks reutilizables (Prisma, next/headers…)
+  fixtures/              ← datos de prueba compartidos
 ```
 
 ## Módulos

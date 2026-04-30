@@ -77,6 +77,38 @@ El segundo argumento `{}` es requerido por Next.js 16 (firma: `revalidateTag(tag
 
 ---
 
+## JWT_SECRET obligatorio en producción
+
+**Decisión:** `src/lib/auth.ts` lanza error en startup si `JWT_SECRET` no está definido en `NODE_ENV === "production"`. En desarrollo usa un string placeholder explícito.
+
+**Por qué:** El código original tenía `|| "fallback-secret-change-me"` que silenciosamente usaba un secreto débil en producción si la variable no estaba configurada.
+
+**Correcto:** Lanzar `Error("JWT_SECRET env var is required in production")` en el módulo al cargarse.
+
+---
+
+## Rate limiting en login: separar check de registro
+
+**Decisión:** `src/lib/rate-limit.ts` expone `isRateLimited` (solo lee) y `recordFailure` (incrementa). El endpoint de login solo llama a `recordFailure` cuando las credenciales son incorrectas.
+
+**Por qué:** Si el contador se incrementara en cada intento (incluyendo los exitosos), un usuario que falla 4 veces y luego acierta quedaría bloqueado igualmente. Solo los fallos cuentan.
+
+**Limitación:** El store es in-memory (`Map`), por lo que el rate limit es por instancia de servidor, no global. Aceptable para un sitio de baja carga; si se escala se reemplazaría por Redis.
+
+---
+
+## Estructura de tests: carpeta `test/` separada
+
+**Decisión:** Los tests viven en `test/` en la raíz, espejando la estructura de `src/`. Los mocks reutilizables van en `test/mocks/`, nunca inline dentro del `.test.ts`.
+
+**Por qué:** Mantiene `src/` limpio (solo código de producción) y facilita ver qué está testado. Los mocks en ficheros separados son reutilizables entre suites y mantienen los tests legibles.
+
+**Framework:** Vitest (resolución nativa del alias `@/` via `resolve.tsconfigPaths`, ESM + TypeScript out-of-the-box, sin configuración extra).
+
+**Convenciones:** AAA pattern, descripciones en español, `new Date(año, mes-1, día)` para fechas sin dependencia de timezone.
+
+---
+
 ## Fetch de galería en servidor (no cliente)
 
 **Decisión:** Mover el fetch de imágenes de `useEffect` en cliente a `page.tsx` en servidor.

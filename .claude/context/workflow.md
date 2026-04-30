@@ -2,10 +2,10 @@
 
 ## Ramas principales
 
-| Rama | Propósito |
-|---|---|
-| `main` | Producción. Solo recibe merges de Prepare Release y hotfixes. |
-| `develop` | Integración. Todas las features se mergean aquí primero. |
+| Rama      | Propósito                                                     |
+| --------- | ------------------------------------------------------------- |
+| `main`    | Producción. Solo recibe merges de Prepare Release y hotfixes. |
+| `develop` | Integración. Todas las features se mergean aquí primero.      |
 
 ## Flujo normal (features)
 
@@ -55,23 +55,31 @@ git checkout -b fix/nombre main   ← branch desde main directamente
 
 ## Convención de branches
 
-| Prefijo | Uso | Base |
-|---|---|---|
-| `feat/` | Nueva funcionalidad | `develop` |
-| `fix/` | Corrección de bug | `develop` o `main` (hotfix) |
-| `perf/` | Mejora de rendimiento | `develop` |
-| `refactor/` | Refactor sin cambio funcional | `develop` |
-| `chore/` | Configuración, dependencias | `develop` |
-| `security/` | Cambios de seguridad | `develop` |
+| Prefijo     | Uso                           | Base                        |
+| ----------- | ----------------------------- | --------------------------- |
+| `feat/`     | Nueva funcionalidad           | `develop`                   |
+| `fix/`      | Corrección de bug             | `develop` o `main` (hotfix) |
+| `perf/`     | Mejora de rendimiento         | `develop`                   |
+| `refactor/` | Refactor sin cambio funcional | `develop`                   |
+| `chore/`    | Configuración, dependencias   | `develop`                   |
+| `security/` | Cambios de seguridad          | `develop`                   |
 
 ## Comandos frecuentes
 
 ```bash
 npm run dev          # desarrollo local
 npx tsc --noEmit     # verificar tipos
+npm test             # ejecutar tests (Vitest, una sola vez)
+npm run test:watch   # tests en modo watch
+npm run test:coverage # report de cobertura en coverage/index.html
 gh pr list           # PRs abiertos
 gh release list      # releases publicadas
 ```
+
+## Hooks de git
+
+- **pre-commit**: ESLint + Prettier sobre ficheros staged (lint-staged)
+- **pre-push**: `npm test` → `npx tsc --noEmit` → `npm run build` (en ese orden; falla rápido si los tests no pasan)
 
 ## Comandos disponibles
 
