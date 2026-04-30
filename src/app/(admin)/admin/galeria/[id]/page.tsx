@@ -15,7 +15,7 @@ import type { Imagen } from "@/modules/galeria"
 import { uploadFile } from "@/lib/supabase"
 
 const imagenSchema = z.object({
-  alt: z.string().optional(),
+  alt: z.string().min(1, "Texto alternativo requerido"),
   span: z.enum(["normal", "tall", "wide"]),
 })
 
@@ -173,7 +173,7 @@ export default function EditarImagenPage({
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                Texto Alternativo
+                Texto Alternativo <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("alt")}
