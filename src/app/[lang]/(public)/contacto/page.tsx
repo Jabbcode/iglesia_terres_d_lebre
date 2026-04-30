@@ -5,6 +5,7 @@ import { Contact } from "@/components/sections/contact"
 import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 import { SITE_URL } from "@/lib/constant"
+import { localBusinessSchema } from "@/lib/json-ld"
 
 export async function generateMetadata({
   params,
@@ -35,5 +36,15 @@ export default async function ContactPage({
   const { lang: langStr } = await params
   const lang = langStr as Locale
   const dict = await getDictionary(lang)
-  return <Contact lang={lang} dict={dict} />
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessSchema()),
+        }}
+      />
+      <Contact lang={lang} dict={dict} />
+    </>
+  )
 }

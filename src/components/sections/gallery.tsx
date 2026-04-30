@@ -26,6 +26,25 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
     fetchConfig()
   }, [fetchConfig])
 
+  useEffect(() => {
+    if (lightbox === null) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        setLightbox((prev) =>
+          prev === null ? null : prev === 0 ? imagenes.length - 1 : prev - 1
+        )
+      } else if (e.key === "ArrowRight") {
+        setLightbox((prev) =>
+          prev === null ? null : prev === imagenes.length - 1 ? 0 : prev + 1
+        )
+      } else if (e.key === "Escape") {
+        setLightbox(null)
+      }
+    }
+    window.addEventListener("keydown", handleKey)
+    return () => window.removeEventListener("keydown", handleKey)
+  }, [lightbox, imagenes.length])
+
   const instagramUrl = config?.instagram
 
   return (
@@ -119,17 +138,26 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
               <span className="sr-only">{dict.gallery.close}</span>
             </button>
 
-            <motion.img
-              key={lightbox}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-              src={imagenes[lightbox].src.replace("w=800", "w=1600")}
-              alt={imagenes[lightbox].alt}
-              className="max-h-[85vh] max-w-full rounded-lg object-contain"
+            <div
+              className="flex flex-col items-center gap-3"
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <motion.img
+                key={lightbox}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                src={imagenes[lightbox].src.replace("w=800", "w=1600")}
+                alt={imagenes[lightbox].alt}
+                className="max-h-[80vh] max-w-full rounded-lg object-contain"
+              />
+              {imagenes[lightbox].alt && (
+                <p className="max-w-lg text-center text-sm text-white/70">
+                  {imagenes[lightbox].alt}
+                </p>
+              )}
+            </div>
 
             {/* Navigation */}
             <button
