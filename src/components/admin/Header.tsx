@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import { useAdmin } from "./AdminContext"
-import { Menu, LogOut } from "lucide-react"
+import { Menu, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { api } from "@/shared/api"
 
 export function Header() {
   const router = useRouter()
-  const { toggleSidebar } = useAdmin()
+  const { toggleSidebar, collapsed, toggleCollapsed } = useAdmin()
 
   const handleLogout = async () => {
     await api.post("/api/auth/logout", {})
@@ -29,8 +29,20 @@ export function Header() {
         <span className="sr-only">Abrir menu</span>
       </Button>
 
-      {/* Spacer for desktop */}
-      <div className="hidden lg:block" />
+      {/* Desktop collapse toggle */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="hidden lg:flex"
+        onClick={toggleCollapsed}
+        title={collapsed ? "Expandir menu" : "Colapsar menu"}
+      >
+        {collapsed ? (
+          <PanelLeftOpen className="size-5" />
+        ) : (
+          <PanelLeftClose className="size-5" />
+        )}
+      </Button>
 
       {/* Logout button */}
       <Button

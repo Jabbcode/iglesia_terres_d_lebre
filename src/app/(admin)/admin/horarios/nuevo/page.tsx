@@ -59,8 +59,14 @@ export default function NuevoHorarioPage() {
       icono: "Church",
       mostrarDetalle: false,
       activo: true,
-      ca_titulo: "", ca_subtitulo: "", ca_dia: "", ca_descripcionLarga: "",
-      en_titulo: "", en_subtitulo: "", en_dia: "", en_descripcionLarga: "",
+      ca_titulo: "",
+      ca_subtitulo: "",
+      ca_dia: "",
+      ca_descripcionLarga: "",
+      en_titulo: "",
+      en_subtitulo: "",
+      en_dia: "",
+      en_descripcionLarga: "",
     },
   })
 
@@ -91,7 +97,9 @@ export default function NuevoHorarioPage() {
 
       let newOrder = 0
       try {
-        const response = await api.get<{ maxOrder: number }>("/api/admin/horarios/max-order")
+        const response = await api.get<{ maxOrder: number }>(
+          "/api/admin/horarios/max-order"
+        )
         newOrder = response.maxOrder + 1
       } catch {
         newOrder = 0
@@ -140,182 +148,179 @@ export default function NuevoHorarioPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <Link
-          href="/admin/horarios"
-          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
-        >
-          <ArrowLeft className="size-4" />
-          Volver a horarios
-        </Link>
-        <h1 className="text-foreground text-2xl font-bold">Nuevo Horario</h1>
-        <p className="text-muted-foreground mt-1">
-          Crea un nuevo horario de servicio
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <Button asChild className="bg-amber hover:bg-amber-dark gap-2">
+          <Link href="/admin/horarios">
+            <ArrowLeft className="size-4" />
+            Volver
+          </Link>
+        </Button>
+        <h1 className="text-foreground text-xl font-bold">Nuevo Horario</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        {/* Información básica */}
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <h2 className="text-foreground mb-4 font-semibold">
-            Informacion Basica
-          </h2>
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Titulo
-                </label>
-                <input
-                  {...register("titulo")}
-                  placeholder="Ej: Culto Dominical"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                {errors.titulo && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.titulo.message}
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Información básica */}
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="text-foreground mb-4 font-semibold">
+              Informacion Basica
+            </h2>
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Titulo
+                  </label>
+                  <input
+                    {...register("titulo")}
+                    placeholder="Ej: Culto Dominical"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                  {errors.titulo && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.titulo.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Subtitulo (opcional)
+                  </label>
+                  <input
+                    {...register("subtitulo")}
+                    placeholder="Ej: semanal"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    Se muestra en cursiva junto al titulo
                   </p>
-                )}
+                </div>
               </div>
 
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Subtitulo (opcional)
-                </label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Dia
+                  </label>
+                  <select
+                    {...register("dia")}
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  >
+                    <option value="">Seleccionar dia</option>
+                    {DIAS_SEMANA.map((dia) => (
+                      <option key={dia} value={dia}>
+                        {dia}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.dia && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.dia.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Hora
+                  </label>
+                  <input
+                    {...register("hora")}
+                    placeholder="Ej: 11:00h"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                  {errors.hora && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.hora.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Icono
+                  </label>
+                  <IconSelector
+                    value={watch("icono")}
+                    onValueChange={(value) => setValue("icono", value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
                 <input
-                  {...register("subtitulo")}
-                  placeholder="Ej: semanal"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  {...register("activo")}
+                  type="checkbox"
+                  id="activo"
+                  className="border-border size-4 rounded"
                 />
-                <p className="text-muted-foreground mt-1 text-xs">
-                  Se muestra en cursiva junto al titulo
+                <label
+                  htmlFor="activo"
+                  className="text-foreground text-sm font-medium"
+                >
+                  Horario activo
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Sección de detalle */}
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-foreground font-semibold">
+                  Seccion de Detalle
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  Muestra este horario con imagen y descripcion ampliada
                 </p>
               </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Dia
-                </label>
-                <select
-                  {...register("dia")}
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                >
-                  <option value="">Seleccionar dia</option>
-                  {DIAS_SEMANA.map((dia) => (
-                    <option key={dia} value={dia}>
-                      {dia}
-                    </option>
-                  ))}
-                </select>
-                {errors.dia && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.dia.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Hora
-                </label>
-                <input
-                  {...register("hora")}
-                  placeholder="Ej: 11:00h"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                {errors.hora && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.hora.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Icono
-                </label>
-                <IconSelector
-                  value={watch("icono")}
-                  onValueChange={(value) => setValue("icono", value)}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                {...register("activo")}
-                type="checkbox"
-                id="activo"
-                className="border-border size-4 rounded"
+              <Switch
+                checked={mostrarDetalle}
+                onCheckedChange={(checked) =>
+                  setValue("mostrarDetalle", checked)
+                }
+                disabled={!imagen}
               />
-              <label
-                htmlFor="activo"
-                className="text-foreground text-sm font-medium"
-              >
-                Horario activo
-              </label>
             </div>
-          </div>
-        </div>
 
-        {/* Sección de detalle */}
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <h2 className="text-foreground font-semibold">
-                Seccion de Detalle
-              </h2>
-              <p className="text-muted-foreground text-sm">
-                Muestra este horario con imagen y descripcion ampliada
-              </p>
-            </div>
-            <Switch
-              checked={mostrarDetalle}
-              onCheckedChange={(checked) => setValue("mostrarDetalle", checked)}
-              disabled={!imagen}
-            />
-          </div>
-
-          <div className="space-y-4 border-t pt-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Imagen
-              </label>
-              <div className={!mostrarDetalle ? "pointer-events-none opacity-50" : ""}>
+            <div className="space-y-4 border-t pt-4">
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Imagen
+                </label>
                 <ImageUpload
                   value={imagen}
                   onChange={setImagen}
                   placeholder="Subir imagen del horario"
                 />
+                {!imagen && (
+                  <p className="mt-1 text-xs text-amber-600">
+                    Requerida para mostrar la seccion de detalle
+                  </p>
+                )}
               </div>
-              {!imagen && (
-                <p className="mt-1 text-xs text-amber-600">
-                  Requerida para mostrar la seccion de detalle
-                </p>
-              )}
-            </div>
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion Larga
-              </label>
-              <textarea
-                {...register("descripcionLarga")}
-                rows={4}
-                placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                disabled={!mostrarDetalle}
-              />
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Descripcion Larga
+                </label>
+                <textarea
+                  {...register("descripcionLarga")}
+                  rows={4}
+                  placeholder="Descripcion detallada que se mostrara en la seccion inferior de la pagina de horarios"
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -325,10 +330,32 @@ export default function NuevoHorarioPage() {
           lang="ca"
           langName="Català"
           fields={[
-            { name: "ca_titulo", label: "Título", placeholder: "Ej: Culte Dominical", register: register("ca_titulo") },
-            { name: "ca_subtitulo", label: "Subtítulo (opcional)", placeholder: "Ej: setmanal", register: register("ca_subtitulo") },
-            { name: "ca_dia", label: "Día", placeholder: "Ej: Diumenge", register: register("ca_dia") },
-            { name: "ca_descripcionLarga", label: "Descripción larga (opcional)", type: "textarea", rows: 3, placeholder: "Descripció detallada...", register: register("ca_descripcionLarga") },
+            {
+              name: "ca_titulo",
+              label: "Título",
+              placeholder: "Ej: Culte Dominical",
+              register: register("ca_titulo"),
+            },
+            {
+              name: "ca_subtitulo",
+              label: "Subtítulo (opcional)",
+              placeholder: "Ej: setmanal",
+              register: register("ca_subtitulo"),
+            },
+            {
+              name: "ca_dia",
+              label: "Día",
+              placeholder: "Ej: Diumenge",
+              register: register("ca_dia"),
+            },
+            {
+              name: "ca_descripcionLarga",
+              label: "Descripción larga (opcional)",
+              type: "textarea",
+              rows: 3,
+              placeholder: "Descripció detallada...",
+              register: register("ca_descripcionLarga"),
+            },
           ]}
         />
 
@@ -336,10 +363,32 @@ export default function NuevoHorarioPage() {
           lang="en"
           langName="English"
           fields={[
-            { name: "en_titulo", label: "Title", placeholder: "Ex: Sunday Service", register: register("en_titulo") },
-            { name: "en_subtitulo", label: "Subtitle (optional)", placeholder: "Ex: weekly", register: register("en_subtitulo") },
-            { name: "en_dia", label: "Day", placeholder: "Ex: Sunday", register: register("en_dia") },
-            { name: "en_descripcionLarga", label: "Long description (optional)", type: "textarea", rows: 3, placeholder: "Detailed description...", register: register("en_descripcionLarga") },
+            {
+              name: "en_titulo",
+              label: "Title",
+              placeholder: "Ex: Sunday Service",
+              register: register("en_titulo"),
+            },
+            {
+              name: "en_subtitulo",
+              label: "Subtitle (optional)",
+              placeholder: "Ex: weekly",
+              register: register("en_subtitulo"),
+            },
+            {
+              name: "en_dia",
+              label: "Day",
+              placeholder: "Ex: Sunday",
+              register: register("en_dia"),
+            },
+            {
+              name: "en_descripcionLarga",
+              label: "Long description (optional)",
+              type: "textarea",
+              rows: 3,
+              placeholder: "Detailed description...",
+              register: register("en_descripcionLarga"),
+            },
           ]}
         />
 

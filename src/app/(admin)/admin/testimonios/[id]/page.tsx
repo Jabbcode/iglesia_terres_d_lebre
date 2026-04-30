@@ -43,7 +43,9 @@ export default function EditarTestimonioPage({
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [thumbnail, setThumbnail] = useState<string | File | null>(null)
-  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(null)
+  const [thumbnailOriginal, setThumbnailOriginal] = useState<string | null>(
+    null
+  )
   const confirm = useConfirm()
 
   const {
@@ -143,7 +145,8 @@ export default function EditarTestimonioPage({
   const handleDelete = async () => {
     const confirmed = await confirm({
       title: "Eliminar testimonio",
-      description: "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
+      description:
+        "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
       confirmLabel: "Eliminar",
       cancelLabel: "Cancelar",
       variant: "danger",
@@ -172,132 +175,191 @@ export default function EditarTestimonioPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <Link
-          href="/admin/testimonios"
-          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
-        >
-          <ArrowLeft className="size-4" />
-          Volver a testimonios
-        </Link>
-        <h1 className="text-foreground text-2xl font-bold">Editar Testimonio</h1>
-        <p className="text-muted-foreground mt-1">Modifica los datos del testimonio</p>
+      <div className="mb-6 flex items-center justify-between">
+        <Button asChild className="bg-amber hover:bg-amber-dark gap-2">
+          <Link href="/admin/testimonios">
+            <ArrowLeft className="size-4" />
+            Volver
+          </Link>
+        </Button>
+        <h1 className="text-foreground text-xl font-bold">Editar Testimonio</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            {error}
+          </div>
         )}
 
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="space-y-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">Nombre</label>
-              <input
-                {...register("nombre")}
-                placeholder="Ej: Maria Garcia"
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion / Testimonio
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={4}
-                placeholder="El testimonio de la persona..."
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.descripcion && (
-                <p className="mt-1 text-sm text-red-500">{errors.descripcion.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                URL del Video (YouTube embed)
-              </label>
-              <input
-                {...register("videoUrl")}
-                placeholder="https://www.youtube.com/embed/..."
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              <p className="text-muted-foreground mt-1 text-xs">
-                Usa el formato embed de YouTube (ej: https://www.youtube.com/embed/VIDEO_ID)
-              </p>
-              {errors.videoUrl && (
-                <p className="mt-1 text-sm text-red-500">{errors.videoUrl.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">Thumbnail</label>
-              <ImageUpload
-                value={thumbnail}
-                onChange={setThumbnail}
-                placeholder="Subir imagen de portada del video"
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="text-foreground mb-4 font-semibold">
+              Informacion Basica
+            </h2>
+            <div className="space-y-4">
               <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">Orden</label>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Nombre
+                </label>
                 <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
+                  {...register("nombre")}
+                  placeholder="Ej: Maria Garcia"
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
+                {errors.nombre && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.nombre.message}
+                  </p>
+                )}
               </div>
-              <div className="flex items-end pb-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    {...register("activo")}
-                    type="checkbox"
-                    id="activo"
-                    className="border-border size-4 rounded"
-                  />
-                  <label htmlFor="activo" className="text-foreground text-sm font-medium">
-                    Testimonio activo
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Descripcion / Testimonio
+                </label>
+                <textarea
+                  {...register("descripcion")}
+                  rows={4}
+                  placeholder="El testimonio de la persona..."
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                {errors.descripcion && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.descripcion.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  URL del Video (YouTube embed)
+                </label>
+                <input
+                  {...register("videoUrl")}
+                  placeholder="https://www.youtube.com/embed/..."
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Usa el formato embed de YouTube (ej:
+                  https://www.youtube.com/embed/VIDEO_ID)
+                </p>
+                {errors.videoUrl && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.videoUrl.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Thumbnail
+                </label>
+                <ImageUpload
+                  value={thumbnail}
+                  onChange={setThumbnail}
+                  placeholder="Subir imagen de portada del video"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Orden
                   </label>
+                  <input
+                    {...register("order", { valueAsNumber: true })}
+                    type="number"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-end pb-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      {...register("activo")}
+                      type="checkbox"
+                      id="activo"
+                      className="border-border size-4 rounded"
+                    />
+                    <label
+                      htmlFor="activo"
+                      className="text-foreground text-sm font-medium"
+                    >
+                      Testimonio activo
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="space-y-6">
+            <TranslationFields
+              lang="ca"
+              langName="Català"
+              fields={[
+                {
+                  name: "ca_nombre",
+                  label: "Nombre",
+                  placeholder: "Ej: Maria Garcia",
+                  register: register("ca_nombre"),
+                },
+                {
+                  name: "ca_descripcion",
+                  label: "Testimonio",
+                  type: "textarea",
+                  rows: 4,
+                  placeholder: "El testimoni de la persona...",
+                  register: register("ca_descripcion"),
+                },
+              ]}
+            />
+
+            <TranslationFields
+              lang="en"
+              langName="English"
+              fields={[
+                {
+                  name: "en_nombre",
+                  label: "Name",
+                  placeholder: "Ex: Maria Garcia",
+                  register: register("en_nombre"),
+                },
+                {
+                  name: "en_descripcion",
+                  label: "Testimony",
+                  type: "textarea",
+                  rows: 4,
+                  placeholder: "The person's testimony...",
+                  register: register("en_descripcion"),
+                },
+              ]}
+            />
+          </div>
         </div>
 
-        <TranslationFields
-          lang="ca"
-          langName="Català"
-          fields={[
-            { name: "ca_nombre", label: "Nombre", placeholder: "Ej: Maria Garcia", register: register("ca_nombre") },
-            { name: "ca_descripcion", label: "Testimonio", type: "textarea", rows: 4, placeholder: "El testimoni de la persona...", register: register("ca_descripcion") },
-          ]}
-        />
-
-        <TranslationFields
-          lang="en"
-          langName="English"
-          fields={[
-            { name: "en_nombre", label: "Name", placeholder: "Ex: Maria Garcia", register: register("en_nombre") },
-            { name: "en_descripcion", label: "Testimony", type: "textarea", rows: 4, placeholder: "The person's testimony...", register: register("en_descripcion") },
-          ]}
-        />
-
         <div className="flex justify-between">
-          <Button type="button" variant="destructive" onClick={handleDelete} disabled={deleting} className="gap-2">
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="gap-2"
+          >
             <Trash2 className="size-4" />
             {deleting ? "Eliminando..." : "Eliminar"}
           </Button>
           <div className="flex gap-3">
             <Link href="/admin/testimonios">
-              <Button type="button" variant="outline">Cancelar</Button>
+              <Button type="button" variant="outline">
+                Cancelar
+              </Button>
             </Link>
-            <Button type="submit" disabled={saving} className="bg-amber hover:bg-amber-dark gap-2">
+            <Button
+              type="submit"
+              disabled={saving}
+              className="bg-amber hover:bg-amber-dark gap-2"
+            >
               <Save className="size-4" />
               {saving ? "Guardando..." : "Guardar Cambios"}
             </Button>
