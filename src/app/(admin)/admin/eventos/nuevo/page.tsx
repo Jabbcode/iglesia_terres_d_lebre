@@ -141,302 +141,310 @@ export default function NuevoEventoPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <Link
-          href="/admin/eventos"
-          className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
-        >
-          <ArrowLeft className="size-4" />
-          Volver a eventos
-        </Link>
-        <h1 className="text-foreground text-2xl font-bold">Nuevo Evento</h1>
-        <p className="text-muted-foreground mt-1">
-          Crea un nuevo evento para la iglesia
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <Button asChild className="bg-amber hover:bg-amber-dark gap-2">
+          <Link href="/admin/eventos">
+            <ArrowLeft className="size-4" />
+            Volver
+          </Link>
+        </Button>
+        <h1 className="text-foreground text-xl font-bold">Nuevo Evento</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="space-y-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Nombre del Evento
-              </label>
-              <input
-                {...register("nombre")}
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-              {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.nombre.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Descripcion
-              </label>
-              <textarea
-                {...register("descripcion")}
-                rows={3}
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="text-foreground mb-4 font-semibold">
+              Informacion Basica
+            </h2>
+            <div className="space-y-4">
               <div>
                 <label className="text-foreground mb-1 block text-sm font-medium">
-                  Fecha
+                  Nombre del Evento
                 </label>
                 <input
-                  {...register("fecha")}
-                  type="date"
+                  {...register("nombre")}
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
-                {errors.fecha && (
+                {errors.nombre && (
                   <p className="mt-1 text-sm text-red-500">
-                    {errors.fecha.message}
+                    {errors.nombre.message}
                   </p>
                 )}
               </div>
 
               <div>
                 <label className="text-foreground mb-1 block text-sm font-medium">
-                  Hora Inicio
+                  Descripcion
                 </label>
-                <input
-                  {...register("horaInicio")}
-                  type="time"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                {errors.horaInicio && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.horaInicio.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Hora Fin
-                </label>
-                <input
-                  {...register("horaFin")}
-                  type="time"
+                <textarea
+                  {...register("descripcion")}
+                  rows={3}
                   className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Ubicacion
-              </label>
-              <input
-                {...register("ubicacion")}
-                placeholder="Ej: Sala principal, Patio, etc."
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Imagen del Evento
-              </label>
-              <ImageUpload
-                value={imagen}
-                onChange={setImagen}
-                placeholder="Subir imagen del evento"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                {...register("activo")}
-                type="checkbox"
-                id="activo"
-                className="border-border size-4 rounded"
-              />
-              <label
-                htmlFor="activo"
-                className="text-foreground text-sm font-medium"
-              >
-                Evento activo
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Seccion de periodicidad */}
-        <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center gap-2">
-            <RefreshCw className="text-amber size-5" />
-            <h2 className="text-foreground font-semibold">Evento Periodico</h2>
-          </div>
-          <p className="text-muted-foreground mb-4 text-sm">
-            Configura si este evento se repite automaticamente.
-          </p>
-
-          <div className="space-y-4">
-            <div>
-              <label className="text-foreground mb-1 block text-sm font-medium">
-                Repeticion
-              </label>
-              <select
-                {...register("periodicidad")}
-                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-              >
-                {PERIODICIDAD_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {esMensualRelativo && (
-              <>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="text-foreground mb-1 block text-sm font-medium">
-                      Semana del mes
-                    </label>
-                    <select
-                      value={semanaDelMes}
-                      onChange={(e) => setSemanaDelMes(Number(e.target.value))}
-                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                    >
-                      {SEMANA_DEL_MES_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-foreground mb-1 block text-sm font-medium">
-                      Dia de la semana
-                    </label>
-                    <select
-                      value={diaSemanaRelativo}
-                      onChange={(e) =>
-                        setDiaSemanaRelativo(Number(e.target.value))
-                      }
-                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                    >
-                      {DIAS_SEMANA_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {esPeriodico && (
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Repetir hasta (opcional)
-                </label>
-                <input
-                  {...register("repetirHasta")}
-                  type="date"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-                <p className="text-muted-foreground mt-1 text-xs">
-                  Si no se especifica, el evento se repetira indefinidamente.
-                </p>
-              </div>
-            )}
-
-            {esPeriodico && (
-              <div className="rounded-lg bg-amber-50 p-3">
-                <p className="text-sm text-amber-800">
-                  {esMensualRelativo ? (
-                    <>
-                      <strong>Nota:</strong> Se repetira el{" "}
-                      <strong>
-                        {
-                          SEMANA_DEL_MES_OPTIONS.find(
-                            (o) => o.value === semanaDelMes
-                          )?.label
-                        }{" "}
-                        {
-                          DIAS_SEMANA_OPTIONS.find(
-                            (o) => o.value === diaSemanaRelativo
-                          )?.label
-                        }
-                      </strong>{" "}
-                      de cada mes.
-                    </>
-                  ) : (
-                    <>
-                      <strong>Nota:</strong> La fecha del evento se usara como
-                      fecha base. El sistema calculara automaticamente la
-                      proxima ocurrencia.
-                    </>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Fecha
+                  </label>
+                  <input
+                    {...register("fecha")}
+                    type="date"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                  {errors.fecha && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.fecha.message}
+                    </p>
                   )}
-                </p>
+                </div>
+
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Hora Inicio
+                  </label>
+                  <input
+                    {...register("horaInicio")}
+                    type="time"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                  {errors.horaInicio && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.horaInicio.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Hora Fin
+                  </label>
+                  <input
+                    {...register("horaFin")}
+                    type="time"
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  />
+                </div>
               </div>
-            )}
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Ubicacion
+                </label>
+                <input
+                  {...register("ubicacion")}
+                  placeholder="Ej: Sala principal, Patio, etc."
+                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-foreground mb-1 block text-sm font-medium">
+                  Imagen del Evento
+                </label>
+                <ImageUpload
+                  value={imagen}
+                  onChange={setImagen}
+                  placeholder="Subir imagen del evento"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  {...register("activo")}
+                  type="checkbox"
+                  id="activo"
+                  className="border-border size-4 rounded"
+                />
+                <label
+                  htmlFor="activo"
+                  className="text-foreground text-sm font-medium"
+                >
+                  Evento activo
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {/* Seccion de periodicidad */}
+            <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-2">
+                <RefreshCw className="text-amber size-5" />
+                <h2 className="text-foreground font-semibold">
+                  Evento Periodico
+                </h2>
+              </div>
+              <p className="text-muted-foreground mb-4 text-sm">
+                Configura si este evento se repite automaticamente.
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-foreground mb-1 block text-sm font-medium">
+                    Repeticion
+                  </label>
+                  <select
+                    {...register("periodicidad")}
+                    className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                  >
+                    {PERIODICIDAD_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {esMensualRelativo && (
+                  <>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <label className="text-foreground mb-1 block text-sm font-medium">
+                          Semana del mes
+                        </label>
+                        <select
+                          value={semanaDelMes}
+                          onChange={(e) =>
+                            setSemanaDelMes(Number(e.target.value))
+                          }
+                          className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                        >
+                          {SEMANA_DEL_MES_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-foreground mb-1 block text-sm font-medium">
+                          Dia de la semana
+                        </label>
+                        <select
+                          value={diaSemanaRelativo}
+                          onChange={(e) =>
+                            setDiaSemanaRelativo(Number(e.target.value))
+                          }
+                          className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                        >
+                          {DIAS_SEMANA_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {esPeriodico && (
+                  <div>
+                    <label className="text-foreground mb-1 block text-sm font-medium">
+                      Repetir hasta (opcional)
+                    </label>
+                    <input
+                      {...register("repetirHasta")}
+                      type="date"
+                      className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+                    />
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      Si no se especifica, el evento se repetira
+                      indefinidamente.
+                    </p>
+                  </div>
+                )}
+
+                {esPeriodico && (
+                  <div className="rounded-lg bg-amber-50 p-3">
+                    <p className="text-sm text-amber-800">
+                      {esMensualRelativo ? (
+                        <>
+                          <strong>Nota:</strong> Se repetira el{" "}
+                          <strong>
+                            {
+                              SEMANA_DEL_MES_OPTIONS.find(
+                                (o) => o.value === semanaDelMes
+                              )?.label
+                            }{" "}
+                            {
+                              DIAS_SEMANA_OPTIONS.find(
+                                (o) => o.value === diaSemanaRelativo
+                              )?.label
+                            }
+                          </strong>{" "}
+                          de cada mes.
+                        </>
+                      ) : (
+                        <>
+                          <strong>Nota:</strong> La fecha del evento se usara
+                          como fecha base. El sistema calculara automaticamente
+                          la proxima ocurrencia.
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Traducciones */}
+            <TranslationFields
+              lang="ca"
+              langName="Catalán"
+              fields={[
+                {
+                  name: "nombre_ca",
+                  label: "Nombre del Evento (Catalán)",
+                  register: register("nombre_ca"),
+                },
+                {
+                  name: "descripcion_ca",
+                  label: "Descripción (Catalán)",
+                  type: "textarea",
+                  register: register("descripcion_ca"),
+                },
+                {
+                  name: "ubicacion_ca",
+                  label: "Ubicación (Catalán)",
+                  register: register("ubicacion_ca"),
+                },
+              ]}
+            />
+
+            <TranslationFields
+              lang="en"
+              langName="Inglés"
+              fields={[
+                {
+                  name: "nombre_en",
+                  label: "Event Name (English)",
+                  register: register("nombre_en"),
+                },
+                {
+                  name: "descripcion_en",
+                  label: "Description (English)",
+                  type: "textarea",
+                  register: register("descripcion_en"),
+                },
+                {
+                  name: "ubicacion_en",
+                  label: "Location (English)",
+                  register: register("ubicacion_en"),
+                },
+              ]}
+            />
           </div>
         </div>
-
-        {/* Traducciones */}
-        <TranslationFields
-          lang="ca"
-          langName="Catalán"
-          fields={[
-            {
-              name: "nombre_ca",
-              label: "Nombre del Evento (Catalán)",
-              register: register("nombre_ca"),
-            },
-            {
-              name: "descripcion_ca",
-              label: "Descripción (Catalán)",
-              type: "textarea",
-              register: register("descripcion_ca"),
-            },
-            {
-              name: "ubicacion_ca",
-              label: "Ubicación (Catalán)",
-              register: register("ubicacion_ca"),
-            },
-          ]}
-        />
-
-        <TranslationFields
-          lang="en"
-          langName="Inglés"
-          fields={[
-            {
-              name: "nombre_en",
-              label: "Event Name (English)",
-              register: register("nombre_en"),
-            },
-            {
-              name: "descripcion_en",
-              label: "Description (English)",
-              type: "textarea",
-              register: register("descripcion_en"),
-            },
-            {
-              name: "ubicacion_en",
-              label: "Location (English)",
-              register: register("ubicacion_en"),
-            },
-          ]}
-        />
 
         <div className="flex justify-end gap-3">
           <Link href="/admin/eventos">
