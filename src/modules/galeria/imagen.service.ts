@@ -18,32 +18,41 @@ export const imagenService = {
     })
   },
 
-  /**
-   * Get active images for public gallery
-   */
-  async getPublic(limit = 20) {
-    return prisma.imagen.findMany({
+  async getPublicPage({
+    limit = 20,
+    cursor,
+  }: { limit?: number; cursor?: string } = {}) {
+    const items = await prisma.imagen.findMany({
       where: { activo: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-      take: limit,
-      select: {
-        id: true,
-        src: true,
-        alt: true,
-        span: true,
-      },
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      select: { id: true, src: true, alt: true, span: true },
     })
+    const hasMore = items.length > limit
+    return {
+      items: hasMore ? items.slice(0, limit) : items,
+      hasMore,
+      nextCursor: hasMore ? items[limit - 1].id : null,
+    }
   },
 
   async getPublicCached(limit = 20) {
     return unstable_cache(
-      () =>
-        prisma.imagen.findMany({
+      async () => {
+        const items = await prisma.imagen.findMany({
           where: { activo: true },
           orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-          take: limit,
+          take: limit + 1,
           select: { id: true, src: true, alt: true, span: true },
-        }),
+        })
+        const hasMore = items.length > limit
+        return {
+          items: hasMore ? items.slice(0, limit) : items,
+          hasMore,
+          nextCursor: hasMore ? items[limit - 1].id : null,
+        }
+      },
       ["galeria-public", String(limit)],
       { tags: ["galeria"], revalidate: REVALIDATE_24H }
     )()

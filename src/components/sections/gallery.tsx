@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Instagram, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfigStore } from "@/stores/config-store"
@@ -16,11 +16,42 @@ interface GalleryProps {
   lang: Locale
   dict: Dictionary
   imagenes: GalleryImagen[]
+  hasMore: boolean
+  nextCursor: string | null
 }
 
-export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
+export function Gallery({
+  lang: _lang,
+  dict,
+  imagenes: initialImagenes,
+  hasMore: initialHasMore,
+  nextCursor: initialCursor,
+}: GalleryProps) {
+  const [imagenes, setImagenes] = useState(initialImagenes)
+  const [hasMore, setHasMore] = useState(initialHasMore)
+  const [cursor, setCursor] = useState(initialCursor)
+  const [loading, setLoading] = useState(false)
   const [lightbox, setLightbox] = useState<number | null>(null)
   const { config, fetchConfig } = useConfigStore()
+
+  const loadMore = useCallback(async () => {
+    if (!cursor || loading) return
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/public/galeria?cursor=${cursor}`)
+      if (!res.ok) return
+      const data = (await res.json()) as {
+        items: GalleryImagen[]
+        hasMore: boolean
+        nextCursor: string | null
+      }
+      setImagenes((prev) => [...prev, ...data.items])
+      setHasMore(data.hasMore)
+      setCursor(data.nextCursor)
+    } finally {
+      setLoading(false)
+    }
+  }, [cursor, loading])
 
   useEffect(() => {
     fetchConfig()
@@ -82,6 +113,22 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
           </div>
         </div>
       </section>
+
+      {/* Load more */}
+      {hasMore && (
+        <section className="bg-cream pb-6">
+          <div className="flex justify-center">
+            <Button
+              onClick={loadMore}
+              disabled={loading}
+              variant="outline"
+              className="h-11 rounded-full px-8 text-sm font-semibold"
+            >
+              {loading ? "…" : dict.gallery.loadMore}
+            </Button>
+          </div>
+        </section>
+      )}
 
       {/* Instagram CTA */}
       {instagramUrl && (

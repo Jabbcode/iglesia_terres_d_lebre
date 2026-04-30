@@ -36,9 +36,17 @@ export default async function GalleryPage({
 }) {
   const { lang: langStr } = await params
   const lang = langStr as Locale
-  const [dict, imagenes] = await Promise.all([
+  const [dict, { items, hasMore, nextCursor }] = await Promise.all([
     getDictionary(lang),
     imagenService.getPublicCached(20),
   ])
-  return <Gallery lang={lang} dict={dict} imagenes={imagenes} />
+  return (
+    <Gallery
+      lang={lang}
+      dict={dict}
+      imagenes={items}
+      hasMore={hasMore}
+      nextCursor={nextCursor}
+    />
+  )
 }
