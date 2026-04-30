@@ -11,6 +11,7 @@ import {
   Clock,
   LucideIcon,
   MessageCircle,
+  Users,
 } from "lucide-react"
 
 interface NavItem {
@@ -25,6 +26,7 @@ const navItems: NavItem[] = [
   { href: "/admin/horarios", label: "Horarios", icon: Clock },
   { href: "/admin/eventos", label: "Eventos", icon: Calendar },
   { href: "/admin/testimonios", label: "Testimonios", icon: MessageCircle },
+  { href: "/admin/usuarios", label: "Usuarios", icon: Users },
   { href: "/admin/configuracion", label: "Configuracion", icon: Settings },
 ]
 
