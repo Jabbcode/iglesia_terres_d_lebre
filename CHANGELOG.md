@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-04-30
+
+### Added
+
+- Sidebar colapsable en desktop: ancho `w-64`/`w-16` con transición suave, estado persistido en `localStorage`
+- Botón de colapso (`PanelLeftClose`/`PanelLeftOpen`) en el Header del panel admin
+
+### Changed
+
+- Formularios de horarios, eventos y testimonios reestructurados en layout de dos columnas en desktop (`lg:grid-cols-2`), una columna en móvil
+- Cabeceras de formularios unificadas: botón amber "Volver" a la izquierda, título alineado a la derecha
+
+### Fixed
+
+- `ImageUpload` y `textarea` en formulario de horarios ya no se bloquean con `pointer-events-none` al eliminar la imagen
+
 ## [1.2.0] - 2026-04-30
 
 ### Added
