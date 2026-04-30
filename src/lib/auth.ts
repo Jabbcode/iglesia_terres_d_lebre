@@ -1,8 +1,12 @@
 import { SignJWT, jwtVerify, type JWTPayload as JoseJWTPayload } from "jose"
 import { cookies } from "next/headers"
 
+const rawSecret = process.env.JWT_SECRET
+if (!rawSecret && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET env var is required in production")
+}
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "fallback-secret-change-me"
+  rawSecret ?? "dev-only-secret-not-for-production"
 )
 
 export interface JWTPayload {
