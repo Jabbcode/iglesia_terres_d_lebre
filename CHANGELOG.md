@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-04-30
+
+### Added
+
+- Módulo de gestión de usuarios (`src/modules/usuarios/`) — CRUD completo accesible solo para ADMIN
+- Panel `/admin/usuarios` con formularios inline para crear, editar y eliminar usuarios, con toggle mostrar/ocultar contraseña
+- Control de acceso por rol en tres capas: API (`withAdmin` → 403), Sidebar (enlace oculto para EDITOR), página (redirect si no es ADMIN)
+- `withAdmin` middleware en `src/modules/auth/auth.middleware.ts` para rutas de solo ADMIN
+- JSON-LD Schema.org: `Organization` + `Event` en la home, `Church` (LocalBusiness) en `/contacto` — helper centralizado en `src/lib/json-ld.ts`
+- Aviso en admin galería cuando hay imágenes visibles sin texto alternativo
+- Navegación con teclado (← → Escape) en el lightbox de galería pública; alt mostrado como caption
+- Sitemap multilingüe con `alternates` hreflang para es / ca / en
+- Suite de tests con Vitest (115 tests): `event-utils`, `rate-limit`, `format`, `auth`, `i18n/config`, `api-response`, `schema-helpers`
+- Hook `pre-push`: ejecuta tests → TypeScript → build antes de cada push
+- Security headers en `next.config.ts`: `X-Frame-Options`, `HSTS`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`
+
+### Changed
+
+- Galería pública ordenada por `createdAt DESC`, limitada a 20 imágenes (las más recientes siempre visibles)
+- `activo` en imágenes funciona como filtro de exclusión; las imágenes se crean visibles por defecto
+- Alt text requerido al editar imágenes individuales
+- Toggle "Oculta/Visible" en galería admin en lugar de "Inactiva/Activa"
+
+### Fixed
+
+- Rate limiter corregido: solo incrementa el contador en intentos de login fallidos, no en los exitosos
+- JWT_SECRET lanza error explícito en producción si no está definido (elimina el fallback silencioso)
+
+### Security
+
+- Rate limiting en `/api/auth/login`: bloqueo por IP tras 5 intentos fallidos
+- Security headers HTTP en todas las rutas vía `next.config.ts`
+
 ## [1.1.0] - 2026-04-29
 
 ### Added
