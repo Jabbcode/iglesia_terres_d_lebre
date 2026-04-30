@@ -15,9 +15,8 @@ import type { Imagen } from "@/modules/galeria"
 import { uploadFile } from "@/lib/supabase"
 
 const imagenSchema = z.object({
-  alt: z.string().optional(),
+  alt: z.string().min(1, "Texto alternativo requerido"),
   span: z.enum(["normal", "tall", "wide"]),
-  order: z.number().int(),
 })
 
 type ImagenForm = z.infer<typeof imagenSchema>
@@ -57,7 +56,6 @@ export default function EditarImagenPage({
           reset({
             alt: imagenData.alt || "",
             span: imagenData.span,
-            order: imagenData.order,
           })
         }
       })
@@ -175,7 +173,7 @@ export default function EditarImagenPage({
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
-                Texto Alternativo
+                Texto Alternativo <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("alt")}
@@ -189,31 +187,18 @@ export default function EditarImagenPage({
               )}
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Tipo de Imagen
-                </label>
-                <select
-                  {...register("span")}
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                >
-                  <option value="normal">Normal</option>
-                  <option value="tall">Vertical (Alta)</option>
-                  <option value="wide">Horizontal (Ancha)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-foreground mb-1 block text-sm font-medium">
-                  Orden
-                </label>
-                <input
-                  {...register("order", { valueAsNumber: true })}
-                  type="number"
-                  className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
-                />
-              </div>
+            <div>
+              <label className="text-foreground mb-1 block text-sm font-medium">
+                Tipo de Imagen
+              </label>
+              <select
+                {...register("span")}
+                className="border-border focus:border-amber w-full rounded-lg border bg-white px-4 py-2 focus:outline-none"
+              >
+                <option value="normal">Normal</option>
+                <option value="tall">Vertical (Alta)</option>
+                <option value="wide">Horizontal (Ancha)</option>
+              </select>
             </div>
           </div>
         </div>

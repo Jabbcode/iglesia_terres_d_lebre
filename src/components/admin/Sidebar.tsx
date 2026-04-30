@@ -11,6 +11,7 @@ import {
   Clock,
   LucideIcon,
   MessageCircle,
+  Users,
 } from "lucide-react"
 
 interface NavItem {
@@ -28,9 +29,17 @@ const navItems: NavItem[] = [
   { href: "/admin/configuracion", label: "Configuracion", icon: Settings },
 ]
 
+const adminOnlyItems: NavItem[] = [
+  { href: "/admin/usuarios", label: "Usuarios", icon: Users },
+]
+
 export function Sidebar() {
   const pathname = usePathname()
-  const { sidebarOpen, closeSidebar } = useAdmin()
+  const { sidebarOpen, closeSidebar, role } = useAdmin()
+  const visibleItems = [
+    ...navItems,
+    ...(role === "ADMIN" ? adminOnlyItems : []),
+  ]
 
   return (
     <>
@@ -57,7 +66,7 @@ export function Sidebar() {
 
           {/* Navigation */}
           <nav className="mt-6 flex-1">
-            {navItems.map((item) => {
+            {visibleItems.map((item) => {
               const isActive =
                 pathname === item.href ||
                 (item.href !== "/admin" && pathname.startsWith(item.href))

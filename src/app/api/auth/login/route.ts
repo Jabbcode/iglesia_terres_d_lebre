@@ -3,25 +3,43 @@ import { prisma } from "@/lib/prisma"
 import { signToken } from "@/lib/auth"
 import bcrypt from "bcryptjs"
 import { loginSchema } from "@/modules/auth"
-import { validationError, unauthorized, serverError } from "@/shared/api"
+import { validationError, serverError } from "@/shared/api"
+import { isRateLimited, recordFailure } from "@/lib/rate-limit"
 import { ZodError } from "zod"
 
+const RATE_LIMIT_OPTIONS = { limit: 5, windowMs: 60_000 }
+
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  const rateLimitKey = `login:${ip}`
+
+  const { blocked, retryAfterMs } = isRateLimited(
+    rateLimitKey,
+    RATE_LIMIT_OPTIONS
+  )
+  if (blocked) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Inténtalo de nuevo en un momento." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+      }
+    )
+  }
+
   try {
     const body = await request.json()
     const { email, password } = loginSchema.parse(body)
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    })
+    const user = await prisma.user.findUnique({ where: { email } })
 
-    if (!user) {
-      return unauthorized("Credenciales incorrectas")
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password)
-    if (!passwordMatch) {
-      return unauthorized("Credenciales incorrectas")
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      recordFailure(rateLimitKey, RATE_LIMIT_OPTIONS)
+      return NextResponse.json(
+        { error: "Credenciales incorrectas" },
+        { status: 401 }
+      )
     }
 
     const token = await signToken({
@@ -43,7 +61,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     })
 

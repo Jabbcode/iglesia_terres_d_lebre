@@ -4,7 +4,7 @@ import { jwtVerify } from "jose"
 import { locales, defaultLocale, isValidLocale } from "@/lib/i18n/config"
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "fallback-secret-change-me"
+  process.env.JWT_SECRET ?? "dev-only-secret-not-for-production"
 )
 
 async function verifyAuth(token: string) {
