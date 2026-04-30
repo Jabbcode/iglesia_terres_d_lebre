@@ -18,29 +18,12 @@ export const imagenService = {
     })
   },
 
-  /**
-   * Get active images for public gallery
-   */
-  async getPublic(limit = 20) {
-    return prisma.imagen.findMany({
-      where: { activo: true },
-      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-      take: limit,
-      select: {
-        id: true,
-        src: true,
-        alt: true,
-        span: true,
-      },
-    })
-  },
-
   async getPublicCached(limit = 20) {
     return unstable_cache(
       () =>
         prisma.imagen.findMany({
           where: { activo: true },
-          orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+          orderBy: { createdAt: "desc" },
           take: limit,
           select: { id: true, src: true, alt: true, span: true },
         }),

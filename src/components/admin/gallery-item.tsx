@@ -80,11 +80,11 @@ export function GalleryItem({
           className="size-full object-cover"
           draggable={false}
         />
-        {/* Inactive overlay */}
+        {/* Hidden overlay */}
         {!image.activo && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <span className="rounded bg-black/60 px-2 py-1 text-xs text-white">
-              Inactiva
+              Oculta
             </span>
           </div>
         )}
@@ -110,11 +110,15 @@ export function GalleryItem({
             onChange={onSpanChange}
             disabled={disabled}
           />
-          <Switch
-            checked={image.activo}
-            onCheckedChange={onToggleActive}
-            disabled={disabled}
-          />
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-xs">Visible</span>
+            <Switch
+              checked={image.activo}
+              onCheckedChange={onToggleActive}
+              disabled={disabled}
+              aria-label="Mostrar en galería pública"
+            />
+          </div>
         </div>
       </div>
 
