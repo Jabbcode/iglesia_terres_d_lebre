@@ -7,22 +7,32 @@ interface RateLimitOptions {
   windowMs: number
 }
 
-export function checkRateLimit(
+export function isRateLimited(
+  key: string,
+  { limit, windowMs: _windowMs }: RateLimitOptions
+): { blocked: boolean; retryAfterMs: number } {
+  const now = Date.now()
+  const entry = store.get(key)
+
+  if (!entry || now >= entry.resetAt) return { blocked: false, retryAfterMs: 0 }
+
+  if (entry.count >= limit) {
+    return { blocked: true, retryAfterMs: entry.resetAt - now }
+  }
+
+  return { blocked: false, retryAfterMs: 0 }
+}
+
+export function recordFailure(
   key: string,
   { limit, windowMs }: RateLimitOptions
-): { allowed: boolean; retryAfterMs: number } {
+): void {
   const now = Date.now()
   const entry = store.get(key)
 
   if (!entry || now >= entry.resetAt) {
     store.set(key, { count: 1, resetAt: now + windowMs })
-    return { allowed: true, retryAfterMs: 0 }
+  } else if (entry.count < limit) {
+    entry.count++
   }
-
-  if (entry.count >= limit) {
-    return { allowed: false, retryAfterMs: entry.resetAt - now }
-  }
-
-  entry.count++
-  return { allowed: true, retryAfterMs: 0 }
 }
