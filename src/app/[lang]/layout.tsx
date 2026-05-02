@@ -18,6 +18,8 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 })
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
 }
