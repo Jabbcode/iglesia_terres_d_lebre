@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import { Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -23,14 +24,16 @@ export function LeaderCard({ leader, dict }: LeaderCardProps) {
 
   return (
     <FadeInUp>
-      <div className="group w-full max-w-sm overflow-hidden rounded-lg bg-white text-center">
+      <div className="group w-full max-w-sm md:max-w-md overflow-hidden rounded-lg bg-white text-center">
         {/* Image with overlay */}
         <div className="relative mb-6 overflow-hidden">
-          <img
+          <Image
             src={leader.image}
             alt={leader.name}
-            className="w-full object-cover"
-            loading="lazy"
+            width={400}
+            height={400}
+            sizes="(max-width: 640px) 100vw, 384px"
+            className="h-auto w-full object-cover"
           />
           {/* Overlay con descripción */}
           <div

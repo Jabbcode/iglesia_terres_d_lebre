@@ -11,6 +11,7 @@ import { getDictionary } from "@/dictionaries"
 import { locales, type Locale } from "@/lib/i18n/config"
 import { organizationSchema, eventSchema } from "@/lib/json-ld"
 import { eventoService } from "@/modules/eventos"
+import { configService } from "@/modules/config"
 
 export async function generateMetadata({
   params,
@@ -45,9 +46,10 @@ export default async function Home({
 }) {
   const { lang: langStr } = await params
   const lang = langStr as Locale
-  const [dict, eventos] = await Promise.all([
+  const [dict, eventos, config] = await Promise.all([
     getDictionary(lang),
     eventoService.getUpcoming(5),
+    configService.getPublicCached(),
   ])
 
   const jsonLd = [organizationSchema(), ...eventos.map((e) => eventSchema(e))]
@@ -58,7 +60,7 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Hero lang={lang} dict={dict} />
+      <Hero lang={lang} dict={dict} videoHero={config?.videoHero ?? null} />
       <NextService lang={lang} dict={dict} />
       <Community lang={lang} dict={dict} />
       <CtaNew lang={lang} dict={dict} />

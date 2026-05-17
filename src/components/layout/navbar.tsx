@@ -80,7 +80,7 @@ export function Navbar({ lang, iglesia }: NavbarProps) {
             alt="Logo Iglesia Bíblica Terres de l'Ebre"
             className="size-28 object-contain"
           />
-          <span className="relative right-7">
+          <span className="relative right-7 hidden min-[425px]:block">
             <div className="flex flex-col">
               <span className="text-muted-foreground relative top-1 left-0.5 text-xs md:text-sm">
                 Iglesia Biblica
@@ -124,61 +124,62 @@ export function Navbar({ lang, iglesia }: NavbarProps) {
         <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher currentLang={lang} />
           <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Menu className="size-6" />
-              <span className="sr-only">Abrir menú</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-72">
-            <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
-            <div className="flex flex-col gap-6 pt-8">
-              <Link href={`/${lang}`} className="flex items-center gap-2 px-4">
-                <img
-                  src="/logo_black.png"
-                  alt="Logo Iglesia Bíblica Terres de l'Ebre"
-                  className="size-28 object-contain"
-                />
-                <span className="relative right-7">
-                  <div className="flex flex-col">
-                    <span className="text-muted-foreground relative top-1 left-0.5 text-xs">
-                      Iglesia Biblica
-                    </span>
-                    <span className="text-sm relative">
-                      {iglesia.nombre}
-                    </span>
-                  </div>
-                </span>
-              </Link>
-              <nav className="flex flex-col gap-4 px-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "text-sm font-semibold tracking-wider transition-colors",
-                      isActive(link.href)
-                        ? "text-amber"
-                        : "text-foreground/70 hover:text-foreground"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                {isAdmin && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    className="text-amber hover:text-amber-dark flex items-center gap-2 text-sm font-semibold tracking-wider transition-colors"
-                  >
-                    <Settings className="size-4" />
-                    ADMIN
-                  </Link>
-                )}
-              </nav>
-            </div>
-          </SheetContent>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="size-6" />
+                <span className="sr-only">Abrir menú</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72">
+              <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
+              <div className="flex flex-col gap-6 pt-8">
+                <Link
+                  href={`/${lang}`}
+                  className="flex items-center gap-2 px-4"
+                >
+                  <img
+                    src="/logo_black.png"
+                    alt="Logo Iglesia Bíblica Terres de l'Ebre"
+                    className="size-28 object-contain"
+                  />
+                  <span className="relative right-7">
+                    <div className="flex flex-col">
+                      <span className="text-muted-foreground relative top-1 left-0.5 text-xs">
+                        Iglesia Biblica
+                      </span>
+                      <span className="text-sm relative">{iglesia.nombre}</span>
+                    </div>
+                  </span>
+                </Link>
+                <nav className="flex flex-col gap-4 px-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "text-sm font-semibold tracking-wider transition-colors",
+                        isActive(link.href)
+                          ? "text-amber"
+                          : "text-foreground/70 hover:text-foreground"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setOpen(false)}
+                      className="text-amber hover:text-amber-dark flex items-center gap-2 text-sm font-semibold tracking-wider transition-colors"
+                    >
+                      <Settings className="size-4" />
+                      ADMIN
+                    </Link>
+                  )}
+                </nav>
+              </div>
+            </SheetContent>
           </Sheet>
         </div>
       </div>
