@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2026-05-17
+
+### Changed
+
+- Hero server-driven: config del video baja como prop desde `page.tsx`, eliminando `fetchConfig()` en cliente (mejora INP)
+- Video hero: `preload="metadata"` + `poster` + evento `canplay` para arranque más rápido
+- Imagen fallback del Hero con `<Image priority fill>` para optimización LCP
+- `<Image>` con dimensiones correctas en `about-us`, `testimonios`, `schedule`, `leader-card` para prevenir CLS mobile
+- `creenciasBase` extraído a `beliefs.data.ts`
+- Texto del logo oculto por debajo de 425px en navbar para evitar overflow en pantallas pequeñas
+
+### Added
+
+- `images.remotePatterns` en `next.config.ts` para Supabase Storage y Unsplash
+
 ## [1.3.1] - 2026-05-02
 
 ### Fixed
