@@ -35,7 +35,10 @@ export function LanguageSwitcher({ currentLang }: { currentLang: Locale }) {
   }, [])
 
   const switchLocale = (locale: Locale) => {
-    if (locale === currentLang) { setOpen(false); return }
+    if (locale === currentLang) {
+      setOpen(false)
+      return
+    }
     const segments = pathname.split("/")
     segments[1] = locale
     router.push(segments.join("/"))
@@ -56,7 +59,10 @@ export function LanguageSwitcher({ currentLang }: { currentLang: Locale }) {
         />
         <span>{localeLabels[currentLang]}</span>
         <ChevronDown
-          className={cn("size-3.5 text-gray-400 transition-transform", open && "rotate-180")}
+          className={cn(
+            "size-3.5 text-gray-400 transition-transform",
+            open && "rotate-180"
+          )}
         />
       </button>
 
@@ -66,7 +72,11 @@ export function LanguageSwitcher({ currentLang }: { currentLang: Locale }) {
           className="absolute right-0 top-full z-50 mt-1 w-28 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg"
         >
           {locales.map((locale) => (
-            <li key={locale} role="option" aria-selected={locale === currentLang}>
+            <li
+              key={locale}
+              role="option"
+              aria-selected={locale === currentLang}
+            >
               <button
                 onClick={() => switchLocale(locale)}
                 className={cn(

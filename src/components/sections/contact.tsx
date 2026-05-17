@@ -19,8 +19,13 @@ interface ContactProps {
 }
 
 export function Contact({ lang: _lang, dict }: ContactProps) {
-  const { direccion, telefono, horarioAtencion, googleMapsEmbed } = siteConfig.contact
-  const { instagram: instagramUrl, facebook: facebookUrl, youtube: youtubeUrl } = siteConfig.socialMedia
+  const { direccion, telefono, horarioAtencion, googleMapsEmbed } =
+    siteConfig.contact
+  const {
+    instagram: instagramUrl,
+    facebook: facebookUrl,
+    youtube: youtubeUrl,
+  } = siteConfig.socialMedia
 
   return (
     <section id="contacto" className="bg-cream py-20">
