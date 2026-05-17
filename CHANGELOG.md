@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-05-02
+
+### Fixed
+
+- Scanner probes (`.env`, `config.json`, etc.) ya no causan `FUNCTION_INVOCATION_FAILED` — `dynamicParams = false` en `[lang]` devuelve 404 inmediato sin invocar la función ISR
+
+### Security
+
+- Migración `middleware.ts` → `proxy.ts` (Next.js 16, elimina warning de deprecación)
+- Eliminado bloque muerto de protección `/api/admin` en el proxy (el matcher ya excluía rutas `api/`)
+- `JWT_SECRET` lanza error en producción si no está definido, consistente con `auth.ts`
+
 ## [1.3.0] - 2026-04-30
 
 ### Added
