@@ -4,13 +4,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes marquee-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @theme inline {
@@ -49,10 +57,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-amber: #E8913A;
-  --color-amber-dark: #D07A2B;
-  --color-cream: #FAF7F2;
-  --color-green-soft: #F0F5F0;
+  --color-amber: #e8913a;
+  --color-amber-dark: #d07a2b;
+  --color-cream: #faf7f2;
+  --color-green-soft: #f0f5f0;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -64,37 +72,37 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #FAF7F2;
+  --background: #faf7f2;
   --foreground: #1a1a1a;
   --card: #ffffff;
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  --primary: #E8913A;
+  --primary: #e8913a;
   --primary-foreground: #ffffff;
-  --secondary: #F0F5F0;
+  --secondary: #f0f5f0;
   --secondary-foreground: #1a1a1a;
   --muted: #f5f5f4;
   --muted-foreground: #6b7280;
-  --accent: #F0F5F0;
+  --accent: #f0f5f0;
   --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
   --border: #e5e7eb;
   --input: #e5e7eb;
-  --ring: #E8913A;
-  --chart-1: #E8913A;
+  --ring: #e8913a;
+  --chart-1: #e8913a;
   --chart-2: #4ade80;
   --chart-3: #1a1a1a;
   --chart-4: #facc15;
   --chart-5: #f87171;
-  --sidebar: #FAF7F2;
+  --sidebar: #faf7f2;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #E8913A;
+  --sidebar-primary: #e8913a;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #F0F5F0;
+  --sidebar-accent: #f0f5f0;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #e5e7eb;
-  --sidebar-ring: #E8913A;
+  --sidebar-ring: #e8913a;
 }
 
 @layer utilities {

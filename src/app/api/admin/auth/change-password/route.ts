@@ -8,7 +8,9 @@ import bcrypt from "bcryptjs"
 
 const changePasswordSchema = z.object({
   currentPassword: z.string().min(1),
-  newPassword: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  newPassword: z
+    .string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres"),
 })
 
 export const POST = withAuth(async (request: NextRequest) => {
@@ -26,7 +28,10 @@ export const POST = withAuth(async (request: NextRequest) => {
     if (!passwordMatch) return badRequest("La contraseña actual es incorrecta")
 
     const hashed = await bcrypt.hash(newPassword, 10)
-    await prisma.user.update({ where: { id: user.id }, data: { password: hashed } })
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashed },
+    })
 
     return success({ ok: true })
   } catch (error) {

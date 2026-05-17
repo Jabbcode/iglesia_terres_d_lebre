@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Play } from "lucide-react"
 import {
   Carousel,
@@ -59,10 +60,12 @@ function TestimonioCard({
       )}
     >
       <div className="relative aspect-video">
-        <img
+        <Image
           src={testimonio.thumbnail}
           alt={`Testimonio de ${testimonio.nombre}`}
-          className="h-full w-full object-cover"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
           <button

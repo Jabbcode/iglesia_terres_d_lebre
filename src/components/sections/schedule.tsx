@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useState } from "react"
 import {
   Church,
@@ -255,12 +256,13 @@ export function Schedule({ lang, dict }: ScheduleProps) {
                     <div
                       className={`w-full max-w-sm lg:max-w-md ${isReversed ? "lg:order-1" : "lg:order-2"}`}
                     >
-                      <div className="bg-muted overflow-hidden rounded-2xl">
-                        <img
+                      <div className="bg-muted relative aspect-[4/3] overflow-hidden rounded-2xl">
+                        <Image
                           src={horario.imagen}
                           alt={horario.titulo}
-                          loading="lazy"
-                          className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-105"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 448px"
+                          className="object-cover transition-transform duration-500 hover:scale-105"
                         />
                       </div>
                     </div>

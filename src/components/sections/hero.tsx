@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { motion, useReducedMotion, Variants } from "framer-motion"
-import { useConfigStore } from "@/stores/config-store"
 import { useEffect, useState, useRef } from "react"
 import type { Locale } from "@/lib/i18n/config"
 import type { Dictionary } from "@/dictionaries"
@@ -11,27 +11,23 @@ import type { Dictionary } from "@/dictionaries"
 interface HeroProps {
   lang: Locale
   dict: Dictionary
+  videoHero: string | null
 }
 
-export function Hero({ lang, dict }: HeroProps) {
+export function Hero({ lang, dict, videoHero }: HeroProps) {
   const shouldReduceMotion = useReducedMotion()
-  const { config, fetchConfig } = useConfigStore()
   const [videoLoaded, setVideoLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    fetchConfig()
-  }, [fetchConfig])
 
   useEffect(() => {
     const videoEl = videoRef.current
     if (!videoEl) return
 
     const handler = () => setVideoLoaded(true)
-    videoEl.addEventListener("canplaythrough", handler)
+    videoEl.addEventListener("canplay", handler)
 
-    return () => videoEl.removeEventListener("canplaythrough", handler)
-  }, [config?.videoHero])
+    return () => videoEl.removeEventListener("canplay", handler)
+  }, [videoHero])
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -58,10 +54,10 @@ export function Hero({ lang, dict }: HeroProps) {
       className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-black"
     >
       {/* Background video */}
-      {config?.videoHero && (
+      {videoHero && (
         <video
           ref={videoRef}
-          key={config.videoHero}
+          key={videoHero}
           autoPlay
           loop
           muted
@@ -70,23 +66,27 @@ export function Hero({ lang, dict }: HeroProps) {
             videoLoaded ? "opacity-100" : "opacity-0"
           }`}
           aria-label={dict.home.hero.ariaVideo}
-          preload="auto"
+          preload="metadata"
+          poster="/hero/hero_bg.png"
           crossOrigin="anonymous"
         >
-          <source src={config.videoHero} type="video/mp4" />
+          <source src={videoHero} type="video/mp4" />
         </video>
       )}
 
       {/* Fallback / placeholder mientras carga */}
       <div
-        className={`absolute inset-0 h-full w-full bg-black object-cover transition-opacity duration-700 ${
+        className={`absolute inset-0 h-full w-full bg-black transition-opacity duration-700 ${
           videoLoaded ? "opacity-0" : "opacity-100"
         }`}
       >
-        <img
+        <Image
           src="/hero/hero_bg.png"
           alt={dict.home.hero.ariaImage}
-          className="h-full w-full object-cover"
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
       </div>
 

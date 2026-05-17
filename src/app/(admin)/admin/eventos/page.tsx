@@ -2,7 +2,10 @@
 
 import { Calendar, MapPin, Clock, RefreshCw, Edit, Trash2 } from "lucide-react"
 import { EmptyState } from "@/components/admin/empty-state"
-import { AdminListHeader, AdminListSkeleton } from "@/components/admin/admin-list"
+import {
+  AdminListHeader,
+  AdminListSkeleton,
+} from "@/components/admin/admin-list"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { useAdminData } from "@/hooks/use-admin-data"
@@ -96,7 +99,8 @@ export default function EventosPage() {
                       <span className="flex items-center gap-1">
                         <Clock className="size-3.5" />
                         {formatDate(evento.fecha)}
-                        {evento.periodicidad !== PERIODICIDAD.NINGUNA && " (base)"}
+                        {evento.periodicidad !== PERIODICIDAD.NINGUNA &&
+                          " (base)"}
                         {" · "}
                         {evento.horaInicio}
                         {evento.horaFin && ` - ${evento.horaFin}`}
@@ -114,7 +118,9 @@ export default function EventosPage() {
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <Switch
                     checked={evento.activo}
-                    onCheckedChange={() => handleToggle(evento.id, evento.activo)}
+                    onCheckedChange={() =>
+                      handleToggle(evento.id, evento.activo)
+                    }
                     className="cursor-pointer"
                   />
                   <div className="flex items-center gap-1">

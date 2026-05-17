@@ -2,7 +2,10 @@
 
 import { MessageSquareQuote, Edit, Trash2 } from "lucide-react"
 import { EmptyState } from "@/components/admin/empty-state"
-import { AdminListHeader, AdminListSkeleton } from "@/components/admin/admin-list"
+import {
+  AdminListHeader,
+  AdminListSkeleton,
+} from "@/components/admin/admin-list"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { useAdminData } from "@/hooks/use-admin-data"
@@ -23,7 +26,8 @@ export default function TestimoniosPage() {
 
   const { handleDelete } = useDeleteConfirm({
     title: "Eliminar testimonio",
-    description: "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
+    description:
+      "¿Estas seguro de eliminar este testimonio? Esta accion no se puede deshacer.",
     onDelete: deleteItem,
   })
 
@@ -66,7 +70,9 @@ export default function TestimoniosPage() {
                   {testimonio.thumbnail ? (
                     <div
                       className="size-12 rounded-lg bg-cover bg-center flex-shrink-0"
-                      style={{ backgroundImage: `url('${testimonio.thumbnail}')` }}
+                      style={{
+                        backgroundImage: `url('${testimonio.thumbnail}')`,
+                      }}
                     />
                   ) : (
                     <div className="bg-amber/10 text-amber flex size-12 items-center justify-center rounded-lg flex-shrink-0">
@@ -87,14 +93,18 @@ export default function TestimoniosPage() {
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <Switch
                     checked={testimonio.activo}
-                    onCheckedChange={() => handleToggle(testimonio.id, testimonio.activo)}
+                    onCheckedChange={() =>
+                      handleToggle(testimonio.id, testimonio.activo)
+                    }
                     className="cursor-pointer"
                   />
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => router.push(`/admin/testimonios/${testimonio.id}`)}
+                      onClick={() =>
+                        router.push(`/admin/testimonios/${testimonio.id}`)
+                      }
                       className="text-amber hover:bg-amber/10 hover:text-amber cursor-pointer"
                       title="Editar"
                     >
