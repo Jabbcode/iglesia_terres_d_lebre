@@ -25,12 +25,17 @@ function PasswordInput({
   label,
   error,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
+}: React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string
+  error?: string
+}) {
   const [show, setShow] = useState(false)
 
   return (
     <div>
-      <label className="text-foreground mb-1 block text-sm font-medium">{label}</label>
+      <label className="text-foreground mb-1 block text-sm font-medium">
+        {label}
+      </label>
       <div className="relative">
         <input
           {...props}
@@ -53,7 +58,10 @@ function PasswordInput({
 
 export function ChangePasswordForm() {
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [message, setMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
 
   const {
     register,
@@ -62,7 +70,11 @@ export function ChangePasswordForm() {
     formState: { errors },
   } = useForm<PasswordForm>({
     resolver: zodResolver(passwordSchema),
-    defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
   })
 
   const onSubmit = async (data: PasswordForm) => {
@@ -73,10 +85,15 @@ export function ChangePasswordForm() {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       })
-      setMessage({ type: "success", text: "Contraseña actualizada correctamente" })
+      setMessage({
+        type: "success",
+        text: "Contraseña actualizada correctamente",
+      })
       reset()
     } catch (err: unknown) {
-      const msg = isApiError(err) ? err.message : "Error al cambiar la contraseña"
+      const msg = isApiError(err)
+        ? err.message
+        : "Error al cambiar la contraseña"
       setMessage({ type: "error", text: msg })
     } finally {
       setSaving(false)
@@ -86,12 +103,16 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {message && (
-        <div className={`rounded-lg p-3 text-sm ${message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+        <div
+          className={`rounded-lg p-3 text-sm ${message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
+        >
           {message.text}
         </div>
       )}
       <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-        <h2 className="text-foreground mb-4 text-lg font-semibold">Cambiar Contraseña</h2>
+        <h2 className="text-foreground mb-4 text-lg font-semibold">
+          Cambiar Contraseña
+        </h2>
         <div className="grid gap-6 sm:grid-cols-2">
           <PasswordInput
             label="Contraseña actual"
@@ -113,7 +134,11 @@ export function ChangePasswordForm() {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button type="submit" disabled={saving} className="bg-amber hover:bg-amber-dark gap-2">
+        <Button
+          type="submit"
+          disabled={saving}
+          className="bg-amber hover:bg-amber-dark gap-2"
+        >
           <KeyRound className="size-4" />
           {saving ? "Actualizando..." : "Cambiar Contraseña"}
         </Button>

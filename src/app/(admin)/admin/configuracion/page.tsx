@@ -19,7 +19,10 @@ type ConfigForm = z.infer<typeof configSchema>
 export default function ConfiguracionPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [message, setMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
 
   const {
     handleSubmit,
@@ -66,18 +69,24 @@ export default function ConfiguracionPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-foreground text-2xl font-bold">Configuracion</h1>
-        <p className="text-muted-foreground mt-1">Gestiona el video principal y la seguridad de tu cuenta</p>
+        <p className="text-muted-foreground mt-1">
+          Gestiona el video principal y la seguridad de tu cuenta
+        </p>
       </div>
 
       {/* Video Principal */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {message && (
-          <div className={`rounded-lg p-3 text-sm ${message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+          <div
+            className={`rounded-lg p-3 text-sm ${message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
+          >
             {message.text}
           </div>
         )}
         <div className="border-border/50 rounded-xl border bg-white p-6 shadow-sm">
-          <h2 className="text-foreground mb-4 text-lg font-semibold">Video Principal</h2>
+          <h2 className="text-foreground mb-4 text-lg font-semibold">
+            Video Principal
+          </h2>
           <VideoUpload
             value={watch("videoHero")}
             onChange={(url) => setValue("videoHero", url)}
@@ -85,11 +94,17 @@ export default function ConfiguracionPage() {
             placeholder="Subir video para el hero"
           />
           {errors.videoHero && (
-            <p className="mt-1 text-sm text-red-500">{errors.videoHero.message}</p>
+            <p className="mt-1 text-sm text-red-500">
+              {errors.videoHero.message}
+            </p>
           )}
         </div>
         <div className="flex justify-end">
-          <Button type="submit" disabled={saving} className="bg-amber hover:bg-amber-dark gap-2">
+          <Button
+            type="submit"
+            disabled={saving}
+            className="bg-amber hover:bg-amber-dark gap-2"
+          >
             <Save className="size-4" />
             {saving ? "Guardando..." : "Guardar Cambios"}
           </Button>

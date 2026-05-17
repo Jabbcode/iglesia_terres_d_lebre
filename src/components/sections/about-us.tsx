@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Target, Eye, Heart, Users, BookOpen } from "lucide-react"
 import { useRef, useState, useEffect } from "react"
 
@@ -99,11 +100,13 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
 
                 {/* Frame with image */}
                 <div className="relative overflow-hidden rounded-lg bg-white p-4 shadow-xl">
-                  <img
+                  <Image
                     src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_principal.png"
                     alt={dict.about.history.imageAltPast}
+                    width={600}
+                    height={800}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="h-auto w-full rounded object-cover"
-                    loading="lazy"
                   />
                 </div>
               </div>
@@ -158,7 +161,7 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
                   <img
                     src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_presente_inferior.jpg"
                     alt={dict.about.history.imageAltPresent}
-                    className="h-auto lg:h-96 w-full object-cover"
+                    className="aspect-[4/3] lg:aspect-auto lg:h-96 w-full object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -174,12 +177,13 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
             {/* Large Image */}
             <div className="flex-1">
-              <div className="overflow-hidden rounded-2xl">
-                <img
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                <Image
                   src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/nosotros_futuro.jpg"
                   alt={dict.about.history.imageAltFuture}
-                  className="h-auto w-full object-cover"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -211,11 +215,12 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
             style={isDesktop ? { y } : {}}
             className="absolute inset-0 w-full h-full lg:h-[150%] lg:-top-[5%]"
           >
-            <img
+            <Image
               src="https://nngrjxgeovdvnawvfrmj.supabase.co/storage/v1/object/public/images/nosotros/fondo_tortosa_roquetes.jpg"
               alt={dict.about.history.imageAltParallax}
-              className="h-full w-full object-cover"
-              loading="lazy"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
           </motion.div>
           {/* Overlay */}

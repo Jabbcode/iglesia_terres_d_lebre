@@ -77,18 +77,22 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
                   onClick={() => setLightbox(index)}
                   className="focus-visible:ring-amber group relative block w-full overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2"
                 >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    loading="lazy"
-                    className={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                  <div
+                    className={`relative w-full ${
                       image.span === "tall"
                         ? "aspect-[3/4]"
                         : image.span === "wide"
                           ? "aspect-[4/3]"
                           : "aspect-square"
                     }`}
-                  />
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
                   {/* Hover overlay */}
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <p className="p-4 text-sm font-medium text-white">

@@ -49,7 +49,9 @@ export function Footer({ lang, iglesia }: FooterProps) {
   }
 
   const { direccion, telefono, email } = siteConfig.contact
-  const whatsappNumber = telefono ? telefono.replace(/\s+/g, "").replace("+", "") : ""
+  const whatsappNumber = telefono
+    ? telefono.replace(/\s+/g, "").replace("+", "")
+    : ""
 
   return (
     <footer className="bg-foreground text-white">
@@ -164,7 +166,8 @@ export function Footer({ lang, iglesia }: FooterProps) {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:px-6 sm:text-left lg:px-8">
           <p>
-            &copy; {new Date().getFullYear()} Iglesia Biblica {iglesia.nombre}. {footerTexts.copyright}.
+            &copy; {new Date().getFullYear()} Iglesia Biblica {iglesia.nombre}.{" "}
+            {footerTexts.copyright}.
           </p>
         </div>
       </div>
