@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.6] - 2026-07-02
+
+### FIXES
+* [#92](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/92) GitHub Release solo enlaza al CHANGELOG
+### OTROS
+* [#91](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/91) sync develop con main v1.3.5
+
+**Full Changelog**: https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.5...v1.3.6
+
+
 ## [1.3.5] - 2026-07-02
 
 ### FEAT
