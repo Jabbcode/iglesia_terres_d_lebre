@@ -12,6 +12,16 @@ Sitio web de iglesia cristiana con panel de administración.
 - @.claude/context/decisions.md — decisiones técnicas tomadas y su razonamiento
 - @.claude/context/standards.md — estándares de código: constantes, TypeScript, convenciones
 
+## Contexto de diseño
+
+- @PRODUCT.md — registro (brand), usuarios, propósito, personalidad y anti-referencias
+- @DESIGN.md — sistema visual: paleta ámbar/crema, tipografía Inter + Playfair, componentes
+
+Registro **brand** (sitio público) con panel admin como superficie secundaria. North Star:
+"La Bienvenida Cálida" — un único acento saturado (ámbar), acento serif de una sola
+palabra por titular, base neutra accesible (WCAG AA) para toda la congregación. Evitar
+siempre estética "iglesia antigua" (vitrales, gótico, look años 2000).
+
 ## Mantenimiento del contexto
 
 Al terminar cualquier implementación significativa, actualizar los ficheros de contexto si aplica:

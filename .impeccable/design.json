@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-02T00:00:00.000Z",
+  "title": "Design System: Iglesia Bíblica Terres de l'Ebre",
+  "extensions": {
+    "colorMeta": {
+      "warm-amber": {
+        "role": "primary",
+        "displayName": "Ámbar Cálido",
+        "canonical": "oklch(72% 0.15 55)",
+        "tonalRamp": ["#3d2409", "#6b3f12", "#a35c1c", "#d07a2b", "#e8913a", "#eda863", "#f3c493", "#f9e1c8"]
+      },
+      "amber-dark": {
+        "role": "primary-deep",
+        "displayName": "Ámbar Oscuro",
+        "canonical": "oklch(62% 0.14 52)",
+        "tonalRamp": ["#331e08", "#5a350f", "#874c18", "#ad681f", "#d07a2b", "#dc9455", "#e8b184", "#f4d0b6"]
+      },
+      "soft-cream": {
+        "role": "neutral-bg",
+        "displayName": "Crema Suave",
+        "canonical": "oklch(97.5% 0.008 75)",
+        "tonalRamp": ["#3a3630", "#5f594e", "#8a8272", "#b6ac97", "#d8d0be", "#ecE6d9", "#f6f2ea", "#faf7f2"]
+      },
+      "sage-green": {
+        "role": "neutral-accent",
+        "displayName": "Verde Salvia",
+        "canonical": "oklch(96.5% 0.01 155)",
+        "tonalRamp": ["#2c342c", "#485648", "#6c7d6c", "#95a695", "#bccabc", "#dbe5db", "#eef3ee", "#f0f5f0"]
+      },
+      "deep-ink": {
+        "role": "foreground",
+        "displayName": "Tinta Profunda",
+        "canonical": "oklch(21% 0 0)",
+        "tonalRamp": ["#0a0a0a", "#1a1a1a", "#2e2e2e", "#464646", "#616161", "#7d7d7d", "#9a9a9a", "#b8b8b8"]
+      },
+      "warm-grey": {
+        "role": "muted-foreground",
+        "displayName": "Gris Cálido",
+        "canonical": "oklch(45% 0.02 240)",
+        "tonalRamp": ["#1c2126", "#2e343b", "#414a53", "#54606e", "#6d7a89", "#8b96a3", "#aeb7c1", "#d4d9de"]
+      },
+      "pure-white": {
+        "role": "surface",
+        "displayName": "Blanco Puro",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": ["#d9d9d9", "#e6e6e6", "#f0f0f0", "#f7f7f7", "#fafafa", "#fcfcfc", "#fefefe", "#ffffff"]
+      },
+      "border-mist": {
+        "role": "border",
+        "displayName": "Niebla",
+        "canonical": "oklch(92% 0.005 260)",
+        "tonalRamp": ["#3a3c40", "#565a60", "#757a82", "#979da5", "#bcc0c6", "#d5d8dc", "#e5e7eb", "#f2f3f5"]
+      },
+      "destructive-red": {
+        "role": "destructive",
+        "displayName": "Rojo Destructivo",
+        "canonical": "oklch(63.7% 0.208 25)",
+        "tonalRamp": ["#450a0a", "#7f1d1d", "#b91c1c", "#dc2626", "#ef4444", "#f87171", "#fca5a5", "#fecaca"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Titular hero (h1) — Inter bold sobre fondo oscuro o crema." },
+      "accent-serif": { "displayName": "Accent Serif", "purpose": "Una palabra/frase de énfasis dentro de un Display o Headline, Playfair Display itálica en ámbar." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos de sección (h2)." },
+      "title": { "displayName": "Title", "purpose": "Títulos de card/bloque (h3)." },
+      "body": { "displayName": "Body", "purpose": "Párrafos descriptivos, color gris cálido." },
+      "label": { "displayName": "Label", "purpose": "Badge en mayúsculas sobre un h2 de sección — máximo uno por página." }
+    },
+    "shadows": [
+      { "name": "card-sutil", "value": "0 1px 2px rgba(0,0,0,0.05)", "purpose": "Cards de contenido (misión, valores, testimonios)." },
+      { "name": "foto-protagonista", "value": "0 20px 25px rgba(0,0,0,0.15)", "purpose": "Marcos de fotografía e imágenes destacadas." },
+      { "name": "cta-calido", "value": "0 10px 15px rgba(232,145,58,0.25)", "purpose": "Sombra cálida bajo el CTA principal ámbar." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Transiciones de color/estado por defecto (hover, focus)." },
+      { "name": "stagger-reveal", "value": "framer-motion staggerChildren 0.2s, duration 0.4s", "purpose": "Entrada escalonada de elementos del hero y secciones con FadeInUp." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal en píldora, ámbar cálido con sombra cálida.",
+      "html": "<button class=\"ds-btn-primary\">Ver horarios</button>",
+      "css": ".ds-btn-primary { background: #e8913a; color: #ffffff; padding: 12px 32px; border-radius: 9999px; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.05em; border: none; box-shadow: 0 10px 15px rgba(232,145,58,0.25); transition: background 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #d07a2b; box-shadow: 0 12px 20px rgba(232,145,58,0.3); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(232,145,58,0.5); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Acción secundaria, fondo transparente con borde.",
+      "html": "<button class=\"ds-btn-outline\">Saber más</button>",
+      "css": ".ds-btn-outline { background: transparent; color: #1a1a1a; padding: 8px 16px; border-radius: 8px; border: 1px solid #e5e7eb; font-weight: 500; font-size: 0.875rem; transition: background 0.2s; } .ds-btn-outline:hover { background: #f0f5f0; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Card de misión/valores/testimonios, fondo blanco sobre crema.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-icon\"><svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#e8913a\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg></div><h3 class=\"ds-card-title\">Nuestra misión</h3><p class=\"ds-card-body\">Servir a la comunidad con fe y cercanía.</p></div>",
+      "css": ".ds-card { background: #ffffff; border-radius: 14px; padding: 40px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; } .ds-card-icon { width: 64px; height: 64px; border-radius: 9999px; background: rgba(232,145,58,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; } .ds-card-title { font-weight: 700; font-size: 1.5rem; color: #1a1a1a; margin-bottom: 16px; } .ds-card-body { color: #54606e; line-height: 1.6; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de formulario (contacto, admin).",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Tu nombre\" />",
+      "css": ".ds-input { background: transparent; border: 1px solid #e5e7eb; border-radius: 8px; padding: 4px 12px; height: 36px; width: 100%; font-size: 0.875rem; color: #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.03); transition: border-color 0.2s, box-shadow 0.2s; } .ds-input::placeholder { color: #54606e; } .ds-input:focus-visible { outline: none; border-color: #e8913a; box-shadow: 0 0 0 3px rgba(232,145,58,0.3); }"
+    },
+    {
+      "name": "Section Label",
+      "kind": "custom",
+      "refersTo": "badge-label",
+      "description": "Etiqueta corta en mayúsculas encima de un H2 de sección — máximo una por página; el resto de fronteras usan el divisor de regla ámbar.",
+      "html": "<p class=\"ds-label\">Nuestros valores</p>",
+      "css": ".ds-label { color: #e8913a; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }"
+    },
+    {
+      "name": "Icon Circle",
+      "kind": "custom",
+      "refersTo": "icon-circle",
+      "description": "Círculo de icono ámbar translúcido, patrón recurrente en misión/visión/valores.",
+      "html": "<div class=\"ds-icon-circle\"><svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#e8913a\" stroke-width=\"2\"><path d=\"M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z\"/></svg></div>",
+      "css": ".ds-icon-circle { width: 64px; height: 64px; border-radius: 9999px; background: rgba(232,145,58,0.1); display: flex; align-items: center; justify-content: center; }"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Barra fija superior con blur y estado activo en ámbar.",
+      "html": "<header class=\"ds-nav\"><nav class=\"ds-nav-links\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">INICIO</a><a class=\"ds-nav-link\" href=\"#\">CREENCIAS</a><a class=\"ds-nav-link\" href=\"#\">CONTACTO</a></nav></header>",
+      "css": ".ds-nav { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid #e5e7eb; padding: 0 32px; height: 96px; display: flex; align-items: center; } .ds-nav-links { display: flex; gap: 24px; } .ds-nav-link { font-weight: 600; font-size: 0.75rem; letter-spacing: 0.05em; color: rgba(26,26,26,0.7); transition: color 0.2s; } .ds-nav-link:hover { color: #1a1a1a; } .ds-nav-link--active { color: #e8913a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Bienvenida Cálida",
+    "overview": "El sistema traduce la hospitalidad de una comunidad real en interfaz: una base neutra clara (crema, blanco, tinta) que deja respirar el contenido, y un único acento —el ámbar cálido— reservado para lo que merece atención (llamadas a la acción, estado activo, la palabra que da énfasis a un titular). El serif itálico (Playfair Display) aparece solo como gesto puntual dentro de titulares en sans bold, nunca como voz tipográfica completa: es la firma personal dentro de una composición por lo demás contemporánea. Este sistema rechaza explícitamente la estética 'iglesia antigua': nada de vitrales, tipografía gótica/blackletter ni maquetación estática de sitios de los 2000.",
+    "keyCharacteristics": [
+      "Base neutra luminosa (crema/blanco/tinta) con un único acento saturado",
+      "Un acento serif itálico por titular, nunca un párrafo completo",
+      "Superficies planas por defecto; sombra reservada a fotografía enmarcada",
+      "CTA principal en píldora (rounded-full), UI funcional en esquinas moderadas (rounded-md)"
+    ],
+    "rules": [
+      { "name": "La Regla del Acento Único", "body": "El ámbar es el único color saturado del sistema. Se usa con moderación: CTA, estado activo, iconos puntuales, la etiqueta en mayúsculas — nunca como fondo extenso de sección.", "section": "colors" },
+      { "name": "Excepción de contraste conocida", "body": "#e8913a da ~2.58:1 sobre blanco/crema como texto o relleno de botón, por debajo de WCAG AA 4.5:1. Es una decisión de marca deliberada (preferencia visual sobre cumplimiento estricto); no oscurecerlo sin consultar primero.", "section": "colors" },
+      { "name": "La Regla de la Palabra de Acento", "body": "Exactamente una palabra o frase corta por titular se convierte en Playfair Display itálica ámbar; el resto permanece en Inter bold. Nunca un titular completo en serif.", "section": "typography" },
+      { "name": "La Regla del Peso Fotográfico", "body": "La sombra pronunciada (shadow-xl) se reserva para fotografía enmarcada. El resto de la interfaz permanece plana o con sombra apenas perceptible (shadow-sm).", "section": "elevation" }
+    ],
+    "dos": [
+      "Do reservar el ámbar (#e8913a) para un único elemento de foco por vista: el CTA, el estado activo, o la palabra de énfasis — nunca como fondo extenso.",
+      "Do usar Playfair Display itálica solo para una palabra o frase corta dentro de un titular Inter bold.",
+      "Do mantener las superficies planas por defecto; usar shadow-xl únicamente en fotografía enmarcada.",
+      "Do verificar contraste de text-muted-foreground (#54606e) sobre crema/blanco — debe seguir siendo legible para público mayor."
+    ],
+    "donts": [
+      "Don't usar vitrales, iconografía religiosa genérica, o cualquier motivo que evoque una 'iglesia antigua'.",
+      "Don't usar tipografía gótica/blackletter en ningún contexto.",
+      "Don't maquetar como un sitio estático estilo años 2000 (bloques rígidos, sin espaciado, sin jerarquía tipográfica).",
+      "Don't convertir un titular completo a serif itálica — el acento es de una palabra, no de la frase entera.",
+      "Don't introducir un segundo color saturado junto al ámbar; si se necesita un segundo acento, resolverlo con una variación tonal del ámbar.",
+      "Don't repetir la etiqueta en mayúsculas (eyebrow) en más de una sección por página. Un único kicker por página es voz; el resto usa el divisor de regla ámbar."
+    ]
+  }
+}

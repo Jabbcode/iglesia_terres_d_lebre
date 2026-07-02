@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Instagram, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useConfigStore } from "@/stores/config-store"
@@ -21,6 +21,9 @@ interface GalleryProps {
 export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
   const [lightbox, setLightbox] = useState<number | null>(null)
   const { config, fetchConfig } = useConfigStore()
+  const lightboxRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const previouslyFocused = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     fetchConfig()
@@ -28,6 +31,10 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
 
   useEffect(() => {
     if (lightbox === null) return
+
+    previouslyFocused.current = document.activeElement as HTMLElement
+    closeButtonRef.current?.focus()
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
         setLightbox((prev) =>
@@ -39,10 +46,27 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
         )
       } else if (e.key === "Escape") {
         setLightbox(null)
+      } else if (e.key === "Tab") {
+        const focusable = lightboxRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
       }
     }
     window.addEventListener("keydown", handleKey)
-    return () => window.removeEventListener("keydown", handleKey)
+    return () => {
+      window.removeEventListener("keydown", handleKey)
+      previouslyFocused.current?.focus()
+    }
   }, [lightbox, imagenes.length])
 
   const instagramUrl = config?.instagram
@@ -127,14 +151,19 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
       <AnimatePresence>
         {lightbox !== null && (
           <motion.div
+            ref={lightboxRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
             onClick={() => setLightbox(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Galería de imágenes"
           >
             <button
+              ref={closeButtonRef}
               onClick={() => setLightbox(null)}
               className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             >
@@ -169,18 +198,20 @@ export function Gallery({ lang: _lang, dict, imagenes }: GalleryProps) {
                 e.stopPropagation()
                 setLightbox(lightbox === 0 ? imagenes.length - 1 : lightbox - 1)
               }}
+              aria-label="Imagen anterior"
               className="absolute left-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
             >
-              &#8249;
+              <span aria-hidden="true">&#8249;</span>
             </button>
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 setLightbox(lightbox === imagenes.length - 1 ? 0 : lightbox + 1)
               }}
+              aria-label="Imagen siguiente"
               className="absolute right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20"
             >
-              &#8250;
+              <span aria-hidden="true">&#8250;</span>
             </button>
           </motion.div>
         )}

@@ -106,7 +106,7 @@ export function Footer({ lang, iglesia }: FooterProps) {
             aria-label="Enlaces del footer"
             className="text-center sm:text-left"
           >
-            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
+            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/60">
               {footerTexts.links}
             </h2>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-1">
@@ -125,7 +125,7 @@ export function Footer({ lang, iglesia }: FooterProps) {
 
           {/* Column 3 - Contact */}
           <div className="text-center sm:text-left">
-            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/40">
+            <h2 className="mb-4 text-xs font-bold tracking-widest text-white/60">
               {footerTexts.contact}
             </h2>
             <address className="space-y-3 not-italic">
@@ -164,7 +164,7 @@ export function Footer({ lang, iglesia }: FooterProps) {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/40 sm:flex-row sm:px-6 sm:text-left lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center text-xs text-white/60 sm:flex-row sm:px-6 sm:text-left lg:px-8">
           <p>
             &copy; {new Date().getFullYear()} Iglesia Biblica {iglesia.nombre}.{" "}
             {footerTexts.copyright}.

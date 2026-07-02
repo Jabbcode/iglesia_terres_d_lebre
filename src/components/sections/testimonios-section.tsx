@@ -127,12 +127,10 @@ export function TestimoniosSection({ lang, dict }: TestimoniosSectionProps) {
       <section className="border-border bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
-              {dict.home.testimonials.badge}
-            </p>
             <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
               {dict.home.testimonials.title}
             </h2>
+            <div className="bg-amber mx-auto mb-6 h-1 w-16 rounded-full" />
             <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-relaxed">
               {dict.home.testimonials.description}
             </p>
