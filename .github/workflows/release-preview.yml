@@ -92,7 +92,8 @@ jobs:
             --jq '.[] | select(.body | startswith("<!-- release-preview-bot -->")) | .id' | head -1)
 
           if [ -n "$existing_id" ]; then
-            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$existing_id" -f body=@/tmp/comment.md
+            jq -n --rawfile body /tmp/comment.md '{body: $body}' \
+              | gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$existing_id" --input -
           else
-            gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body "$(cat /tmp/comment.md)"
           fi
