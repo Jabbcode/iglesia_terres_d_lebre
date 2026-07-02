@@ -17,21 +17,29 @@ git checkout -b feat/nombre develop   ← branch desde develop
 → mergear a develop
 ```
 
-## Flujo de release
+## Flujo de release (automatizado)
 
-Cuando hay suficientes cambios en `develop` para publicar:
+`.github/workflows/release.yml` automatiza todo lo que antes era manual, a partir de labels:
 
 ```
-1. PR: develop → main  (título: "Release vX.Y.Z")
-2. Esperar confirmación
-3. Mergear
-4. Actualizar CHANGELOG.md y package.json con nueva versión
-5. Crear tag: git tag vX.Y.Z && git push origin vX.Y.Z
-6. Crear GitHub Release desde el tag
-7. Crear PR de `main` → `develop` con título "chore: sync develop con main vX.Y.Z"
-8. Esperar confirmación
-9. Mergear — develop queda con CHANGELOG y version bump actualizados
+1. PR: develop → main  (título libre, ej. "Release" o el que sea)
+2. Añadir una label: release-type/patch | release-type/minor | release-type/major
+3. Esperar confirmación
+4. Mergear  ← este es el único paso manual real; a partir de aquí todo es automático:
+   - calcula la nueva versión según la label
+   - genera las notas con la API de GitHub (agrupadas por labels vía .github/release.yml)
+   - inserta esas notas en CHANGELOG.md + bump de package.json, commit directo a main
+   - crea el tag vX.Y.Z y el GitHub Release
+   - abre el PR de sync "chore: sync develop con main vX.Y.Z" (main → develop)
+5. Esperar confirmación
+6. Mergear el PR de sync — develop queda con CHANGELOG y version bump actualizados
 ```
+
+Las PRs de feature/fix deben llevar la label correspondiente (`feat`, `fix`, `refactor`,
+`docs`, `chore`, `style`, `test`, `db`, `security`, `perf`) para que aparezcan bien
+categorizadas en las notas de release. Las labels `release-type/*` se excluyen
+automáticamente del changelog generado (evita que el propio PR de release aparezca
+como ruido).
 
 ## Hotfixes (bug urgente en producción)
 

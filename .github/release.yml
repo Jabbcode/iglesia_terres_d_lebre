@@ -1,0 +1,32 @@
+changelog:
+  exclude:
+    labels:
+      - "release-type/patch"
+      - "release-type/minor"
+      - "release-type/major"
+  categories:
+    - title: "✨ Nuevas funcionalidades"
+      labels:
+        - "feat"
+    - title: "🐛 Fixes"
+      labels:
+        - "fix"
+    - title: "🔒 Seguridad"
+      labels:
+        - "security"
+    - title: "♻️ Refactor"
+      labels:
+        - "refactor"
+    - title: "⚡ Rendimiento"
+      labels:
+        - "perf"
+    - title: "🗄️ Base de datos"
+      labels:
+        - "db"
+    - title: "🧹 Otros"
+      labels:
+        - "chore"
+        - "style"
+        - "test"
+        - "docs"
+        - "*"
