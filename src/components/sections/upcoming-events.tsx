@@ -251,12 +251,10 @@ export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="text-amber mb-3 text-xs font-bold tracking-[0.3em]">
-            {dict.home.upcomingEvents.badge}
-          </p>
           <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
             {dict.home.upcomingEvents.title}
           </h2>
+          <div className="bg-amber mx-auto mb-6 h-1 w-16 rounded-full" />
           <p className="text-muted-foreground text-base leading-relaxed">
             {dict.home.upcomingEvents.description}
           </p>

@@ -291,12 +291,10 @@ export function AboutUs({ lang, dict }: AboutUsProps) {
       <section className="bg-cream py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <p className="text-amber mb-3 text-xs font-bold tracking-widest uppercase">
-              {dict.about.values.badge}
-            </p>
             <h2 className="text-foreground text-3xl font-bold sm:text-4xl">
               {dict.about.values.title}
             </h2>
+            <div className="bg-amber mx-auto mt-6 h-1 w-20" />
           </div>
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
             {valuesFromDict.map((value, index) => (
