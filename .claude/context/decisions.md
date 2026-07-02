@@ -2,6 +2,32 @@
 
 Registro de decisiones importantes tomadas y su razonamiento.
 
+## Release automatizado por labels, no por parseo de título
+
+**Decisión:** El workflow `.github/workflows/release.yml` decide el bump de versión
+(patch/minor/major) leyendo una label `release-type/*` en el PR `develop → main`, no
+parseando el título del PR.
+
+**Por qué:** Una label es una señal estructurada y explícita (el usuario la elige a
+propósito), mientras que parsear el título es frágil y ambiguo. El único paso manual
+real del release es añadir esa label y confirmar el merge; todo lo demás (versión,
+changelog, tag, GitHub Release, PR de sync) es automático a partir de ahí.
+
+**Notas de release:** Se generan con la API de GitHub (`releases/generate-notes`), que
+recorre los merge commits entre tags — SÍ recoge los PRs individuales de `develop`
+(fix/feat/etc.), no solo el PR grande de release, porque esos merge commits quedan
+como ancestros en el historial de `main`. Se verificó con una llamada real a la API
+antes de asumirlo.
+
+**Exclusión de ruido:** Las propias labels `release-type/patch|minor|major` se usan
+también como criterio de exclusión en `.github/release.yml`, así el PR de release no
+aparece listado como una entrada más del changelog. Evita crear una label extra solo
+para eso.
+
+**Categorización:** Requiere que los PRs de feature/fix lleven una label de tipo
+(`feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`, `db`, `security`, `perf`)
+que coincide 1:1 con la convención de commits ya existente en `workflow.md`.
+
 ## Caché en 3 capas
 
 **Decisión:** Implementar caché en Layer 1 (Cache-Control), Layer 2 (ISR) y Layer 3 (unstable_cache).
