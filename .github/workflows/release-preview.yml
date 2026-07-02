@@ -73,6 +73,8 @@ jobs:
           ' /tmp/notes.md > /tmp/notes-clean.md
           mv /tmp/notes-clean.md /tmp/notes.md
           sed -i '/./,/^$/!d' /tmp/notes.md
+          sed -i -E 's/^\* (feat|fix|refactor|docs|chore|style|test|db|security|perf): /* /' /tmp/notes.md
+          sed -i -E 's|^\* (.+) by @[^ ]+ in (https://[^ ]+/pull/([0-9]+))$|* [#\3](\2) \1|' /tmp/notes.md
 
           {
             echo "<!-- release-preview-bot -->"
