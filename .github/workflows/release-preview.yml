@@ -63,6 +63,17 @@ jobs:
             -f previous_tag_name="v${{ steps.version.outputs.previous }}" \
             --jq '.body' > /tmp/notes.md
 
+          sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
+          sed -i "/^## What's Changed$/d" /tmp/notes.md
+          awk '
+            /^## New Contributors$/ { skip=1; next }
+            skip && /^\*\*Full Changelog\*\*/ { skip=0 }
+            skip { next }
+            { print }
+          ' /tmp/notes.md > /tmp/notes-clean.md
+          mv /tmp/notes-clean.md /tmp/notes.md
+          sed -i '/./,/^$/!d' /tmp/notes.md
+
           {
             echo "<!-- release-preview-bot -->"
             echo "## 🔖 Vista previa del release"
