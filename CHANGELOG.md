@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.5] - 2026-07-02
+
+### FEAT
+* [#85](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/85) preview de release en comentario del PR
+### FIXES
+* [#87](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/87) release-preview.yml necesita contents: write
+* [#88](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/88) comentario de release-preview mostraba texto literal
+### REFACTOR
+* [#89](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/89) simplificar formato de las notas de release
+* [#90](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/90) bullets del changelog como [#PR](link) titulo
+### OTROS
+* [#84](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/84) sync develop con main v1.3.4
+
+**Full Changelog**: https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.4...v1.3.5
+
+
 ## [1.3.4] - 2026-07-02
 
 <!-- Release notes generated using configuration in .github/release.yml at develop -->
