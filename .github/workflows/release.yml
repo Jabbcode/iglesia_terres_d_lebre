@@ -66,6 +66,21 @@ jobs:
             -f previous_tag_name="v${{ steps.version.outputs.previous }}" \
             --jq '.body' > /tmp/notes.md
 
+      - name: Limpiar ruido de las notas generadas
+        run: |
+          sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
+          sed -i "/^## What's Changed$/d" /tmp/notes.md
+          awk '
+            /^## New Contributors$/ { skip=1; next }
+            skip && /^\*\*Full Changelog\*\*/ { skip=0 }
+            skip { next }
+            { print }
+          ' /tmp/notes.md > /tmp/notes-clean.md
+          mv /tmp/notes-clean.md /tmp/notes.md
+          sed -i '/./,/^$/!d' /tmp/notes.md
+          sed -i -E 's/^\* (feat|fix|refactor|docs|chore|style|test|db|security|perf): /* /' /tmp/notes.md
+          sed -i -E 's|^\* (.+) by @[^ ]+ in (https://[^ ]+/pull/([0-9]+))$|* [#\3](\2) \1|' /tmp/notes.md
+
       - name: Update CHANGELOG.md
         run: |
           date=$(date +%Y-%m-%d)

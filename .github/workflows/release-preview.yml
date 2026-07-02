@@ -1,0 +1,112 @@
+name: Release Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  preview:
+    if: >
+      github.event.action == 'opened' ||
+      github.event.action == 'synchronize' ||
+      startsWith(github.event.label.name, 'release-type/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Determine bump type from current labels
+        id: bump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          labels=$(gh pr view "${{ github.event.pull_request.number }}" --json labels --jq '.labels[].name')
+          if echo "$labels" | grep -qx 'release-type/major'; then
+            echo "type=major" >> "$GITHUB_OUTPUT"
+          elif echo "$labels" | grep -qx 'release-type/minor'; then
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+          elif echo "$labels" | grep -qx 'release-type/patch'; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "type=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute next version
+        id: version
+        if: steps.bump.outputs.type != 'none'
+        run: |
+          current=$(node -p "require('./package.json').version")
+          IFS='.' read -r major minor patch <<< "$current"
+          case "${{ steps.bump.outputs.type }}" in
+            major) major=$((major+1)); minor=0; patch=0 ;;
+            minor) minor=$((minor+1)); patch=0 ;;
+            patch) patch=$((patch+1)) ;;
+          esac
+          echo "new=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
+          echo "previous=$current" >> "$GITHUB_OUTPUT"
+
+      - name: Build preview comment
+        if: steps.bump.outputs.type != 'none'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X POST "repos/${{ github.repository }}/releases/generate-notes" \
+            -f tag_name="v${{ steps.version.outputs.new }}" \
+            -f target_commitish="${{ github.event.pull_request.head.ref }}" \
+            -f previous_tag_name="v${{ steps.version.outputs.previous }}" \
+            --jq '.body' > /tmp/notes.md
+
+          sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
+          sed -i "/^## What's Changed$/d" /tmp/notes.md
+          awk '
+            /^## New Contributors$/ { skip=1; next }
+            skip && /^\*\*Full Changelog\*\*/ { skip=0 }
+            skip { next }
+            { print }
+          ' /tmp/notes.md > /tmp/notes-clean.md
+          mv /tmp/notes-clean.md /tmp/notes.md
+          sed -i '/./,/^$/!d' /tmp/notes.md
+          sed -i -E 's/^\* (feat|fix|refactor|docs|chore|style|test|db|security|perf): /* /' /tmp/notes.md
+          sed -i -E 's|^\* (.+) by @[^ ]+ in (https://[^ ]+/pull/([0-9]+))$|* [#\3](\2) \1|' /tmp/notes.md
+
+          {
+            echo "<!-- release-preview-bot -->"
+            echo "## 🔖 Vista previa del release"
+            echo ""
+            echo "Al mergear con la label \`release-type/${{ steps.bump.outputs.type }}\`, se publicará:"
+            echo ""
+            echo "**v${{ steps.version.outputs.new }}** (actual: v${{ steps.version.outputs.previous }})"
+            echo ""
+            cat /tmp/notes.md
+          } > /tmp/comment.md
+
+      - name: Build "sin label" comment
+        if: steps.bump.outputs.type == 'none'
+        run: |
+          {
+            echo "<!-- release-preview-bot -->"
+            echo "## 🔖 Vista previa del release"
+            echo ""
+            echo "⚠️ No hay ninguna label \`release-type/patch\`, \`release-type/minor\` o \`release-type/major\` en este PR — al mergear **no se publicará ningún release**."
+          } > /tmp/comment.md
+
+      - name: Post or update comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          existing_id=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '.[] | select(.body | startswith("<!-- release-preview-bot -->")) | .id' | head -1)
+
+          if [ -n "$existing_id" ]; then
+            jq -n --rawfile body /tmp/comment.md '{body: $body}' \
+              | gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$existing_id" --input -
+          else
+            gh pr comment "${{ github.event.pull_request.number }}" --body "$(cat /tmp/comment.md)"
+          fi
