@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3] - 2026-07-02
+
+### Added
+
+- `PRODUCT.md` y `DESIGN.md`: contexto de registro, personalidad de marca y sistema visual documentado (impeccable)
+- Configuración de live mode (`.impeccable/live/config.json`) para iteración visual en navegador
+
+### Fixed
+
+- Lightbox de galería y modal de vídeo: semántica de diálogo (`role="dialog"`, `aria-modal`), foco inicial, retorno de foco y trampa de teclado; cierre con Escape añadido al modal de vídeo
+- Contraste de footer (`text-white/40` → `/60`) y de `--muted-foreground` (`#54606e`), por debajo de WCAG AA
+- Mismatch de hidratación en `useIsMobile`/`useMediaQuery` que causaba un salto visible de layout (grid ↔ carrusel) tras cargar en Schedule, Beliefs, Testimonios y Upcoming Events
+
+### Changed
+
+- Reducida la repetición del eyebrow (etiqueta uppercase) a un único kicker por página; el resto de secciones usa el divisor de regla ámbar ya existente en Liderazgo
+
+### Removed
+
+- `newsletter.tsx`: componente sin usar en ninguna página, con formulario no funcional
+
 ## [1.3.2] - 2026-05-17
 
 ### Changed
