@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2026-07-02
+
+<!-- Release notes generated using configuration in .github/release.yml at develop -->
+
+## What's Changed
+### 🧹 Otros
+* chore: sync develop con main v1.3.3 by @Jabbcode in https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/81
+* chore: automatizar release develop->main con GitHub Actions by @Jabbcode in https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/82
+
+
+**Full Changelog**: https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.3...v1.3.4
+
+
 ## [1.3.3] - 2026-07-02
 
 ### Added
