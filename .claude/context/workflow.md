@@ -24,6 +24,8 @@ git checkout -b feat/nombre develop   ← branch desde develop
 ```
 1. PR: develop → main  (título libre, ej. "Release" o el que sea)
 2. Añadir una label: release-type/patch | release-type/minor | release-type/major
+   → release-preview.yml comenta en el PR la versión que se generaría y el changelog
+   de vista previa (se actualiza solo si cambias la label o subes más commits)
 3. Esperar confirmación
 4. Mergear  ← este es el único paso manual real; a partir de aquí todo es automático:
    - calcula la nueva versión según la label
