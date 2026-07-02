@@ -37,6 +37,11 @@ git checkout -b feat/nombre develop   ← branch desde develop
 6. Mergear el PR de sync — develop queda con CHANGELOG y version bump actualizados
 ```
 
+**Estructura de CHANGELOG.md:** cada entrada de versión lleva solo sus cambios
+categorizados (sin el link de comparación inline). Todos los links "Full Changelog"
+se acumulan al final del fichero, en la sección `## Comparaciones completas`, con el
+más reciente arriba de esa lista.
+
 Las PRs de feature/fix deben llevar la label correspondiente (`feat`, `fix`, `refactor`,
 `docs`, `chore`, `style`, `test`, `db`, `security`, `perf`) para que aparezcan bien
 categorizadas en las notas de release. Las labels `release-type/*` se excluyen

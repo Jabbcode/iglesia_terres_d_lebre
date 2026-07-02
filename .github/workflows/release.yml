@@ -67,6 +67,7 @@ jobs:
             --jq '.body' > /tmp/notes.md
 
       - name: Limpiar ruido de las notas generadas
+        id: clean
         run: |
           sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
           sed -i "/^## What's Changed$/d" /tmp/notes.md
@@ -81,6 +82,15 @@ jobs:
           sed -i -E 's/^\* (feat|fix|refactor|docs|chore|style|test|db|security|perf): /* /' /tmp/notes.md
           sed -i -E 's|^\* (.+) by @[^ ]+ in (https://[^ ]+/pull/([0-9]+))$|* [#\3](\2) \1|' /tmp/notes.md
 
+          compare_url=$(grep -m1 '^\*\*Full Changelog\*\*' /tmp/notes.md | grep -oE 'https://\S+')
+          range=$(echo "$compare_url" | grep -oE '[^/]+$')
+          sed -i '/^\*\*Full Changelog\*\*/d' /tmp/notes.md
+          content=$(cat /tmp/notes.md)
+          printf '%s\n' "$content" > /tmp/notes.md
+
+          echo "compare_url=$compare_url" >> "$GITHUB_OUTPUT"
+          echo "range=$range" >> "$GITHUB_OUTPUT"
+
       - name: Update CHANGELOG.md
         run: |
           date=$(date +%Y-%m-%d)
@@ -94,6 +104,33 @@ jobs:
             tail -n +7 CHANGELOG.md
           } > /tmp/changelog-new.md
           mv /tmp/changelog-new.md CHANGELOG.md
+
+          bullet="- [${{ steps.clean.outputs.range }}](${{ steps.clean.outputs.compare_url }})"
+          if grep -q "^## Comparaciones completas$" CHANGELOG.md; then
+            awk -v bullet="$bullet" '
+              {
+                print
+                if ($0 ~ /^## Comparaciones completas$/ && !done) {
+                  getline nextline
+                  print nextline
+                  print bullet
+                  done=1
+                }
+              }
+            ' CHANGELOG.md > /tmp/changelog-with-link.md
+            mv /tmp/changelog-with-link.md CHANGELOG.md
+          else
+            {
+              cat CHANGELOG.md
+              echo ""
+              echo "---"
+              echo ""
+              echo "## Comparaciones completas"
+              echo ""
+              echo "$bullet"
+            } > /tmp/changelog-with-link.md
+            mv /tmp/changelog-with-link.md CHANGELOG.md
+          fi
 
       - name: Commit version bump
         run: |
