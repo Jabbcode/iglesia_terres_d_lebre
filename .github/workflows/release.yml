@@ -114,7 +114,7 @@ jobs:
         run: |
           gh release create "v${{ steps.version.outputs.new }}" \
             --title "v${{ steps.version.outputs.new }}" \
-            --notes-file /tmp/notes.md
+            --notes "Ver [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) para el detalle de cambios."
 
       - name: Create sync PR to develop
         env:
