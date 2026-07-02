@@ -5,25 +5,25 @@ changelog:
       - "release-type/minor"
       - "release-type/major"
   categories:
-    - title: "✨ Nuevas funcionalidades"
+    - title: "FEAT"
       labels:
         - "feat"
-    - title: "🐛 Fixes"
+    - title: "FIXES"
       labels:
         - "fix"
-    - title: "🔒 Seguridad"
+    - title: "SECURITY"
       labels:
         - "security"
-    - title: "♻️ Refactor"
+    - title: "REFACTOR"
       labels:
         - "refactor"
-    - title: "⚡ Rendimiento"
+    - title: "PERF"
       labels:
         - "perf"
-    - title: "🗄️ Base de datos"
+    - title: "DB"
       labels:
         - "db"
-    - title: "🧹 Otros"
+    - title: "OTROS"
       labels:
         - "chore"
         - "style"
