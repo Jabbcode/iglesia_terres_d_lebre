@@ -123,6 +123,10 @@ en `main`, nunca a tags):
    cierra el issue si salió bien
 ```
 
+**El campo `about` en el frontmatter de la plantilla es obligatorio** para que GitHub
+la registre en el selector de "New issue" — sin él, el archivo existe y es válido
+pero no aparece listado. Confirmado quitándolo y volviéndolo a añadir.
+
 Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
 (Settings → Secrets and variables → Actions). El CLI de Vercel no depende de qué
 rama/tag es — solo despliega el código que esté en disco en ese momento, por eso
