@@ -2,6 +2,36 @@
 
 Registro de decisiones importantes tomadas y su razonamiento.
 
+## Deploy manual: rollback de un deployment existente, no rebuild vía CLI
+
+**Decisión:** `.github/workflows/deploy-version.yml` (comando `/deploy vX.Y.Z` en un
+issue) busca el deployment de Vercel ya construido para el commit de ese tag y hace
+`vercel rollback` sobre él, en vez de reconstruir el código con `vercel build` +
+`vercel deploy --prebuilt` dentro del propio Action.
+
+**Por qué:** `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
+`SUPABASE_SERVICE_ROLE_KEY` están marcadas **Sensitive** en Vercel. Eso bloquea el
+rebuild en dos capas distintas: (1) `vercel pull` nunca las entrega, ni con token de
+API — se pueden inyectar a mano en el build con secrets de GitHub duplicados; pero
+(2) **tampoco llegan al runtime** de un deployment subido vía CLI/prebuilt, y esto no
+tiene workaround — Sensitive solo se conecta en build+runtime cuando Vercel
+construye el código con su propia infraestructura (flujo normal de git push).
+Confirmado con un deploy real que compiló bien pero devolvía 500 en producción con
+el mismo error de JWT_SECRET, ahora en runtime.
+
+**Alternativas descartadas:**
+- Quitar "Sensitive" a las variables para que `vercel pull` las entregue: resuelto
+  técnicamente pero debilita la protección de una clave que firma sesiones de admin
+  (quedaría legible vía API/dashboard para cualquiera con acceso al proyecto).
+- Duplicar los secrets también en GitHub Actions e inyectarlos en el build: arregla
+  el build pero no el runtime (ver arriba) — insuficiente por sí solo.
+
+**Consecuencia:** el deploy manual solo puede volver a un tag que **ya estuvo en
+producción** alguna vez (porque necesita que exista un deployment previo construido
+por Vercel para ese commit). No sirve para desplegar código que nunca pasó por el
+flujo normal de release — pero ese no es un caso real dado el flujo actual del
+proyecto (todo lo que se taggea ya pasó por `main`).
+
 ## Release automatizado por labels, no por parseo de título
 
 **Decisión:** El workflow `.github/workflows/release.yml` decide el bump de versión
