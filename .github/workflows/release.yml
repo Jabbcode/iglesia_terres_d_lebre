@@ -13,7 +13,10 @@ jobs:
   release:
     if: >
       github.event.pull_request.merged == true &&
-      github.event.pull_request.head.ref == 'develop' &&
+      (
+        github.event.pull_request.head.ref == 'develop' ||
+        startsWith(github.event.pull_request.head.ref, 'hotfix/')
+      ) &&
       (
         contains(github.event.pull_request.labels.*.name, 'release-type/patch') ||
         contains(github.event.pull_request.labels.*.name, 'release-type/minor') ||
