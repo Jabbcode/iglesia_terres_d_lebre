@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-07-03
+
+### FEAT
+* [#100](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/100) extender la automatización de release a hotfixes
+* [#104](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/104) deploy manual de un tag a producción vía comando en issue
+* [#107](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/107) disparar deploy también al crear el issue de la plantilla
+* [#109](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/109) simplificar plantilla de deploy y mostrar link al Action
+* [#113](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/113) inyectar secrets Sensitive de Vercel desde GitHub
+* [#120](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/120) rollback de deployment existente en vez de rebuild vía CLI
+### FIXES
+* [#102](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/102) no ocultar contenido real de hotfixes en el changelog
+* [#111](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/111) sintaxis YAML rota en deploy-version.yml + ajustes de plantilla
+* [#115](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/115) vercel build no leía las env vars inyectadas por env: del step
+* [#122](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/122) revert: volver a rebuild vía CLI con el project ID correcto
+* [#128](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/128) restaurar inyección manual de Sensitive (confirmada necesaria)
+* [#130](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/130) incluir vercel.json en el guard de cambios de código
+### OTROS
+* [#103](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/103) sync develop con main v1.3.8
+* [#117](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/117) debug: diagnóstico temporal de secrets en deploy-version
+* [#124](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/124) corregir conclusión errónea sobre Sensitive y runtime
+* [#126](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/126) probar vercel pull solo, sin inyección manual
+* [#129](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/129) desactivar el auto-deploy de Vercel en main
+
 ## [1.3.8] - 2026-07-03
 
 ### FEAT
@@ -215,6 +238,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Comparaciones completas
 
+- [v1.3.8...v1.4.0](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.8...v1.4.0)
 - [v1.3.7...v1.3.8](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.7...v1.3.8)
 - [v1.3.6...v1.3.7](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.6...v1.3.7)
 - [v1.3.5...v1.3.6](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.5...v1.3.6)
