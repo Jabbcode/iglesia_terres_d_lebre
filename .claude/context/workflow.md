@@ -50,9 +50,14 @@ comentario avisando por qué. Evita versionar cambios de tooling/CI/docs puros
 
 Las PRs de feature/fix deben llevar la label correspondiente (`feat`, `fix`, `refactor`,
 `docs`, `chore`, `style`, `test`, `db`, `security`, `perf`) para que aparezcan bien
-categorizadas en las notas de release. Las labels `release-type/*` se excluyen
-automáticamente del changelog generado (evita que el propio PR de release aparezca
-como ruido).
+categorizadas en las notas de release.
+
+**Exclusión del PR agregador:** el propio PR "Release" (develop→main) solo lleva
+`release-type/*` y ninguna label de tipo, así que el workflow lo detecta y lo quita de
+las notas (evita que aparezca como ruido). Un hotfix, en cambio, lleva **ambas**
+labels a la vez (`release-type/patch` + `fix`, por ejemplo) — como sí tiene label de
+tipo, su contenido real se muestra igual, sin quedar tapado por tener también la
+label de release.
 
 ## Hotfixes (bug urgente en producción)
 
