@@ -173,5 +173,7 @@ gh release list      # releases publicadas
 ## Comandos disponibles
 
 - `/pr` — crea PR para el branch actual
-- `/deploy` — mergea PR tras confirmación
-- `/release` — ejecuta el flujo completo de release
+
+`/deploy` y `/release` (comandos de Claude Code) se eliminaron — describían el
+proceso manual que ahora automatizan `release.yml` (label `release-type/*` en el PR
+develop→main) y el comando `/deploy vX.Y.Z` en un issue de GitHub, respectivamente.
