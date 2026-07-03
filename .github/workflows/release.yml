@@ -96,6 +96,8 @@ jobs:
       - name: Limpiar ruido de las notas generadas
         id: clean
         if: steps.codecheck.outputs.has_code_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
           sed -i "/^## What's Changed$/d" /tmp/notes.md
