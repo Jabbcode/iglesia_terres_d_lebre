@@ -45,3 +45,6 @@ docs
 
 .vercel
 .env*
+
+.vercel
+.env*

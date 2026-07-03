@@ -93,61 +93,53 @@ jobs:
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
         run: npm install -g vercel@latest
 
-      - name: Buscar el deployment de Vercel para ese commit
-        id: finddeploy
+      - name: Deploy a producción
+        id: deploy
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Sensitive en Vercel: nunca las entrega `vercel pull`, así que se
+          # inyectan aquí directo para que next build/prisma generate las vean.
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          sha=$(git rev-parse HEAD)
-          deployment_url=$(curl -s "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&teamId=${VERCEL_ORG_ID}&limit=100" \
-            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            | jq -r --arg sha "$sha" '[.deployments[] | select(.meta.githubCommitSha == $sha)] | first | .url // empty')
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
 
-          if [ -z "$deployment_url" ]; then
-            echo "found=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "found=true" >> "$GITHUB_OUTPUT"
-            echo "url=https://$deployment_url" >> "$GITHUB_OUTPUT"
-          fi
+          # vercel build lee las env vars de este archivo, no del entorno del
+          # shell — las Sensitive nunca llegan ahí vía pull, así que se
+          # añaden a mano con los secrets de GitHub.
+          {
+            printf 'JWT_SECRET=%s\n' "$JWT_SECRET"
+            printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
+            printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL"
+            printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY"
+          } >> .vercel/.env.production.local
 
-      - name: Avisar que no se encontró deployment para ese tag
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && steps.finddeploy.outputs.found == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh issue comment "${{ github.event.issue.number }}" \
-            --body "❌ No se encontró ningún deployment de Vercel para el commit de \`${{ steps.parse.outputs.version }}\`. Puede que ese tag nunca se haya desplegado, o que esté fuera del rango de búsqueda (últimos 100 deployments).
-
-          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-
-      - name: Rollback a producción
-        id: deploy
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && steps.finddeploy.outputs.found == 'true'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          vercel rollback "${{ steps.finddeploy.outputs.url }}" --token="$VERCEL_TOKEN" --yes
+          vercel build --prod --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Comentar resultado
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && steps.finddeploy.outputs.found == 'true' && success()
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "✅ Producción movida a \`${{ steps.parse.outputs.version }}\`: ${{ steps.finddeploy.outputs.url }}
+            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           gh issue close "${{ github.event.issue.number }}"
 
       - name: Comentar fallo
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && steps.finddeploy.outputs.found == 'true' && failure()
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "❌ Falló el rollback a \`${{ steps.parse.outputs.version }}\`.
+            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
