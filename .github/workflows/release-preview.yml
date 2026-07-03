@@ -38,9 +38,22 @@ jobs:
             echo "type=none" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Comprobar si hay cambios de código
+        id: codecheck
+        if: steps.bump.outputs.type != 'none'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          files=$(gh api "repos/${{ github.repository }}/compare/${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" --jq '.files[].filename')
+          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$)'; then
+            echo "has_code_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_code_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compute next version
         id: version
-        if: steps.bump.outputs.type != 'none'
+        if: steps.bump.outputs.type != 'none' && steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           current=$(node -p "require('./package.json').version")
           IFS='.' read -r major minor patch <<< "$current"
@@ -53,7 +66,7 @@ jobs:
           echo "previous=$current" >> "$GITHUB_OUTPUT"
 
       - name: Build preview comment
-        if: steps.bump.outputs.type != 'none'
+        if: steps.bump.outputs.type != 'none' && steps.codecheck.outputs.has_code_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -95,6 +108,16 @@ jobs:
             echo "## 🔖 Vista previa del release"
             echo ""
             echo "⚠️ No hay ninguna label \`release-type/patch\`, \`release-type/minor\` o \`release-type/major\` en este PR — al mergear **no se publicará ningún release**."
+          } > /tmp/comment.md
+
+      - name: Build "sin cambios de código" comment
+        if: steps.bump.outputs.type != 'none' && steps.codecheck.outputs.has_code_changes == 'false'
+        run: |
+          {
+            echo "<!-- release-preview-bot -->"
+            echo "## 🔖 Vista previa del release"
+            echo ""
+            echo "⚠️ Este PR tiene la label \`release-type/${{ steps.bump.outputs.type }}\`, pero no hay cambios en \`src/\`, \`prisma/\` ni configs de build/runtime — al mergear **no se generará ninguna versión ni release**."
           } > /tmp/comment.md
 
       - name: Post or update comment

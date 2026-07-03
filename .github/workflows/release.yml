@@ -28,8 +28,29 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Comprobar si hay cambios de código
+        id: codecheck
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          files=$(gh api "repos/${{ github.repository }}/compare/${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" --jq '.files[].filename')
+          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$)'; then
+            echo "has_code_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_code_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar que no hubo cambios de código
+        if: steps.codecheck.outputs.has_code_changes == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --body "⚠️ Este PR no tiene cambios en \`src/\`, \`prisma/\` ni configs de build/runtime — no se generó ninguna versión ni release."
+
       - name: Determine bump type
         id: bump
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           if echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release-type/major'; then
             echo "type=major" >> "$GITHUB_OUTPUT"
@@ -41,6 +62,7 @@ jobs:
 
       - name: Compute new version
         id: version
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           current=$(node -p "require('./package.json').version")
           IFS='.' read -r major minor patch <<< "$current"
@@ -53,11 +75,13 @@ jobs:
           echo "previous=$current" >> "$GITHUB_OUTPUT"
 
       - name: Bump package.json
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           node -e "const fs=require('fs');const p=require('./package.json');p.version='${{ steps.version.outputs.new }}';fs.writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n')"
 
       - name: Generate release notes
         id: notes
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -68,6 +92,7 @@ jobs:
 
       - name: Limpiar ruido de las notas generadas
         id: clean
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           sed -i "/^<!-- Release notes generated using configuration/d" /tmp/notes.md
           sed -i "/^## What's Changed$/d" /tmp/notes.md
@@ -92,6 +117,7 @@ jobs:
           echo "range=$range" >> "$GITHUB_OUTPUT"
 
       - name: Update CHANGELOG.md
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           date=$(date +%Y-%m-%d)
           {
@@ -133,6 +159,7 @@ jobs:
           fi
 
       - name: Commit version bump
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -141,11 +168,13 @@ jobs:
           git push origin main
 
       - name: Create and push tag
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         run: |
           git tag "v${{ steps.version.outputs.new }}"
           git push origin "v${{ steps.version.outputs.new }}"
 
       - name: Create GitHub Release
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -154,6 +183,7 @@ jobs:
             --notes "Ver [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) para el detalle de cambios."
 
       - name: Create sync PR to develop
+        if: steps.codecheck.outputs.has_code_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
