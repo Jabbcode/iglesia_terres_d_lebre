@@ -108,6 +108,17 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+          # vercel build lee las env vars de este archivo, no del entorno del
+          # shell — las Sensitive nunca llegan ahí vía pull, así que se
+          # añaden a mano con los secrets de GitHub.
+          {
+            printf 'JWT_SECRET=%s\n' "$JWT_SECRET"
+            printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
+            printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL"
+            printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY"
+          } >> .vercel/.env.production.local
+
           vercel build --prod --token="$VERCEL_TOKEN"
           url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
           echo "url=$url" >> "$GITHUB_OUTPUT"
