@@ -128,6 +128,13 @@ Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el 
 rama/tag es — solo despliega el código que esté en disco en ese momento, por eso
 funciona para tags cuando la integración nativa no puede.
 
+**Variables Sensitive de Vercel:** `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
+`SUPABASE_SERVICE_ROLE_KEY` están marcadas como Sensitive en Vercel, así que
+`vercel pull` nunca las entrega (por diseño, ni con token de API). Por eso también
+viven duplicadas como secrets de GitHub y se inyectan directo en el paso de build.
+Si se rotan en Vercel, hay que actualizarlas también aquí (`gh secret set NOMBRE`) o
+el deploy manual falla con el valor viejo.
+
 ## Comandos frecuentes
 
 ```bash
