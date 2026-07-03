@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   deploy:
@@ -20,39 +21,97 @@ jobs:
       ) ||
       (
         github.event_name == 'issue_comment' &&
-        !github.event.issue.pull_request &&
-        startsWith(github.event.comment.body, '/deploy ') &&
+        startsWith(github.event.comment.body, '/deploy') &&
         github.event.comment.user.login == github.repository_owner
       )
     runs-on: ubuntu-latest
     steps:
-      - name: Extraer versión
+      - name: Detectar modo y extraer datos
         id: parse
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
+          IS_PR: ${{ github.event.issue.pull_request != null }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           COMMENT_BODY: ${{ github.event.comment.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
         run: |
           if [ "$EVENT_NAME" = "issues" ]; then
             text="$ISSUE_BODY"
+            is_pr="false"
           else
             text="$COMMENT_BODY"
-          fi
-          version=$(echo "$text" | grep -oE '/deploy v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | awk '{print $2}')
-          if [ -z "$version" ]; then
-            echo "valid=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "valid=true" >> "$GITHUB_OUTPUT"
-            echo "version=$version" >> "$GITHUB_OUTPUT"
+            is_pr="$IS_PR"
           fi
 
-      - name: Avisar comando inválido
-        if: steps.parse.outputs.valid == 'false'
+          if [ "$is_pr" = "true" ]; then
+            echo "mode=preview" >> "$GITHUB_OUTPUT"
+            if echo "$text" | grep -qE '^/deploy[[:space:]]*$'; then
+              sha=$(gh pr view "$ISSUE_NUMBER" --repo "$REPO" --json headRefOid -q .headRefOid)
+              echo "valid=true" >> "$GITHUB_OUTPUT"
+              echo "ref=$sha" >> "$GITHUB_OUTPUT"
+            elif echo "$text" | grep -qE '/deploy v[0-9]+\.[0-9]+\.[0-9]+'; then
+              echo "valid=false" >> "$GITHUB_OUTPUT"
+              echo "reason=version_not_allowed" >> "$GITHUB_OUTPUT"
+            else
+              echo "valid=false" >> "$GITHUB_OUTPUT"
+              echo "reason=malformed" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "mode=prod" >> "$GITHUB_OUTPUT"
+            version=$(echo "$text" | grep -oE '/deploy v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | awk '{print $2}')
+            if [ -z "$version" ]; then
+              echo "valid=false" >> "$GITHUB_OUTPUT"
+              if echo "$text" | grep -qE '^/deploy[[:space:]]*$'; then
+                echo "reason=version_required" >> "$GITHUB_OUTPUT"
+              else
+                echo "reason=malformed" >> "$GITHUB_OUTPUT"
+              fi
+            else
+              echo "valid=true" >> "$GITHUB_OUTPUT"
+              echo "version=$version" >> "$GITHUB_OUTPUT"
+              echo "ref=refs/tags/$version" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Avisar versión requerida (producción)
+        if: steps.parse.outputs.valid == 'false' && steps.parse.outputs.mode == 'prod' && steps.parse.outputs.reason == 'version_required'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ En un issue de producción hace falta indicar versión — usa \`/deploy vX.Y.Z\` (ej. \`/deploy v1.3.7\`).
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Avisar comando inválido (producción)
+        if: steps.parse.outputs.valid == 'false' && steps.parse.outputs.mode == 'prod' && steps.parse.outputs.reason == 'malformed'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
             --body "⚠️ No se detectó un comando válido. Escribe \`/deploy vX.Y.Z\` en el cuerpo del issue (ej. \`/deploy v1.3.7\`).
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Avisar versión no permitida (preview)
+        if: steps.parse.outputs.valid == 'false' && steps.parse.outputs.mode == 'preview' && steps.parse.outputs.reason == 'version_not_allowed'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ En una PR no se admite versión — usa \`/deploy\` sin argumentos para desplegar el HEAD de esta rama a Preview.
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Avisar comando inválido (preview)
+        if: steps.parse.outputs.valid == 'false' && steps.parse.outputs.mode == 'preview' && steps.parse.outputs.reason == 'malformed'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "⚠️ Para desplegar esta PR a Preview escribe \`/deploy\` solo, sin versión.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
@@ -65,7 +124,7 @@ jobs:
 
       - name: Verificar que el tag existe
         id: tagcheck
-        if: steps.parse.outputs.valid == 'true'
+        if: steps.parse.outputs.valid == 'true' && steps.parse.outputs.mode == 'prod'
         run: |
           if git ls-remote --tags "https://github.com/${{ github.repository }}" | grep -q "refs/tags/${{ steps.parse.outputs.version }}$"; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -74,7 +133,7 @@ jobs:
           fi
 
       - name: Avisar tag inexistente
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'false'
+        if: steps.parse.outputs.valid == 'true' && steps.parse.outputs.mode == 'prod' && steps.tagcheck.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -83,19 +142,29 @@ jobs:
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
-      - name: Checkout del tag
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+      - name: Determinar si se puede desplegar
+        id: gate
+        if: steps.parse.outputs.valid == 'true'
+        run: |
+          if [ "${{ steps.parse.outputs.mode }}" = "prod" ]; then
+            echo "go=${{ steps.tagcheck.outputs.exists == 'true' }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.gate.outputs.go == 'true'
         uses: actions/checkout@v4
         with:
-          ref: "refs/tags/${{ steps.parse.outputs.version }}"
+          ref: ${{ steps.parse.outputs.ref }}
 
       - name: Instalar Vercel CLI
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        if: steps.gate.outputs.go == 'true'
         run: npm install -g vercel@latest
 
       - name: Deploy a producción
-        id: deploy
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        id: deploy_prod
+        if: steps.gate.outputs.go == 'true' && steps.parse.outputs.mode == 'prod'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -124,23 +193,61 @@ jobs:
           url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Comentar resultado
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && success()
+      - name: Deploy a preview
+        id: deploy_preview
+        if: steps.gate.outputs.go == 'true' && steps.parse.outputs.mode == 'preview'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Mismas credenciales que producción (una sola BD por ahora) — un
+          # /deploy en preview escribe sobre datos reales, ver PRODUCT.md/decisions.md
+          # si en algún momento se separa una BD de staging.
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+
+          {
+            printf 'JWT_SECRET=%s\n' "$JWT_SECRET"
+            printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
+            printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL"
+            printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY"
+          } >> .vercel/.env.preview.local
+
+          vercel build --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comentar resultado (producción)
+        if: steps.gate.outputs.go == 'true' && steps.parse.outputs.mode == 'prod' && success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}
+            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy_prod.outputs.url }}
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           gh issue close "${{ github.event.issue.number }}"
 
-      - name: Comentar fallo
-        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && failure()
+      - name: Comentar resultado (preview)
+        if: steps.gate.outputs.go == 'true' && steps.parse.outputs.mode == 'preview' && success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`.
+            --body "✅ Preview desplegado: ${{ steps.deploy_preview.outputs.url }}
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Comentar fallo
+        if: steps.gate.outputs.go == 'true' && failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ Falló el deploy.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
