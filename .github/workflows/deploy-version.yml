@@ -34,10 +34,11 @@ jobs:
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
           if [ "$EVENT_NAME" = "issues" ]; then
-            version=$(echo "$ISSUE_BODY" | grep -A3 -i '^### Versión a desplegar' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+            text="$ISSUE_BODY"
           else
-            version=$(echo "$COMMENT_BODY" | grep -oE '^/deploy (v[0-9]+\.[0-9]+\.[0-9]+)' | awk '{print $2}')
+            text="$COMMENT_BODY"
           fi
+          version=$(echo "$text" | grep -oE '/deploy v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | awk '{print $2}')
           if [ -z "$version" ]; then
             echo "valid=false" >> "$GITHUB_OUTPUT"
           else
@@ -45,13 +46,15 @@ jobs:
             echo "version=$version" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Avisar comando/formulario inválido
+      - name: Avisar comando inválido
         if: steps.parse.outputs.valid == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "⚠️ No se detectó una versión válida. En el formulario usa \`vX.Y.Z\` en el campo \"Versión a desplegar\", o comenta \`/deploy vX.Y.Z\`."
+            --body "⚠️ No se detectó un comando válido. Escribe \`/deploy vX.Y.Z\` en el cuerpo del issue (ej. \`/deploy v1.3.7\`).
+
+[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
       - name: Reaccionar al comando
         if: github.event_name == 'issue_comment' && steps.parse.outputs.valid == 'true'
@@ -76,7 +79,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`."
+            --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`.
+
+[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
       - name: Checkout del tag
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
@@ -107,7 +112,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}"
+            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}
+
+[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           gh issue close "${{ github.event.issue.number }}"
 
       - name: Comentar fallo
@@ -116,4 +123,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" \
-            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`. Revisa los logs del workflow."
+            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`.
+
+[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"

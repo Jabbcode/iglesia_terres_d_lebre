@@ -112,14 +112,15 @@ producción sin pasar por la integración Git de Vercel (que solo reacciona a pu
 en `main`, nunca a tags):
 
 ```
-1. Crear un issue con la plantilla "Deploy de una versión específica" (campo
-   "Versión a desplegar") → dispara solo con crear el issue
-   — o comentar en cualquier issue: /deploy vX.Y.Z
+1. Crear un issue con la plantilla "Deploy de una versión" — título y body libres,
+   el body trae precargado "/deploy vX.Y.Z", solo cambia la versión
+   — o comentar ese mismo comando en cualquier issue existente
 2. En ambos casos, solo funciona si lo hace el dueño del repo
-   (github.repository_owner)
+   (github.repository_owner); dispara solo con crear el issue, sin pasos extra
 3. El workflow verifica que el tag existe, hace checkout de ese commit exacto,
    y despliega con el CLI de Vercel (vercel build + vercel deploy --prod)
-4. Comenta el resultado (URL o error) y cierra el issue si salió bien
+4. Comenta el resultado (URL o error, con link directo al run del Action) y
+   cierra el issue si salió bien
 ```
 
 Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
