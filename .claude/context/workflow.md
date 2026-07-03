@@ -107,33 +107,45 @@ la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
 
 ## Deploy manual de una versión (rollback)
 
-`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente a
-producción sin pasar por la integración Git de Vercel (que solo reacciona a pushes
-en `main`, nunca a tags):
+`.github/workflows/deploy-version.yml` permite volver a producción a cualquier tag
+que ya se haya publicado, sin pasar por la integración Git de Vercel (que solo
+reacciona a pushes en `main`, nunca a tags):
 
 ```
-1. Crear un issue con la plantilla "Deploy de una versión" — título y body libres,
+1. Crear un issue con la plantilla "Deploy Release" — título y body libres,
    el body trae precargado "/deploy vX.Y.Z", solo cambia la versión
    — o comentar ese mismo comando en cualquier issue existente
 2. En ambos casos, solo funciona si lo hace el dueño del repo
    (github.repository_owner); dispara solo con crear el issue, sin pasos extra
-3. El workflow verifica que el tag existe, hace checkout de ese commit exacto,
-   y despliega con el CLI de Vercel (vercel build + vercel deploy --prod)
-4. Comenta el resultado (URL o error, con link directo al run del Action) y
+3. El workflow verifica que el tag existe, resuelve su commit exacto, y busca en
+   la API de Vercel el deployment que Vercel ya construyó para ese commit (el que
+   se generó la primera vez que ese tag llegó a main por el flujo normal)
+4. Si lo encuentra, hace `vercel rollback` sobre ese deployment — NO reconstruye
+   nada, solo mueve producción a un build que ya existe
+5. Comenta el resultado (URL o error, con link directo al run del Action) y
    cierra el issue si salió bien
 ```
 
-Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
-(Settings → Secrets and variables → Actions). El CLI de Vercel no depende de qué
-rama/tag es — solo despliega el código que esté en disco en ese momento, por eso
-funciona para tags cuando la integración nativa no puede.
+**Por qué rollback y no rebuild:** se probó primero reconstruir el tag vía
+`vercel build` + `vercel deploy --prebuilt` en el propio Action. Falló en dos
+capas: `JWT_SECRET`/`DATABASE_URL`/`SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` están
+marcadas **Sensitive** en Vercel, así que ni `vercel pull` las entrega (se pueden
+inyectar a mano en el build), ni — esto sí es un límite duro — llegan al **runtime**
+de un deployment subido vía CLI/prebuilt. Un deployment construido por la propia
+infraestructura de Vercel (vía git push normal) sí tiene las Sensitive conectadas en
+build y runtime desde el origen; por eso reutilizar ese deployment con `rollback` es
+la única vía que funciona de verdad. Confirmado con un deploy real: compiló bien
+pero devolvía 500 en producción con el mismo error de JWT_SECRET, ahora en runtime.
 
-**Variables Sensitive de Vercel:** `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
-`SUPABASE_SERVICE_ROLE_KEY` están marcadas como Sensitive en Vercel, así que
-`vercel pull` nunca las entrega (por diseño, ni con token de API). Por eso también
-viven duplicadas como secrets de GitHub y se inyectan directo en el paso de build.
-Si se rotan en Vercel, hay que actualizarlas también aquí (`gh secret set NOMBRE`) o
-el deploy manual falla con el valor viejo.
+**El campo `about` en el frontmatter de la plantilla de issue es obligatorio** para
+que GitHub la registre en el selector de "New issue" — sin él, el archivo existe y
+es válido pero no aparece listado. Confirmado quitándolo y volviéndolo a añadir.
+
+Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
+(Settings → Secrets and variables → Actions) — ya no hace falta duplicar
+`JWT_SECRET`/`DATABASE_URL`/`SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` como secrets
+de GitHub, porque este workflow ya no compila nada (se pueden borrar esos 4 si no
+se usan en otro lado).
 
 ## Comandos frecuentes
 
