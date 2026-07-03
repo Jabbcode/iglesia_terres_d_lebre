@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.8] - 2026-07-03
+
+### FEAT
+* [#98](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/98) no versionar cuando el PR no toca código real
+### FIXES
+* [#101](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/101) tarjetas de creencia sin detalle no son botones
+### OTROS
+* [#97](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/97) sync develop con main v1.3.7
+
+
 ## [1.3.7] - 2026-07-02
 
 ### REFACTOR
@@ -205,6 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Comparaciones completas
 
+- [v1.3.7...v1.3.8](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.7...v1.3.8)
 - [v1.3.6...v1.3.7](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.6...v1.3.7)
 - [v1.3.5...v1.3.6](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.5...v1.3.6)
 - [v1.3.4...v1.3.5](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.4...v1.3.5)
