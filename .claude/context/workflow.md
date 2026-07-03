@@ -105,11 +105,11 @@ la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
 `develop` o `hotfix/*` — cualquier otra rama mergeada a `main` con una label
 `release-type/*` no dispara nada, como salvaguarda.
 
-## Deploy manual de una versión (rollback)
+## Deploy manual de una versión
 
-`.github/workflows/deploy-version.yml` permite volver a producción a cualquier tag
-que ya se haya publicado, sin pasar por la integración Git de Vercel (que solo
-reacciona a pushes en `main`, nunca a tags):
+`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente a
+producción sin pasar por la integración Git de Vercel (que solo reacciona a pushes
+en `main`, nunca a tags):
 
 ```
 1. Crear un issue con la plantilla "Deploy Release" — título y body libres,
@@ -117,35 +117,30 @@ reacciona a pushes en `main`, nunca a tags):
    — o comentar ese mismo comando en cualquier issue existente
 2. En ambos casos, solo funciona si lo hace el dueño del repo
    (github.repository_owner); dispara solo con crear el issue, sin pasos extra
-3. El workflow verifica que el tag existe, resuelve su commit exacto, y busca en
-   la API de Vercel el deployment que Vercel ya construyó para ese commit (el que
-   se generó la primera vez que ese tag llegó a main por el flujo normal)
-4. Si lo encuentra, hace `vercel rollback` sobre ese deployment — NO reconstruye
-   nada, solo mueve producción a un build que ya existe
-5. Comenta el resultado (URL o error, con link directo al run del Action) y
+3. El workflow verifica que el tag existe, hace checkout de ese commit exacto,
+   y despliega con el CLI de Vercel (vercel build + vercel deploy --prod)
+4. Comenta el resultado (URL o error, con link directo al run del Action) y
    cierra el issue si salió bien
 ```
-
-**Por qué rollback y no rebuild:** se probó primero reconstruir el tag vía
-`vercel build` + `vercel deploy --prebuilt` en el propio Action. Falló en dos
-capas: `JWT_SECRET`/`DATABASE_URL`/`SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` están
-marcadas **Sensitive** en Vercel, así que ni `vercel pull` las entrega (se pueden
-inyectar a mano en el build), ni — esto sí es un límite duro — llegan al **runtime**
-de un deployment subido vía CLI/prebuilt. Un deployment construido por la propia
-infraestructura de Vercel (vía git push normal) sí tiene las Sensitive conectadas en
-build y runtime desde el origen; por eso reutilizar ese deployment con `rollback` es
-la única vía que funciona de verdad. Confirmado con un deploy real: compiló bien
-pero devolvía 500 en producción con el mismo error de JWT_SECRET, ahora en runtime.
 
 **El campo `about` en el frontmatter de la plantilla de issue es obligatorio** para
 que GitHub la registre en el selector de "New issue" — sin él, el archivo existe y
 es válido pero no aparece listado. Confirmado quitándolo y volviéndolo a añadir.
 
 Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
-(Settings → Secrets and variables → Actions) — ya no hace falta duplicar
-`JWT_SECRET`/`DATABASE_URL`/`SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` como secrets
-de GitHub, porque este workflow ya no compila nada (se pueden borrar esos 4 si no
-se usan en otro lado).
+(Settings → Secrets and variables → Actions), más `JWT_SECRET`, `DATABASE_URL`,
+`SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` duplicados como secrets de GitHub — están
+marcadas **Sensitive** en Vercel, así que `vercel pull` nunca las entrega (ni con
+token de API); se inyectan a mano en `.vercel/.env.production.local` tras el pull.
+
+**⚠️ El proyecto de Vercel correcto es `terres_lebre`, no `iglesia_terres_d_lebre`**
+(mismo team, distinto `projectId` — al correr `vercel link` aparecen "2 matches
+across teams", fácil de confundir). El segundo es un proyecto viejo/huérfano sin las
+env vars de runtime completas; apuntar `VERCEL_PROJECT_ID` ahí produce un deploy que
+compila pero devuelve 500 en producción ("JWT_SECRET env var is required"), lo cual
+en su momento se confundió con una limitación real de las variables Sensitive (ver
+`decisions.md`). Si algo similar vuelve a pasar, lo primero es verificar el project
+ID con `vercel link` + `.vercel/repo.json`, no asumir que es un límite de Vercel.
 
 ## Comandos frecuentes
 
