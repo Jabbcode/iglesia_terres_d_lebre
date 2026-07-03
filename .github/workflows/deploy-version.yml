@@ -80,7 +80,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "❌ En un issue de producción hace falta indicar versión — usa \`/deploy vX.Y.Z\` (ej. \`/deploy v1.3.7\`).
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -90,7 +90,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "⚠️ No se detectó un comando válido. Escribe \`/deploy vX.Y.Z\` en el cuerpo del issue (ej. \`/deploy v1.3.7\`).
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -100,7 +100,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "❌ En una PR no se admite versión — usa \`/deploy\` sin argumentos para desplegar el HEAD de esta rama a Preview.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -110,7 +110,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "⚠️ Para desplegar esta PR a Preview escribe \`/deploy\` solo, sin versión.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -137,7 +137,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -226,18 +226,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy_prod.outputs.url }}
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          gh issue close "${{ github.event.issue.number }}"
+          gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
 
       - name: Comentar resultado (preview)
         if: steps.gate.outputs.go == 'true' && steps.parse.outputs.mode == 'preview' && success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "✅ Preview desplegado: ${{ steps.deploy_preview.outputs.url }}
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -247,7 +247,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" \
             --body "❌ Falló el deploy.
 
           [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
