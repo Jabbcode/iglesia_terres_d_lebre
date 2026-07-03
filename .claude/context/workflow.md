@@ -56,16 +56,25 @@ como ruido).
 
 ## Hotfixes (bug urgente en producción)
 
+El prefijo `hotfix/` es la señal que `release.yml` reconoce para disparar la misma
+automatización que un release normal, directamente contra `main`:
+
 ```
-git checkout -b fix/nombre main   ← branch desde main directamente
+git checkout -b hotfix/nombre main   ← branch desde main directamente, prefijo hotfix/
 → commits
 → PR hacia main
+→ añadir label release-type/patch (normalmente)
+   → release-preview.yml avisa la versión que se generaría
 → esperar confirmación
-→ mergear
-→ PR de sync: main → develop
+→ mergear  ← automático a partir de aquí: versión, CHANGELOG, tag, GitHub Release,
+             y PR de sync "chore: sync develop con main vX.Y.Z" (main → develop)
 → esperar confirmación
-→ mergear
+→ mergear el PR de sync
 ```
+
+Cualquier otro prefijo de rama (`fix/`, `feat/`, etc.) mergeado a `main` con una
+label `release-type/*` **no** dispara el workflow — solo `develop` y `hotfix/*` lo
+hacen, como salvaguarda contra un release accidental.
 
 ## Versionado semántico
 
@@ -76,14 +85,20 @@ git checkout -b fix/nombre main   ← branch desde main directamente
 
 ## Convención de branches
 
-| Prefijo     | Uso                           | Base                        |
-| ----------- | ----------------------------- | --------------------------- |
-| `feat/`     | Nueva funcionalidad           | `develop`                   |
-| `fix/`      | Corrección de bug             | `develop` o `main` (hotfix) |
-| `perf/`     | Mejora de rendimiento         | `develop`                   |
-| `refactor/` | Refactor sin cambio funcional | `develop`                   |
-| `chore/`    | Configuración, dependencias   | `develop`                   |
-| `security/` | Cambios de seguridad          | `develop`                   |
+| Prefijo     | Uso                                    | Base      |
+| ----------- | --------------------------------------- | --------- |
+| `feat/`     | Nueva funcionalidad                     | `develop` |
+| `fix/`      | Corrección de bug                       | `develop` |
+| `perf/`     | Mejora de rendimiento                   | `develop` |
+| `refactor/` | Refactor sin cambio funcional           | `develop` |
+| `chore/`    | Configuración, dependencias             | `develop` |
+| `security/` | Cambios de seguridad                    | `develop` |
+| `hotfix/`   | Bug urgente en producción               | `main`    |
+
+`hotfix/` es el único prefijo que va directo a `main`. El propio nombre de la rama es
+la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
+`develop` o `hotfix/*` — cualquier otra rama mergeada a `main` con una label
+`release-type/*` no dispara nada, como salvaguarda.
 
 ## Comandos frecuentes
 
