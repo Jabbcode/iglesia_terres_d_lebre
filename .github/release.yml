@@ -1,9 +1,4 @@
 changelog:
-  exclude:
-    labels:
-      - "release-type/patch"
-      - "release-type/minor"
-      - "release-type/major"
   categories:
     - title: "FEAT"
       labels:

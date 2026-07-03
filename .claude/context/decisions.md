@@ -2,6 +2,40 @@
 
 Registro de decisiones importantes tomadas y su razonamiento.
 
+## Deploy manual: rebuild vía CLI (no rollback) — cuidado con el proyecto de Vercel
+
+**Decisión:** `.github/workflows/deploy-version.yml` (comando `/deploy vX.Y.Z` en un
+issue) reconstruye el tag con `vercel build` + `vercel deploy --prebuilt --prod`
+dentro del propio Action, inyectando `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
+`SUPABASE_SERVICE_ROLE_KEY` (marcadas **Sensitive** en Vercel, así que `vercel pull`
+nunca las entrega) a mano en `.vercel/.env.production.local` desde secrets de GitHub
+duplicados.
+
+**Historial de este diagnóstico (para no repetir la confusión):** el proyecto vinculado
+al principio (`VERCEL_PROJECT_ID`) era `iglesia_terres_d_lebre` — un proyecto de Vercel
+distinto y equivocado (mismo team, distinto id), probablemente huérfano de una fase
+anterior del proyecto. Un deploy real ahí compiló bien pero devolvía 500 en producción
+con "JWT_SECRET env var is required", lo que en su momento se interpretó como que las
+variables Sensitive nunca llegan al runtime de un deploy vía CLI/prebuilt (se llegó a
+implementar y descartar un enfoque alternativo de `vercel rollback` por esta razón).
+**Esa conclusión era incorrecta, pero solo a medias.** Al corregir `VERCEL_PROJECT_ID`
+al proyecto real (`terres_lebre`), el rebuild vía CLI con la inyección manual
+funcionó de punta a punta, con las Sensitive disponibles en runtime con normalidad
+— el proyecto viejo simplemente no tenía esas env vars de runtime completas, no era
+una limitación de la plataforma. **Pero la parte de build sigue siendo real**: se
+probó explícitamente quitar la inyección manual y dejar solo `vercel pull` contra el
+proyecto correcto, y volvió a fallar exactamente igual ("JWT_SECRET env var is
+required" en build). Conclusión final: `vercel pull` nunca entrega las Sensitive
+(confirmado, necesita la inyección manual desde secrets de GitHub) — el runtime del
+deployment ya generado sí las tiene bien conectadas una vez que el proyecto es el
+correcto.
+
+**Verificar antes de tocar este workflow:** confirmar con `vercel link` (elige
+"terres_lebre", no "iglesia_terres_d_lebre" — aparecen "2 matches across teams") y
+comparar `.vercel/repo.json` contra los secrets `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` si
+algo vuelve a fallar con errores de "Project not found" o env vars faltantes en
+runtime.
+
 ## Release automatizado por labels, no por parseo de título
 
 **Decisión:** El workflow `.github/workflows/release.yml` decide el bump de versión

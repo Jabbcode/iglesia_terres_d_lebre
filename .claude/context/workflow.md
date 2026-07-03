@@ -37,35 +37,53 @@ git checkout -b feat/nombre develop   ← branch desde develop
 6. Mergear el PR de sync — develop queda con CHANGELOG y version bump actualizados
 ```
 
+**Este flujo publica una versión (tag + GitHub Release), no la despliega.** El push a
+`main` no dispara Vercel (ver "Deploy manual de una versión" más abajo) — para que
+la versión llegue a producción hace falta el paso aparte `/deploy vX.Y.Z`.
+
 **Estructura de CHANGELOG.md:** cada entrada de versión lleva solo sus cambios
 categorizados (sin el link de comparación inline). Todos los links "Full Changelog"
 se acumulan al final del fichero, en la sección `## Comparaciones completas`, con el
 más reciente arriba de esa lista.
 
 **Guard de cambios de código:** si el PR develop→main con label `release-type/*` no
-toca `src/`, `prisma/` ni configs de build/runtime (`next.config.ts`, `package.json`,
-`package-lock.json`, `tsconfig.json`), no se genera versión ni release — solo un
-comentario avisando por qué. Evita versionar cambios de tooling/CI/docs puros
-(`.github/`, `.claude/`, etc.).
+toca `src/`, `prisma/` ni configs de build/runtime/deploy (`next.config.ts`,
+`package.json`, `package-lock.json`, `tsconfig.json`, `vercel.json`), no se genera
+versión ni release — solo un comentario avisando por qué. Evita versionar cambios de
+tooling/CI/docs puros (`.github/`, `.claude/`, etc.).
 
 Las PRs de feature/fix deben llevar la label correspondiente (`feat`, `fix`, `refactor`,
 `docs`, `chore`, `style`, `test`, `db`, `security`, `perf`) para que aparezcan bien
-categorizadas en las notas de release. Las labels `release-type/*` se excluyen
-automáticamente del changelog generado (evita que el propio PR de release aparezca
-como ruido).
+categorizadas en las notas de release.
+
+**Exclusión del PR agregador:** el propio PR "Release" (develop→main) solo lleva
+`release-type/*` y ninguna label de tipo, así que el workflow lo detecta y lo quita de
+las notas (evita que aparezca como ruido). Un hotfix, en cambio, lleva **ambas**
+labels a la vez (`release-type/patch` + `fix`, por ejemplo) — como sí tiene label de
+tipo, su contenido real se muestra igual, sin quedar tapado por tener también la
+label de release.
 
 ## Hotfixes (bug urgente en producción)
 
+El prefijo `hotfix/` es la señal que `release.yml` reconoce para disparar la misma
+automatización que un release normal, directamente contra `main`:
+
 ```
-git checkout -b fix/nombre main   ← branch desde main directamente
+git checkout -b hotfix/nombre main   ← branch desde main directamente, prefijo hotfix/
 → commits
 → PR hacia main
+→ añadir label release-type/patch (normalmente)
+   → release-preview.yml avisa la versión que se generaría
 → esperar confirmación
-→ mergear
-→ PR de sync: main → develop
+→ mergear  ← automático a partir de aquí: versión, CHANGELOG, tag, GitHub Release,
+             y PR de sync "chore: sync develop con main vX.Y.Z" (main → develop)
 → esperar confirmación
-→ mergear
+→ mergear el PR de sync
 ```
+
+Cualquier otro prefijo de rama (`fix/`, `feat/`, etc.) mergeado a `main` con una
+label `release-type/*` **no** dispara el workflow — solo `develop` y `hotfix/*` lo
+hacen, como salvaguarda contra un release accidental.
 
 ## Versionado semántico
 
@@ -76,14 +94,64 @@ git checkout -b fix/nombre main   ← branch desde main directamente
 
 ## Convención de branches
 
-| Prefijo     | Uso                           | Base                        |
-| ----------- | ----------------------------- | --------------------------- |
-| `feat/`     | Nueva funcionalidad           | `develop`                   |
-| `fix/`      | Corrección de bug             | `develop` o `main` (hotfix) |
-| `perf/`     | Mejora de rendimiento         | `develop`                   |
-| `refactor/` | Refactor sin cambio funcional | `develop`                   |
-| `chore/`    | Configuración, dependencias   | `develop`                   |
-| `security/` | Cambios de seguridad          | `develop`                   |
+| Prefijo     | Uso                                    | Base      |
+| ----------- | --------------------------------------- | --------- |
+| `feat/`     | Nueva funcionalidad                     | `develop` |
+| `fix/`      | Corrección de bug                       | `develop` |
+| `perf/`     | Mejora de rendimiento                   | `develop` |
+| `refactor/` | Refactor sin cambio funcional           | `develop` |
+| `chore/`    | Configuración, dependencias             | `develop` |
+| `security/` | Cambios de seguridad                    | `develop` |
+| `hotfix/`   | Bug urgente en producción               | `main`    |
+
+`hotfix/` es el único prefijo que va directo a `main`. El propio nombre de la rama es
+la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
+`develop` o `hotfix/*` — cualquier otra rama mergeada a `main` con una label
+`release-type/*` no dispara nada, como salvaguarda.
+
+## Deploy manual de una versión
+
+**El deploy a producción ya NO es automático.** `vercel.json` tiene
+`git.deploymentEnabled.main = false` — un push a `main` (incluido el que hace
+`release.yml` en cada release) ya no dispara ningún deploy en Vercel. Publicar a
+producción es siempre una acción deliberada vía `/deploy vX.Y.Z`, desacoplada del
+release: se puede tener varias versiones taggeadas sin que ninguna llegue a
+producción hasta que se decida explícitamente.
+
+`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente
+(recién creado o de hace tiempo) a producción, vía CLI de Vercel — no depende de
+que Vercel haya construido ese commit antes:
+
+```
+1. Crear un issue con la plantilla "Deploy Release" — título y body libres,
+   el body trae precargado "/deploy vX.Y.Z", solo cambia la versión
+   — o comentar ese mismo comando en cualquier issue existente
+2. En ambos casos, solo funciona si lo hace el dueño del repo
+   (github.repository_owner); dispara solo con crear el issue, sin pasos extra
+3. El workflow verifica que el tag existe, hace checkout de ese commit exacto,
+   y despliega con el CLI de Vercel (vercel build + vercel deploy --prod)
+4. Comenta el resultado (URL o error, con link directo al run del Action) y
+   cierra el issue si salió bien
+```
+
+**El campo `about` en el frontmatter de la plantilla de issue es obligatorio** para
+que GitHub la registre en el selector de "New issue" — sin él, el archivo existe y
+es válido pero no aparece listado. Confirmado quitándolo y volviéndolo a añadir.
+
+Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
+(Settings → Secrets and variables → Actions), más `JWT_SECRET`, `DATABASE_URL`,
+`SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` duplicados como secrets de GitHub — están
+marcadas **Sensitive** en Vercel, así que `vercel pull` nunca las entrega (ni con
+token de API); se inyectan a mano en `.vercel/.env.production.local` tras el pull.
+
+**⚠️ El proyecto de Vercel correcto es `terres_lebre`, no `iglesia_terres_d_lebre`**
+(mismo team, distinto `projectId` — al correr `vercel link` aparecen "2 matches
+across teams", fácil de confundir). El segundo es un proyecto viejo/huérfano sin las
+env vars de runtime completas; apuntar `VERCEL_PROJECT_ID` ahí produce un deploy que
+compila pero devuelve 500 en producción ("JWT_SECRET env var is required"), lo cual
+en su momento se confundió con una limitación real de las variables Sensitive (ver
+`decisions.md`). Si algo similar vuelve a pasar, lo primero es verificar el project
+ID con `vercel link` + `.vercel/repo.json`, no asumir que es un límite de Vercel.
 
 ## Comandos frecuentes
 
@@ -105,5 +173,7 @@ gh release list      # releases publicadas
 ## Comandos disponibles
 
 - `/pr` — crea PR para el branch actual
-- `/deploy` — mergea PR tras confirmación
-- `/release` — ejecuta el flujo completo de release
+
+`/deploy` y `/release` (comandos de Claude Code) se eliminaron — describían el
+proceso manual que ahora automatizan `release.yml` (label `release-type/*` en el PR
+develop→main) y el comando `/deploy vX.Y.Z` en un issue de GitHub, respectivamente.

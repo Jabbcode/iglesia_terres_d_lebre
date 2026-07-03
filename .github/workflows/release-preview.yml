@@ -45,7 +45,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           files=$(gh api "repos/${{ github.repository }}/compare/${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" --jq '.files[].filename')
-          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$)'; then
+          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$|vercel\.json$)'; then
             echo "has_code_changes=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_code_changes=false" >> "$GITHUB_OUTPUT"
@@ -88,6 +88,36 @@ jobs:
           sed -i '/./,/^$/!d' /tmp/notes.md
           sed -i -E 's/^\* (feat|fix|refactor|docs|chore|style|test|db|security|perf): /* /' /tmp/notes.md
           sed -i -E 's|^\* (.+) by @[^ ]+ in (https://[^ ]+/pull/([0-9]+))$|* [#\3](\2) \1|' /tmp/notes.md
+
+          pr_labels=$(gh pr view "${{ github.event.pull_request.number }}" --json labels --jq '.labels[].name')
+          has_category_label=false
+          for l in feat fix refactor docs chore style test db security perf; do
+            if echo "$pr_labels" | grep -qx "$l"; then
+              has_category_label=true
+              break
+            fi
+          done
+          if [ "$has_category_label" = "false" ]; then
+            sed -i "/^\* \[#${{ github.event.pull_request.number }}\]/d" /tmp/notes.md
+            awk '
+              /^### / {
+                if (heading != "" && buf != "") { printf "%s%s", heading, buf }
+                heading = $0 "\n"
+                buf = ""
+                next
+              }
+              /^\* / { buf = buf $0 "\n"; next }
+              {
+                if (heading != "") {
+                  if (buf != "") printf "%s%s", heading, buf
+                  heading=""; buf=""
+                }
+                print
+              }
+              END { if (heading != "" && buf != "") printf "%s%s", heading, buf }
+            ' /tmp/notes.md > /tmp/notes-agg.md
+            mv /tmp/notes-agg.md /tmp/notes.md
+          fi
 
           {
             echo "<!-- release-preview-bot -->"

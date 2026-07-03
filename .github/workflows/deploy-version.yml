@@ -1,0 +1,146 @@
+name: Deploy Version (manual)
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  deploy:
+    if: >
+      (
+        github.event_name == 'issues' &&
+        contains(github.event.issue.labels.*.name, 'deploy') &&
+        github.event.issue.user.login == github.repository_owner
+      ) ||
+      (
+        github.event_name == 'issue_comment' &&
+        !github.event.issue.pull_request &&
+        startsWith(github.event.comment.body, '/deploy ') &&
+        github.event.comment.user.login == github.repository_owner
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer versión
+        id: parse
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          if [ "$EVENT_NAME" = "issues" ]; then
+            text="$ISSUE_BODY"
+          else
+            text="$COMMENT_BODY"
+          fi
+          version=$(echo "$text" | grep -oE '/deploy v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | awk '{print $2}')
+          if [ -z "$version" ]; then
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar comando inválido
+        if: steps.parse.outputs.valid == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "⚠️ No se detectó un comando válido. Escribe \`/deploy vX.Y.Z\` en el cuerpo del issue (ej. \`/deploy v1.3.7\`).
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Reaccionar al comando
+        if: github.event_name == 'issue_comment' && steps.parse.outputs.valid == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" -f content='+1'
+
+      - name: Verificar que el tag existe
+        id: tagcheck
+        if: steps.parse.outputs.valid == 'true'
+        run: |
+          if git ls-remote --tags "https://github.com/${{ github.repository }}" | grep -q "refs/tags/${{ steps.parse.outputs.version }}$"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar tag inexistente
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`.
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Checkout del tag
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: "refs/tags/${{ steps.parse.outputs.version }}"
+
+      - name: Instalar Vercel CLI
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        run: npm install -g vercel@latest
+
+      - name: Deploy a producción
+        id: deploy
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Sensitive en Vercel: nunca las entrega `vercel pull`, ni siquiera
+          # del proyecto correcto (confirmado con un test real) — se
+          # inyectan aquí directo para que next build/prisma generate las vean.
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+          # vercel build lee las env vars de este archivo, no del entorno del
+          # shell — las Sensitive nunca llegan ahí vía pull, así que se
+          # añaden a mano con los secrets de GitHub.
+          {
+            printf 'JWT_SECRET=%s\n' "$JWT_SECRET"
+            printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
+            printf 'SUPABASE_URL=%s\n' "$SUPABASE_URL"
+            printf 'SUPABASE_SERVICE_ROLE_KEY=%s\n' "$SUPABASE_SERVICE_ROLE_KEY"
+          } >> .vercel/.env.production.local
+
+          vercel build --prod --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comentar resultado
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          gh issue close "${{ github.event.issue.number }}"
+
+      - name: Comentar fallo
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`.
+
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
