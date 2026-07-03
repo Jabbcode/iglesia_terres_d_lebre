@@ -37,6 +37,10 @@ git checkout -b feat/nombre develop   ← branch desde develop
 6. Mergear el PR de sync — develop queda con CHANGELOG y version bump actualizados
 ```
 
+**Este flujo publica una versión (tag + GitHub Release), no la despliega.** El push a
+`main` no dispara Vercel (ver "Deploy manual de una versión" más abajo) — para que
+la versión llegue a producción hace falta el paso aparte `/deploy vX.Y.Z`.
+
 **Estructura de CHANGELOG.md:** cada entrada de versión lleva solo sus cambios
 categorizados (sin el link de comparación inline). Todos los links "Full Changelog"
 se acumulan al final del fichero, en la sección `## Comparaciones completas`, con el
@@ -107,9 +111,16 @@ la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
 
 ## Deploy manual de una versión
 
-`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente a
-producción sin pasar por la integración Git de Vercel (que solo reacciona a pushes
-en `main`, nunca a tags):
+**El deploy a producción ya NO es automático.** `vercel.json` tiene
+`git.deploymentEnabled.main = false` — un push a `main` (incluido el que hace
+`release.yml` en cada release) ya no dispara ningún deploy en Vercel. Publicar a
+producción es siempre una acción deliberada vía `/deploy vX.Y.Z`, desacoplada del
+release: se puede tener varias versiones taggeadas sin que ninguna llegue a
+producción hasta que se decida explícitamente.
+
+`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente
+(recién creado o de hace tiempo) a producción, vía CLI de Vercel — no depende de
+que Vercel haya construido ese commit antes:
 
 ```
 1. Crear un issue con la plantilla "Deploy Release" — título y body libres,
