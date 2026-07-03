@@ -6,7 +6,7 @@
 - **Lenguaje:** TypeScript
 - **ORM:** Prisma (conecta como superuser, bypassa RLS de Supabase)
 - **Storage:** Supabase Storage (uploads solo desde servidor via service_role)
-- **Deploy:** Vercel (CDN Edge Network)
+- **Deploy:** Vercel (CDN Edge Network) — **manual**, no automático (ver `workflow.md`)
 - **i18n:** es / ca / en (`src/lib/i18n/`)
 - **Testing:** Vitest v4 (`vitest.config.ts`)
 
