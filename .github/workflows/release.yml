@@ -37,7 +37,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           files=$(gh api "repos/${{ github.repository }}/compare/${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" --jq '.files[].filename')
-          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$)'; then
+          if echo "$files" | grep -qE '^(src/|prisma/|next\.config\.ts$|package\.json$|package-lock\.json$|tsconfig\.json$|vercel\.json$)'; then
             echo "has_code_changes=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_code_changes=false" >> "$GITHUB_OUTPUT"
