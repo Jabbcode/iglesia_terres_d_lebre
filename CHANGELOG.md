@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.7] - 2026-07-02
+
+### REFACTOR
+* [#95](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/95) acumular Full Changelog en sección aparte
+### OTROS
+* [#94](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/94) sync develop con main v1.3.6
+
+
 ## [1.3.6] - 2026-07-02
 
 ### FIXES
@@ -197,6 +205,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Comparaciones completas
 
+- [v1.3.6...v1.3.7](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.6...v1.3.7)
 - [v1.3.5...v1.3.6](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.5...v1.3.6)
 - [v1.3.4...v1.3.5](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.4...v1.3.5)
 - [v1.3.3...v1.3.4](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.3...v1.3.4)
