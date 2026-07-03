@@ -1,7 +1,6 @@
 ---
-name: Deploy de una versión
-about: Despliega un tag específico a producción
-title: "Deploy"
+name: Deploy release
+title: "Deploy vX.Y.Z"
 labels: deploy
 ---
 
