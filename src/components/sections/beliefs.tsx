@@ -94,10 +94,13 @@ export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
             <div className="flex flex-wrap justify-center gap-5">
               {creencias.map((creencia) => {
                 const Icon = creencia.icon
+                const CardTag = creencia.mostrarDetalle ? "button" : "div"
                 return (
-                  <button
+                  <CardTag
                     key={creencia.id}
-                    onClick={() => handleCardClick(creencia.id)}
+                    {...(creencia.mostrarDetalle
+                      ? { onClick: () => handleCardClick(creencia.id) }
+                      : {})}
                     className={`border-border/50 w-full max-w-[280px] rounded-2xl border bg-white p-8 text-center shadow-sm transition-all hover:shadow-md ${
                       creencia.mostrarDetalle
                         ? "cursor-pointer hover:-translate-y-1"
@@ -117,7 +120,7 @@ export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
                     <p className="text-muted-foreground text-sm">
                       {creencia.shortDescription}
                     </p>
-                  </button>
+                  </CardTag>
                 )
               })}
             </div>
@@ -139,13 +142,16 @@ export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
                 <CarouselContent className="mx-2 -ml-2">
                   {creencias.map((creencia) => {
                     const Icon = creencia.icon
+                    const CardTag = creencia.mostrarDetalle ? "button" : "div"
                     return (
                       <CarouselItem
                         key={creencia.id}
                         className="basis-full py-4 pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                       >
-                        <button
-                          onClick={() => handleCardClick(creencia.id)}
+                        <CardTag
+                          {...(creencia.mostrarDetalle
+                            ? { onClick: () => handleCardClick(creencia.id) }
+                            : {})}
                           className={`border-border/50 w-full rounded-2xl border bg-white p-8 text-center shadow-sm transition-all hover:shadow-md ${
                             creencia.mostrarDetalle
                               ? "cursor-pointer hover:-translate-y-1"
@@ -168,7 +174,7 @@ export function Beliefs({ lang: _lang, dict }: BeliefsProps) {
                           <p className="text-muted-foreground text-sm">
                             {creencia.shortDescription}
                           </p>
-                        </button>
+                        </CardTag>
                       </CarouselItem>
                     )
                   })}
