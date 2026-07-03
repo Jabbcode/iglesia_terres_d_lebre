@@ -1,0 +1,28 @@
+name: Deploy de una versión específica
+description: Solicita el despliegue (o rollback) de un tag concreto a producción
+title: "Deploy: "
+labels: ["deploy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Para desplegar una versión concreta a producción (rollback o redeploy), comenta en este issue:
+        ```
+        /deploy vX.Y.Z
+        ```
+        Solo funciona si lo comenta el dueño del repositorio. Revisa `gh release list` para ver los tags disponibles.
+  - type: input
+    id: version
+    attributes:
+      label: Versión a desplegar
+      description: Tag exacto que quieres desplegar
+      placeholder: "v1.3.6"
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Motivo
+      description: ¿Por qué se necesita este deploy? (rollback, hotfix verificado, etc.)
+    validations:
+      required: false

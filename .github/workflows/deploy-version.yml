@@ -1,0 +1,101 @@
+name: Deploy Version (manual)
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  deploy:
+    if: >
+      !github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/deploy ') &&
+      github.event.comment.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer versión del comando
+        id: parse
+        run: |
+          version=$(echo '${{ github.event.comment.body }}' | grep -oE '^/deploy (v[0-9]+\.[0-9]+\.[0-9]+)' | awk '{print $2}')
+          if [ -z "$version" ]; then
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar comando inválido
+        if: steps.parse.outputs.valid == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "⚠️ Formato no reconocido. Usa \`/deploy vX.Y.Z\` (ej. \`/deploy v1.3.6\`)."
+
+      - name: Reaccionar al comando
+        if: steps.parse.outputs.valid == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" -f content='+1'
+
+      - name: Verificar que el tag existe
+        id: tagcheck
+        if: steps.parse.outputs.valid == 'true'
+        run: |
+          if git ls-remote --tags "https://github.com/${{ github.repository }}" | grep -q "refs/tags/${{ steps.parse.outputs.version }}$"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar tag inexistente
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`."
+
+      - name: Checkout del tag
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: "refs/tags/${{ steps.parse.outputs.version }}"
+
+      - name: Instalar Vercel CLI
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        run: npm install -g vercel@latest
+
+      - name: Deploy a producción
+        id: deploy
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          vercel build --prod --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comentar resultado
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}"
+          gh issue close "${{ github.event.issue.number }}"
+
+      - name: Comentar fallo
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true' && failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`. Revisa los logs del workflow."
