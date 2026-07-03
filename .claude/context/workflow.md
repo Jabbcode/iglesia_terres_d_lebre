@@ -105,6 +105,26 @@ la señal: `release.yml` solo dispara automáticamente para PRs cuyo origen sea
 `develop` o `hotfix/*` — cualquier otra rama mergeada a `main` con una label
 `release-type/*` no dispara nada, como salvaguarda.
 
+## Deploy manual de una versión (rollback)
+
+`.github/workflows/deploy-version.yml` permite desplegar cualquier tag existente a
+producción sin pasar por la integración Git de Vercel (que solo reacciona a pushes
+en `main`, nunca a tags):
+
+```
+1. Crear un issue con la plantilla "Deploy de una versión específica"
+2. Comentar en ese issue: /deploy vX.Y.Z
+   → solo funciona si lo comenta el dueño del repo (github.repository_owner)
+3. El workflow verifica que el tag existe, hace checkout de ese commit exacto,
+   y despliega con el CLI de Vercel (vercel build + vercel deploy --prod)
+4. Comenta el resultado (URL o error) y cierra el issue si salió bien
+```
+
+Requiere los secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` en el repo
+(Settings → Secrets and variables → Actions). El CLI de Vercel no depende de qué
+rama/tag es — solo despliega el código que esté en disco en ese momento, por eso
+funciona para tags cuando la integración nativa no puede.
+
 ## Comandos frecuentes
 
 ```bash
