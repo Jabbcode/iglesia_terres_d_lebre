@@ -2,35 +2,32 @@
 
 Registro de decisiones importantes tomadas y su razonamiento.
 
-## Deploy manual: rollback de un deployment existente, no rebuild vía CLI
+## Deploy manual: rebuild vía CLI (no rollback) — cuidado con el proyecto de Vercel
 
 **Decisión:** `.github/workflows/deploy-version.yml` (comando `/deploy vX.Y.Z` en un
-issue) busca el deployment de Vercel ya construido para el commit de ese tag y hace
-`vercel rollback` sobre él, en vez de reconstruir el código con `vercel build` +
-`vercel deploy --prebuilt` dentro del propio Action.
+issue) reconstruye el tag con `vercel build` + `vercel deploy --prebuilt --prod`
+dentro del propio Action, inyectando `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
+`SUPABASE_SERVICE_ROLE_KEY` (marcadas **Sensitive** en Vercel, así que `vercel pull`
+nunca las entrega) a mano en `.vercel/.env.production.local` desde secrets de GitHub
+duplicados.
 
-**Por qué:** `JWT_SECRET`, `DATABASE_URL`, `SUPABASE_URL` y
-`SUPABASE_SERVICE_ROLE_KEY` están marcadas **Sensitive** en Vercel. Eso bloquea el
-rebuild en dos capas distintas: (1) `vercel pull` nunca las entrega, ni con token de
-API — se pueden inyectar a mano en el build con secrets de GitHub duplicados; pero
-(2) **tampoco llegan al runtime** de un deployment subido vía CLI/prebuilt, y esto no
-tiene workaround — Sensitive solo se conecta en build+runtime cuando Vercel
-construye el código con su propia infraestructura (flujo normal de git push).
-Confirmado con un deploy real que compiló bien pero devolvía 500 en producción con
-el mismo error de JWT_SECRET, ahora en runtime.
+**Historial de este diagnóstico (para no repetir la confusión):** el proyecto vinculado
+al principio (`VERCEL_PROJECT_ID`) era `iglesia_terres_d_lebre` — un proyecto de Vercel
+distinto y equivocado (mismo team, distinto id), probablemente huérfano de una fase
+anterior del proyecto. Un deploy real ahí compiló bien pero devolvía 500 en producción
+con "JWT_SECRET env var is required", lo que en su momento se interpretó como que las
+variables Sensitive nunca llegan al runtime de un deploy vía CLI/prebuilt (se llegó a
+implementar y descartar un enfoque alternativo de `vercel rollback` por esta razón).
+**Esa conclusión era incorrecta**: al corregir `VERCEL_PROJECT_ID` al proyecto real
+(`terres_lebre`), el mismo rebuild vía CLI funcionó de punta a punta, con las
+Sensitive disponibles en runtime con normalidad. El proyecto viejo simplemente no
+tenía esas env vars de runtime completas — no era una limitación de la plataforma.
 
-**Alternativas descartadas:**
-- Quitar "Sensitive" a las variables para que `vercel pull` las entregue: resuelto
-  técnicamente pero debilita la protección de una clave que firma sesiones de admin
-  (quedaría legible vía API/dashboard para cualquiera con acceso al proyecto).
-- Duplicar los secrets también en GitHub Actions e inyectarlos en el build: arregla
-  el build pero no el runtime (ver arriba) — insuficiente por sí solo.
-
-**Consecuencia:** el deploy manual solo puede volver a un tag que **ya estuvo en
-producción** alguna vez (porque necesita que exista un deployment previo construido
-por Vercel para ese commit). No sirve para desplegar código que nunca pasó por el
-flujo normal de release — pero ese no es un caso real dado el flujo actual del
-proyecto (todo lo que se taggea ya pasó por `main`).
+**Verificar antes de tocar este workflow:** confirmar con `vercel link` (elige
+"terres_lebre", no "iglesia_terres_d_lebre" — aparecen "2 matches across teams") y
+comparar `.vercel/repo.json` contra los secrets `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` si
+algo vuelve a fallar con errores de "Project not found" o env vars faltantes en
+runtime.
 
 ## Release automatizado por labels, no por parseo de título
 
