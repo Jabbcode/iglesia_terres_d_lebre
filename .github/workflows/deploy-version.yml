@@ -54,7 +54,7 @@ jobs:
           gh issue comment "${{ github.event.issue.number }}" \
             --body "⚠️ No se detectó un comando válido. Escribe \`/deploy vX.Y.Z\` en el cuerpo del issue (ej. \`/deploy v1.3.7\`).
 
-[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
       - name: Reaccionar al comando
         if: github.event_name == 'issue_comment' && steps.parse.outputs.valid == 'true'
@@ -81,7 +81,7 @@ jobs:
           gh issue comment "${{ github.event.issue.number }}" \
             --body "❌ El tag \`${{ steps.parse.outputs.version }}\` no existe. Revisa \`gh release list\`.
 
-[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
       - name: Checkout del tag
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
@@ -114,7 +114,7 @@ jobs:
           gh issue comment "${{ github.event.issue.number }}" \
             --body "✅ Desplegado \`${{ steps.parse.outputs.version }}\` a producción: ${{ steps.deploy.outputs.url }}
 
-[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           gh issue close "${{ github.event.issue.number }}"
 
       - name: Comentar fallo
@@ -125,4 +125,4 @@ jobs:
           gh issue comment "${{ github.event.issue.number }}" \
             --body "❌ Falló el deploy de \`${{ steps.parse.outputs.version }}\`.
 
-[Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          [Ver run]($GITHUB_SERVER_URL/${{ github.repository }}/actions/runs/${{ github.run_id }})"
