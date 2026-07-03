@@ -93,6 +93,22 @@ jobs:
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
         run: npm install -g vercel@latest
 
+      - name: Diagnóstico de secrets (sin imprimir valores)
+        if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID JWT_SECRET DATABASE_URL SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY; do
+            value="${!name}"
+            echo "$name -> longitud: ${#value}"
+          done
+
       - name: Deploy a producción
         id: deploy
         if: steps.parse.outputs.valid == 'true' && steps.tagcheck.outputs.exists == 'true'
