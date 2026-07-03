@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-07-03
+
+### FIXES
+* [#132](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/132) falta GH_TOKEN en el paso de limpieza de notas
+* [#135](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/135) binaryTarget rhel-openssl-3.0.x para Prisma en Vercel
+### OTROS
+* [#133](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/133) sync develop con main v1.4.0
+
+
 ## [1.4.0] - 2026-07-03
 
 ### FEAT
@@ -238,6 +247,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Comparaciones completas
 
+- [v1.4.0...v1.4.1](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.4.0...v1.4.1)
 - [v1.3.8...v1.4.0](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.8...v1.4.0)
 - [v1.3.7...v1.3.8](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.7...v1.3.8)
 - [v1.3.6...v1.3.7](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.6...v1.3.7)
