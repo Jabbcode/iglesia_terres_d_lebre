@@ -42,6 +42,12 @@ categorizados (sin el link de comparación inline). Todos los links "Full Change
 se acumulan al final del fichero, en la sección `## Comparaciones completas`, con el
 más reciente arriba de esa lista.
 
+**Guard de cambios de código:** si el PR develop→main con label `release-type/*` no
+toca `src/`, `prisma/` ni configs de build/runtime (`next.config.ts`, `package.json`,
+`package-lock.json`, `tsconfig.json`), no se genera versión ni release — solo un
+comentario avisando por qué. Evita versionar cambios de tooling/CI/docs puros
+(`.github/`, `.claude/`, etc.).
+
 Las PRs de feature/fix deben llevar la label correspondiente (`feat`, `fix`, `refactor`,
 `docs`, `chore`, `style`, `test`, `db`, `security`, `perf`) para que aparezcan bien
 categorizadas en las notas de release. Las labels `release-type/*` se excluyen
