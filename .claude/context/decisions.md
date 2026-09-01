@@ -214,3 +214,37 @@ El segundo argumento `{}` es requerido por Next.js 16 (firma: `revalidateTag(tag
 **Por qué:** Inyectar en el layout global produciría JSON-LD duplicado en todas las páginas. Inyectar por página permite adaptar el tipo de schema al contenido (Organization en home, Church en contacto, Event para cada evento próximo).
 
 **Datos:** Usan `siteConfig` (dirección, teléfono, redes) y `IGLESIA_NAME`/`SITE_URL` de `src/lib/constant.ts`.
+
+---
+
+## Eventos públicos: SSR desde el servicio, sin endpoint CDN
+
+**Decisión:** La home lee los eventos próximos en el Server Component vía
+`eventoService.getProximosPublic(lang)` y los pasa como prop a
+`<UpcomingEvents>`. Se eliminó `GET /api/public/eventos` (y su consumo con
+`fetch` en cliente).
+
+**Por qué:** El endpoint respondía con `publicSuccess()` →
+`Cache-Control: s-maxage=86400`, que hace que el Edge CDN de Vercel cachee la
+respuesta por URL 24h. `revalidateTag`/`revalidatePath` **no purgan** entradas
+del CDN creadas con un header `Cache-Control` puesto a mano — solo caducan por
+tiempo o con un deploy nuevo. Resultado: deshabilitar/editar un evento en el
+admin no se reflejaba hasta 24h. Es la misma razón por la que la galería ya se
+movió a fetch en servidor.
+
+**Cómo queda la caché:** una sola capa efectiva —
+`getPublicCached(lang)` (`unstable_cache`, tag `"eventos"`, 24h) evita hits a
+BD; la home es ISR (`revalidate = 86400`) y se sirve como HTML estático desde
+el mismo Edge CDN. `revalidateTag("eventos", {})` en las rutas admin invalida
+el `unstable_cache` **y** regenera el ISR que lo consumió. Propagación en
+segundos, sin deploy.
+
+**`getProximosPublic` no se cachea:** llama a `calcularProximaOcurrencia`, que
+depende de `new Date()`. Solo la query (`getPublicCached`) está en
+`unstable_cache`; el mapeo/orden/filtro de ocurrencias pasadas se hace por
+request. El JSON-LD (`eventSchema`) usa esta misma lista, así que la fecha
+estructurada es la próxima ocurrencia, no la fecha base.
+
+**Aplica igual a:** `/api/public/horarios` y `/api/public/testimonios` siguen
+siendo `fetch` en cliente con el mismo CDN de 24h — mismo lag potencial si se
+edita desde admin. No se tocaron en este cambio.

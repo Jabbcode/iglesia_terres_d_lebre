@@ -48,11 +48,14 @@ export default async function Home({
   const lang = langStr as Locale
   const [dict, eventos, config] = await Promise.all([
     getDictionary(lang),
-    eventoService.getUpcoming(5),
+    eventoService.getProximosPublic(lang),
     configService.getPublicCached(),
   ])
 
-  const jsonLd = [organizationSchema(), ...eventos.map((e) => eventSchema(e))]
+  const jsonLd = [
+    organizationSchema(),
+    ...eventos.slice(0, 5).map((e) => eventSchema(e)),
+  ]
 
   return (
     <>
@@ -64,7 +67,7 @@ export default async function Home({
       <NextService lang={lang} dict={dict} />
       <Community lang={lang} dict={dict} />
       <CtaNew lang={lang} dict={dict} />
-      <UpcomingEvents lang={lang} dict={dict} />
+      <UpcomingEvents eventos={eventos} lang={lang} dict={dict} />
     </>
   )
 }
