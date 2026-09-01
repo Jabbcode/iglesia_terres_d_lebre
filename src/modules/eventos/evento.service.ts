@@ -1,8 +1,10 @@
 import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
 import { REVALIDATE_24H } from "@/lib/constants/cache"
+import { calcularProximaOcurrencia } from "@/lib/event-utils"
 import type { Periodicidad } from "@prisma/client"
 import type { CreateEventoInput, UpdateEventoInput } from "./evento.schema"
+import type { EventoProximo } from "./evento.types"
 
 export const eventoService = {
   /**
@@ -132,6 +134,8 @@ export const eventoService = {
             ubicacion: true,
             imagen: true,
             periodicidad: true,
+            semanaDelMes: true,
+            diaSemanaRelativo: true,
             repetirHasta: true,
             translations: { where: { lang } },
           },
@@ -142,21 +146,45 @@ export const eventoService = {
   },
 
   /**
-   * Get upcoming active events
+   * Eventos activos resueltos para el sitio público: parte de las filas
+   * cacheadas (`getPublicCached`) y calcula la próxima ocurrencia por request
+   * — ese cálculo depende de la fecha actual y no puede cachearse. Descarta
+   * los eventos únicos ya pasados y ordena por próxima fecha + hora.
    */
-  async getUpcoming(limit = 5) {
-    return unstable_cache(
-      () =>
-        prisma.evento.findMany({
-          where: {
-            activo: true,
-            fecha: { gte: new Date() },
-          },
-          orderBy: { fecha: "asc" },
-          take: limit,
-        }),
-      ["eventos-upcoming", String(limit)],
-      { tags: ["eventos"], revalidate: REVALIDATE_24H }
-    )()
+  async getProximosPublic(lang: string): Promise<EventoProximo[]> {
+    const eventos = await this.getPublicCached(lang)
+
+    return eventos
+      .map((evento): EventoProximo | null => {
+        const proximaOcurrencia = calcularProximaOcurrencia({
+          fecha: evento.fecha,
+          periodicidad: evento.periodicidad,
+          semanaDelMes: evento.semanaDelMes,
+          diaSemanaRelativo: evento.diaSemanaRelativo,
+          repetirHasta: evento.repetirHasta,
+        })
+
+        if (!proximaOcurrencia) return null
+
+        const translation = evento.translations[0]
+
+        return {
+          id: evento.id,
+          nombre: translation?.nombre || evento.nombre,
+          descripcion: translation?.descripcion || evento.descripcion,
+          fecha: proximaOcurrencia,
+          horaInicio: evento.horaInicio,
+          horaFin: evento.horaFin,
+          ubicacion: translation?.ubicacion || evento.ubicacion,
+          imagen: evento.imagen,
+          periodicidad: evento.periodicidad,
+        }
+      })
+      .filter((e): e is EventoProximo => e !== null)
+      .sort((a, b) => {
+        const fechaDiff = a.fecha.getTime() - b.fecha.getTime()
+        if (fechaDiff !== 0) return fechaDiff
+        return a.horaInicio.localeCompare(b.horaInicio)
+      })
   },
 }

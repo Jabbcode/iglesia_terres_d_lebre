@@ -6,6 +6,7 @@ export {
 } from "./evento.schema"
 export type {
   Evento,
+  EventoProximo,
   Periodicidad,
   CreateEventoInput,
   UpdateEventoInput,
