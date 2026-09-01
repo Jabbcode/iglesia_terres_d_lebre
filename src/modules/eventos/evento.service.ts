@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { REVALIDATE_24H } from "@/lib/constants/cache"
 import type { Periodicidad } from "@prisma/client"
 import type { CreateEventoInput, UpdateEventoInput } from "./evento.schema"
 
@@ -111,16 +113,50 @@ export const eventoService = {
   },
 
   /**
+   * Get active events with their translations for a locale (public GET).
+   * Cached por tag "eventos"; el cálculo de próxima ocurrencia queda fuera
+   * (depende de la fecha actual y no debe cachearse).
+   */
+  async getPublicCached(lang: string) {
+    return unstable_cache(
+      () =>
+        prisma.evento.findMany({
+          where: { activo: true },
+          select: {
+            id: true,
+            nombre: true,
+            descripcion: true,
+            fecha: true,
+            horaInicio: true,
+            horaFin: true,
+            ubicacion: true,
+            imagen: true,
+            periodicidad: true,
+            repetirHasta: true,
+            translations: { where: { lang } },
+          },
+        }),
+      ["eventos-public", lang],
+      { tags: ["eventos"], revalidate: REVALIDATE_24H }
+    )()
+  },
+
+  /**
    * Get upcoming active events
    */
   async getUpcoming(limit = 5) {
-    return prisma.evento.findMany({
-      where: {
-        activo: true,
-        fecha: { gte: new Date() },
-      },
-      orderBy: { fecha: "asc" },
-      take: limit,
-    })
+    return unstable_cache(
+      () =>
+        prisma.evento.findMany({
+          where: {
+            activo: true,
+            fecha: { gte: new Date() },
+          },
+          orderBy: { fecha: "asc" },
+          take: limit,
+        }),
+      ["eventos-upcoming", String(limit)],
+      { tags: ["eventos"], revalidate: REVALIDATE_24H }
+    )()
   },
 }

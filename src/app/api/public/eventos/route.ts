@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { eventoService } from "@/modules/eventos"
 import { calcularProximaOcurrencia } from "@/lib/event-utils"
 import { publicSuccess, success, handleError } from "@/shared/api"
 import { isValidLocale } from "@/lib/i18n/config"
@@ -14,24 +14,7 @@ export async function GET(request: NextRequest) {
       return success([])
     }
 
-    const eventos = await prisma.evento.findMany({
-      where: { activo: true },
-      select: {
-        id: true,
-        nombre: true,
-        descripcion: true,
-        fecha: true,
-        horaInicio: true,
-        horaFin: true,
-        ubicacion: true,
-        imagen: true,
-        periodicidad: true,
-        repetirHasta: true,
-        translations: {
-          where: { lang },
-        },
-      },
-    })
+    const eventos = await eventoService.getPublicCached(lang)
 
     // Calculate next occurrence and filter active events
     const eventosConProximaFecha = eventos
