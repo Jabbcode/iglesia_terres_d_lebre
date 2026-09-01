@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { CalendarDays, MapPin, Clock, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeInUp } from "@/components/ui/motion"
 import Link from "next/link"
-import type { Evento } from "@/modules/eventos"
+import type { EventoProximo } from "@/modules/eventos"
 import {
   Carousel,
   CarouselContent,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { useIsMobile } from "@/hooks/use-media-query"
-import { api } from "@/shared/api"
 import type { Locale } from "@/lib/i18n/config"
 import type { Dictionary } from "@/dictionaries"
 
@@ -113,7 +112,7 @@ function formatDate(dateStr: string | Date, lang: string): string {
 }
 
 interface EventCardProps {
-  evento: Evento
+  evento: EventoProximo
   lang: string
   dict: Dictionary
 }
@@ -189,34 +188,13 @@ function EventCard({ evento, lang, dict }: EventCardProps) {
 }
 
 interface UpcomingEventsProps {
+  eventos: EventoProximo[]
   lang: Locale
   dict: Dictionary
 }
 
-export function UpcomingEvents({ lang, dict }: UpcomingEventsProps) {
-  const [eventos, setEventos] = useState<Evento[]>([])
-  const [loading, setLoading] = useState(true)
+export function UpcomingEvents({ eventos, lang, dict }: UpcomingEventsProps) {
   const isMobile = useIsMobile()
-
-  useEffect(() => {
-    api
-      .get<Evento[]>(`/api/public/eventos?lang=${lang}`)
-      .then(setEventos)
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [lang])
-
-  if (loading) {
-    return (
-      <section className="border-border border-t bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto mb-10 max-w-2xl text-center">
-            <div className="bg-muted mx-auto h-4 w-32 animate-pulse rounded" />
-          </div>
-        </div>
-      </section>
-    )
-  }
 
   if (eventos.length === 0) {
     return (
