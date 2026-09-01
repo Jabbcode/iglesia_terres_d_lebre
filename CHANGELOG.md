@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-09-01
+
+### FEAT
+* [#140](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/140) /deploy on-demand a Preview desde PRs
+### FIXES
+* [#142](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/142) --repo explícito en comandos gh de deploy-version.yml
+* [#145](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/145) invalidar caché de eventos con revalidateTag
+### OTROS
+* [#137](https://github.com/Jabbcode/iglesia_terres_d_lebre/pull/137) sync develop con main v1.4.1
+
+
 ## [1.4.1] - 2026-07-03
 
 ### FIXES
@@ -247,6 +258,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Comparaciones completas
 
+- [v1.4.1...v1.4.2](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.4.1...v1.4.2)
 - [v1.4.0...v1.4.1](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.4.0...v1.4.1)
 - [v1.3.8...v1.4.0](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.8...v1.4.0)
 - [v1.3.7...v1.3.8](https://github.com/Jabbcode/iglesia_terres_d_lebre/compare/v1.3.7...v1.3.8)
